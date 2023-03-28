@@ -2,109 +2,120 @@
 
 
 #include "PlayerBase.h"
-#include "Camera/CameraComponent.h"
-#include "Components/CapsuleComponent.h"
-#include "Components/InputComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
-#include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "EnhancedInputComponent.h"
-#include "EnhancedInputSubsystems.h"
+#include "Camera/CameraComponent.h"
 
-// Sets default values
+
 APlayerBase::APlayerBase()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+
+	//Set up boom arm
+	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
+	SpringArm->TargetArmLength = 500.0f;
+	SpringArm->bUsePawnControlRotation = true;
+	SpringArm->SetupAttachment(RootComponent);
+
+	//Set up Camera
+	Camera = CreateDefaultSubobject <UCameraComponent>(TEXT("Camera"));
+	Camera->SetupAttachment(SpringArm);
+
+	//Set up New input system
 	PrimaryActorTick.bCanEverTick = true;
+	bAddDefaultMovementBindings = false;
 
-
-	// Set size for collision capsule
-	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
-
-	// Don't rotate when the controller rotates. Let that just affect the camera.
-	bUseControllerRotationPitch = false;
-	bUseControllerRotationYaw = false;
-	bUseControllerRotationRoll = false;
-
-	// Configure character movement
-	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
-	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f); // ...at this rotation rate
-
-	// So we can easly adjust on the BP
-	GetCharacterMovement()->MaxWalkSpeed = 500.f;
-	GetCharacterMovement()->MinAnalogWalkSpeed = 20.f;
-	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
-
-	// Create a camera boom (pulls in towards the player if there is a collision)
-	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 400.0f; // The camera follows at this distance behind the character	
-	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
-
-	// Create a follow camera
-	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
-	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
-	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 }
 
-// Called when the game starts or when spawned
-void APlayerBase::BeginPlay()
-{
+void APlayerBase::BeginPlay(){
+
 	Super::BeginPlay();
 
-	//Add Input Mapping Context
-	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
+	if (HasAuthority())
 	{
-		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		// Spawn the player character on the server.
+		APlayerBase* NewPlayer = GetWorld()->SpawnActor<APlayerBase>(GetActorLocation(), GetActorRotation());
+		NewPlayer->SetOwner(this);
+
+		// Spawn a new player controller for the owning player.
+		APlayerController* NewController = GetWorld()->SpawnActor<APlayerController>(GetActorLocation(), GetActorRotation());
+		NewController->Possess(NewPlayer);
+
+		// Replicate the spawned player character to clients.
+		if (HasAuthority())
 		{
-			Subsystem->AddMappingContext(DefaultMappingContext, 0);
+			NewPlayer->SpawnActor<AActor>(FTransform::Identity, FActorSpawnParameters());
 		}
 	}
-	
 }
 
-// Called every frame
 void APlayerBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	//Update camera rotation based on controller rotation
+	if(Controller != nullptr && SpringArm != nullptr)
+	{
+		SpringArm->SetWorldRotation(Controller->GetControlRotation());
+	}
 }
 
-// Called to bind functionality to input
 void APlayerBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	check(PlayerInputComponent);
 
-	// Set up action bindings
-	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent)) {
-
-		//Moving
-		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APlayerBase::Move);
-
-	}
-
+	PlayerInputComponent->BindAxis("MoveRight", this, &APlayerBase::MoveRight);
+	PlayerInputComponent->BindAxis("MoveUp", this, &APlayerBase::MoveUp);
 }
 
-void APlayerBase::Move(const FInputActionValue& Value)
+void APlayerBase::MoveRight(float Value)
 {
-	// input is a Vector2D
-	FVector2D MovementVector = Value.Get<FVector2D>();
-
-	if (Controller != nullptr)
+	MovementInput.X = Value;
+	if (HasAuthority())
 	{
-		// find out which way is forward
-		const FRotator Rotation = Controller->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-		// get forward vector
-		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-
-		// get right vector 
-		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-
-		// add movement 
-		AddMovementInput(ForwardDirection, MovementVector.Y);
-		AddMovementInput(RightDirection, MovementVector.X);
+		Server_SetMovementInput(MovementInput);
 	}
+	else
+	{
+		Client_SetMovementInput(MovementInput);
+	}
+	AddMovementInput(FVector(0.0f, 1.0f, 0.0f), Value);
 }
+
+void APlayerBase::MoveUp(float Value)
+{
+	MovementInput.Y = Value;
+	if (HasAuthority())
+	{
+		Server_SetMovementInput(MovementInput);
+	}
+	else
+	{
+		Client_SetMovementInput(MovementInput);
+	}
+	AddMovementInput(FVector(-1.0f, 0.0f, 0.0f), Value);
+}
+
+
+void APlayerBase::Server_SetMovementInput_Implementation(const FVector& Input)
+{
+	MovementInput = Input;
+}
+
+void APlayerBase::Client_SetMovementInput_Implementation(const FVector& Input)
+{
+	MovementInput = Input;
+}
+
+void APlayerBase::OnRep_MovementInput()
+{
+	// Update the character movement based on the replicated movement input
+	FVector Movement = FVector(MovementInput.Y, MovementInput.X, 0.0f);
+	Movement.Normalize();
+	AddMovementInput(Movement);
+}
+
+void APlayerBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+}
+
 

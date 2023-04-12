@@ -3,9 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PaperCharacter.h"
-#include "Camera/CameraComponent.h"
-#include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
 #include "PlayerBase.generated.h"
 
@@ -13,61 +11,76 @@
  * 
  */
 UCLASS()
-class PROJECTM_API APlayerBase : public APaperCharacter
+class PROJECTM_API APlayerBase : public ACharacter
 {
 	GENERATED_BODY()
-
 	
 public:
+	// Sets default values for this pawn's properties
 	APlayerBase();
 
-	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 
-protected:
-	void BeginPlay() override;
-
-public:
-	void Tick(float DeltaTime) override;
-
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	bool bAddDefaultMovementBindings;
-
-private:
-
-	
-	UPROPERTY(EditAnywhere)
-	USpringArmComponent* SpringArm;
-
-	UPROPERTY(EditAnywhere)
-	UCameraComponent* Camera;
-
-	UPROPERTY(Replicated, EditAnywhere)
-	FVector MovementInput;
-
-	UPROPERTY(EditAnywhere)
-	float MoveSpeed;
-
-	UFUNCTION(Server, Reliable)
-	void Server_SetMovementInput(const FVector& Input);
-
-	UFUNCTION(Client, Reliable)
-	void Client_SetMovementInput(const FVector& Input);
-
-	void MoveRight(float Value);
-	
-
-	void MoveUp(float Value);
-
-	void OnRep_MovementInput();
-
-	void Server_SetMovementInput_Implementation(const FVector& Input);
-
-	void Client_SetMovementInput_Implementation(const FVector& Input);
+	/** Returns TopDownCameraComponent subobject **/
+	FORCEINLINE class UCameraComponent* GetTopDownCameraComponent() const { return TopDownCameraComponent; }
+	/** Returns CameraBoom subobject **/
+	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 
 
+	/** Property replication */
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
+private:
+		/** Top down camera */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	class UCameraComponent* TopDownCameraComponent;
 
-	
+	/** Camera boom positioning the camera above the character */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	class USpringArmComponent* CameraBoom;
+
+
+protected:
+	virtual void BeginPlay() override;
+
+	//Max Walk Speed
+	UPROPERTY(EditAnywhere)
+	float _maxMoveSpeed;
+
+	//Current Walk Speed
+	UPROPERTY(EditAnywhere)
+	float _moveSpeed;
+
+	//Max starting Health
+	UPROPERTY(EditDefaultsOnly, Category = "Health")
+	float _maxHealth;
+
+	//Current Player Health
+	UPROPERTY(BlueprintReadWrite, ReplicatedUsing=OnRep_CurrentHealth)
+	float _currentHealth;
+
+	/** RepNotify for changes made to current health.*/
+	UFUNCTION()
+	void OnRep_CurrentHealth();
+
+	/** Response to health being updated. Called on the server immediately after modification, and on clients in response to a RepNotify*/
+	void OnHealthUpdate();
+
+public:
+	//Getter for Max Health
+	UFUNCTION(BlueprintPure, Category="Health")
+	FORCEINLINE float GetMaxHealth() const { return _maxHealth; }
+
+	//Getter for Current Health
+	UFUNCTION(BlueprintPure, Category = "Health")
+	FORCEINLINE float GetCurrentHealth() const { return _currentHealth; }
+
+	//Setter for Current Health
+	UFUNCTION(BlueprintCallable, Category = "Health")
+	void SetCurrentHealth(float _hpValue);
+
+	//Event for Taking Damage
+	UFUNCTION(BlueprintCallable, Category = "Health")
+		float TakeDamage(float _damageTaken, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* _otherActor) override;
 };

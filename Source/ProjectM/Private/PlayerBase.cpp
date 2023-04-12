@@ -2,120 +2,137 @@
 
 
 #include "PlayerBase.h"
-#include "GameFramework/SpringArmComponent.h"
+#include "UObject/ConstructorHelpers.h"
 #include "Camera/CameraComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Engine/World.h"
 
 
 APlayerBase::APlayerBase()
 {
 
-	//Set up boom arm
-	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
-	SpringArm->TargetArmLength = 500.0f;
-	SpringArm->bUsePawnControlRotation = true;
-	SpringArm->SetupAttachment(RootComponent);
+	//Stats
+	
+	//400.0f = 400 cm/s
+	_maxMoveSpeed = 400.0f;
 
-	//Set up Camera
-	Camera = CreateDefaultSubobject <UCameraComponent>(TEXT("Camera"));
-	Camera->SetupAttachment(SpringArm);
+	_moveSpeed = _maxMoveSpeed;
 
-	//Set up New input system
+	_maxHealth = 100.0f;
+
+	_currentHealth = _maxHealth;
+
+
+	//Set size for player capsule
+	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
+
+	// Don't rotate character to camera direction
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationYaw = false;
+	bUseControllerRotationRoll = false;
+
+	// Configure character movement
+	GetCharacterMovement()->bOrientRotationToMovement = true; // Rotate character to moving direction
+	GetCharacterMovement()->RotationRate = FRotator(0.f, 640.f, 0.f);
+	GetCharacterMovement()->bConstrainToPlane = true;
+	GetCharacterMovement()->bSnapToPlaneAtStart = true;
+	GetCharacterMovement()->MaxWalkSpeed = _moveSpeed;
+
+	// Create a camera boom...
+	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+	CameraBoom->SetupAttachment(RootComponent);
+	CameraBoom->SetUsingAbsoluteRotation(true); // Don't want arm to rotate when character does
+	CameraBoom->TargetArmLength = 800.f;
+	CameraBoom->SetRelativeRotation(FRotator(-60.f, 0.f, 0.f));
+	CameraBoom->bDoCollisionTest = false; // Don't want to pull camera in when it collides with level
+
+	// Create a camera...
+	TopDownCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("TopDownCamera"));
+	TopDownCameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
+	TopDownCameraComponent->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+
+	// Activate ticking in order to update the cursor every frame.
 	PrimaryActorTick.bCanEverTick = true;
-	bAddDefaultMovementBindings = false;
+	PrimaryActorTick.bStartWithTickEnabled = true;
+
 
 }
 
-void APlayerBase::BeginPlay(){
-
+// Called when the game starts or when spawned
+void APlayerBase::BeginPlay()
+{
 	Super::BeginPlay();
 
-	if (HasAuthority())
-	{
-		// Spawn the player character on the server.
-		APlayerBase* NewPlayer = GetWorld()->SpawnActor<APlayerBase>(GetActorLocation(), GetActorRotation());
-		NewPlayer->SetOwner(this);
-
-		// Spawn a new player controller for the owning player.
-		APlayerController* NewController = GetWorld()->SpawnActor<APlayerController>(GetActorLocation(), GetActorRotation());
-		NewController->Possess(NewPlayer);
-
-		// Replicate the spawned player character to clients.
-		if (HasAuthority())
-		{
-			NewPlayer->SpawnActor<AActor>(FTransform::Identity, FActorSpawnParameters());
-		}
-	}
 }
 
 void APlayerBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	//Update camera rotation based on controller rotation
-	if(Controller != nullptr && SpringArm != nullptr)
-	{
-		SpringArm->SetWorldRotation(Controller->GetControlRotation());
-	}
-}
-
-void APlayerBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	check(PlayerInputComponent);
-
-	PlayerInputComponent->BindAxis("MoveRight", this, &APlayerBase::MoveRight);
-	PlayerInputComponent->BindAxis("MoveUp", this, &APlayerBase::MoveUp);
-}
-
-void APlayerBase::MoveRight(float Value)
-{
-	MovementInput.X = Value;
-	if (HasAuthority())
-	{
-		Server_SetMovementInput(MovementInput);
-	}
-	else
-	{
-		Client_SetMovementInput(MovementInput);
-	}
-	AddMovementInput(FVector(0.0f, 1.0f, 0.0f), Value);
-}
-
-void APlayerBase::MoveUp(float Value)
-{
-	MovementInput.Y = Value;
-	if (HasAuthority())
-	{
-		Server_SetMovementInput(MovementInput);
-	}
-	else
-	{
-		Client_SetMovementInput(MovementInput);
-	}
-	AddMovementInput(FVector(-1.0f, 0.0f, 0.0f), Value);
 }
 
 
-void APlayerBase::Server_SetMovementInput_Implementation(const FVector& Input)
-{
-	MovementInput = Input;
-}
-
-void APlayerBase::Client_SetMovementInput_Implementation(const FVector& Input)
-{
-	MovementInput = Input;
-}
-
-void APlayerBase::OnRep_MovementInput()
-{
-	// Update the character movement based on the replicated movement input
-	FVector Movement = FVector(MovementInput.Y, MovementInput.X, 0.0f);
-	Movement.Normalize();
-	AddMovementInput(Movement);
-}
-
-void APlayerBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+// Replicated Properties
+void APlayerBase::GetLifetimeReplicatedProps(TArray <FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	//Replicate current health.
+	DOREPLIFETIME(APlayerBase, _currentHealth);
 }
+
+void APlayerBase::OnHealthUpdate()
+{
+	//Client Specific functionality
+	if(IsLocallyControlled())
+	{
+		FString healthMessage = FString::Printf(TEXT("You now have %f health remaining."), _currentHealth);
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, healthMessage);
+
+		if (_currentHealth <= 0)
+		{
+			FString deathMessage = FString::Printf(TEXT("You have been killed."));
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, deathMessage);
+		}
+	}
+
+	//Server specific functionality
+	if(GetLocalRole() == ROLE_Authority)
+	{
+		FString healthMessage = FString::Printf(TEXT("%s now has %f health remaining."), *GetFName().ToString(), _currentHealth);
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, healthMessage);
+	}
+	//Functions that occur on all machines. 
+/*
+	Any special functionality that should occur as a result of damage or death should be placed here.
+*/
+
+
+}
+
+void APlayerBase::SetCurrentHealth(float _hpValue)
+{
+	if(GetLocalRole() == ROLE_Authority)
+	{
+		_currentHealth = FMath::Clamp(_hpValue, 0.f, _maxHealth);
+		OnHealthUpdate();
+	}
+}
+
+float APlayerBase::TakeDamage(float _damageTaken, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* _otherActor)
+{
+	float _damageApplied = _currentHealth - _damageTaken;
+	SetCurrentHealth(_damageApplied);
+
+	return _damageApplied;
+}
+
+void APlayerBase::OnRep_CurrentHealth()
+{
+	OnHealthUpdate();
+}
+
+
 
 

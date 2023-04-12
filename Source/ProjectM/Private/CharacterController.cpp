@@ -11,6 +11,14 @@ ACharacterController::ACharacterController()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	
+	//Initialize projectile class
+	_projectileClass = ABulletBase::StaticClass();
+
+	//Initialize fire rate
+	_fireRate = 0.15f;
+
+	bIsFiringWeapon = false;
+
 }
 
 // Called when the game starts or when spawned
@@ -38,7 +46,7 @@ void ACharacterController::SetupInputComponent()
 	InputComponent->BindAxis("MoveRight", this, &ACharacterController::MoveRight);
 
 	//Bind Fire Button to Action(function)
-	InputComponent->BindAction("Fire", IE_Pressed, this, &ACharacterController::Fire);
+	InputComponent->BindAction("Fire", IE_Pressed, this, &ACharacterController::StartShoot);
 
 
 }
@@ -64,9 +72,43 @@ void ACharacterController::MoveRight(float AxisValue)
 	}
 }
 
-void ACharacterController::Fire()
+
+
+
+
+void ACharacterController::StartShoot()
 {
 
+	if (!bIsFiringWeapon)
+	{
+		bIsFiringWeapon = true;
+		UWorld* _world = GetWorld();
+		_world->GetTimerManager().SetTimer(_firingTimer, this, &ACharacterController::StopShoot, _fireRate, false);
+		HandleShoot();
+
+	}
+
+}
+
+void ACharacterController::StopShoot()
+{
+	bIsFiringWeapon = false;
+
+}
+
+void ACharacterController::HandleShoot_Implementation()
+{
+	APawn* const PlayerPawn = GetPawn();
+
+	FVector _spawnLocation = PlayerPawn->GetActorLocation() + (PlayerPawn->GetActorForwardVector() * 50.0f);
+	FRotator _spawnRotation = PlayerPawn->GetActorRotation();
+	
+	FActorSpawnParameters _spawnParameters;
+	_spawnParameters.Instigator = GetInstigator();
+	_spawnParameters.Owner = this;
+
+	ABulletBase* _spawnedBullet = GetWorld()->SpawnActor<ABulletBase>(_spawnLocation, _spawnRotation, _spawnParameters);
+	
 
 }
 

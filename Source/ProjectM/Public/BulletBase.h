@@ -19,6 +19,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	virtual void Destroyed() override;
+
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -37,16 +40,20 @@ public:
 
     // Particle used when the projectile impacts against another object and explodes.
     UPROPERTY(EditAnywhere, Category = "Effects")
-    class UParticleSystem* ExplosionEffect;
+    class UParticleSystem* _explosionEffect;
 
 	//The damage type and damage that will be done by this projectile
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Damage")
-    TSubclassOf<class UDamageType> DamageType;
+    TSubclassOf<class UDamageType> _damageType;
 
     //The damage dealt by this projectile.
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Damage")
-    float _Damage;
+    float _damage;
 
-	
+
+
+protected:
+	UFUNCTION(Category="Projectile")
+		void OnProjectileImpact(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
 };

@@ -83,4 +83,6 @@ public:
 	//Event for Taking Damage
 	UFUNCTION(BlueprintCallable, Category = "Health")
 		float TakeDamage(float _damageTaken, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* _otherActor) override;
+
+	void ActivateRagdoll();
 };

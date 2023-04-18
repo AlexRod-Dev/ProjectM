@@ -17,6 +17,7 @@ class PROJECTM_API AProjectMGameModeBase : public AGameModeBase
 public:
 	AProjectMGameModeBase();
 
-		
+protected:
+	
 
 };

@@ -7,6 +7,7 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Components/PrimitiveComponent.h"
 #include "Engine/World.h"
 
 
@@ -87,27 +88,32 @@ void APlayerBase::OnHealthUpdate()
 	//Client Specific functionality
 	if(IsLocallyControlled())
 	{
-		FString healthMessage = FString::Printf(TEXT("You now have %f health remaining."), _currentHealth);
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, healthMessage);
+		FString healthMessage = FString::Printf(TEXT(" %f health remaining."), _currentHealth);
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Blue, healthMessage);
 
-		if (_currentHealth <= 0)
-		{
-			FString deathMessage = FString::Printf(TEXT("You have been killed."));
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, deathMessage);
-		}
+	
 	}
 
 	//Server specific functionality
 	if(GetLocalRole() == ROLE_Authority)
 	{
-		FString healthMessage = FString::Printf(TEXT("%s now has %f health remaining."), *GetFName().ToString(), _currentHealth);
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, healthMessage);
-	}
-	//Functions that occur on all machines. 
-/*
-	Any special functionality that should occur as a result of damage or death should be placed here.
-*/
+		//FString healthMessage = FString::Printf(TEXT("%s now has %f health remaining."), *GetFName().ToString(), _currentHealth);
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, healthMessage);
 
+		
+
+	}
+
+
+	//All machines
+	if (_currentHealth <= 0)
+	{
+
+		ActivateRagdoll();
+
+	}
+
+	
 
 }
 
@@ -126,6 +132,13 @@ float APlayerBase::TakeDamage(float _damageTaken, FDamageEvent const& DamageEven
 	SetCurrentHealth(_damageApplied);
 
 	return _damageApplied;
+}
+
+void APlayerBase::ActivateRagdoll()
+{
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
+	GetMesh()->SetSimulatePhysics(true);
 }
 
 void APlayerBase::OnRep_CurrentHealth()

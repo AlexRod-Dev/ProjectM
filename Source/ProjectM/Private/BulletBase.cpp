@@ -8,6 +8,7 @@
 #include "GameFramework/DamageType.h"
 #include "Particles/ParticleSystem.h"
 #include "Kismet/GameplayStatics.h"
+#include "PlayerBase.h"
 #include "UObject/ConstructorHelpers.h"
 
 
@@ -67,7 +68,9 @@ ABulletBase::ABulletBase()
 void ABulletBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	//The bullets destroys after 2.5 seconds.
+	SetLifeSpan(2.5f);
 }
 
 void ABulletBase::Destroyed()
@@ -88,8 +91,13 @@ void ABulletBase::OnProjectileImpact(UPrimitiveComponent* HitComponent, AActor* 
 {
 	if(OtherActor)
 	{
-		
-		GEngine->AddOnScreenDebugMessage(-10, 1.f, FColor::Yellow, OtherActor->GetName());
+		//for Teammates
+		if(APlayerBase* character = Cast<APlayerBase>(OtherActor))
+		{
+			character->TakeDamage(_damage, FDamageEvent(), nullptr, this);
+		}
+	
+	
 		
 		//UGameplayStatics::ApplyPointDamage(OtherActor, _damage, NormalImpulse, Hit, GetInstigator()->Controller, this, _damageType);
 

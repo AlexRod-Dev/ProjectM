@@ -60,12 +60,17 @@ protected:
 	UPROPERTY(BlueprintReadWrite, ReplicatedUsing=OnRep_CurrentHealth)
 	float _currentHealth;
 
+	UPROPERTY(BlueprintReadWrite, Category = "Health")
+	bool bIsDead;
+
 	/** RepNotify for changes made to current health.*/
 	UFUNCTION()
 	void OnRep_CurrentHealth();
 
 	/** Response to health being updated. Called on the server immediately after modification, and on clients in response to a RepNotify*/
 	void OnHealthUpdate();
+
+	FTimerHandle RespawnTimerHandle;
 
 public:
 	//Getter for Max Health
@@ -82,7 +87,16 @@ public:
 
 	//Event for Taking Damage
 	UFUNCTION(BlueprintCallable, Category = "Health")
-		float TakeDamage(float _damageTaken, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* _otherActor) override;
+	virtual float TakeDamage(float _damageTaken, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* _otherActor) override;
 
-	void ActivateRagdoll();
+	void Die();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void MultiDie();
+	void MultiDie_Implementation();
+
+
+	void Respawn();
+
+	void HandleRespawnTimer();
 };

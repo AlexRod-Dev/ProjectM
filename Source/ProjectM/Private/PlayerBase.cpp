@@ -8,6 +8,12 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/PrimitiveComponent.h"
+#include "CharacterController.h"
+#include "UObject/SoftObjectPtr.h"
+#include "GameFramework/PlayerStart.h"
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "../ProjectMGameModeBase.h"
 #include "Engine/World.h"
 
 
@@ -25,6 +31,8 @@ APlayerBase::APlayerBase()
 
 	_currentHealth = _maxHealth;
 
+	bIsDead = false;
+
 
 	//Set size for player capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
@@ -40,6 +48,8 @@ APlayerBase::APlayerBase()
 	GetCharacterMovement()->bConstrainToPlane = true;
 	GetCharacterMovement()->bSnapToPlaneAtStart = true;
 	GetCharacterMovement()->MaxWalkSpeed = _moveSpeed;
+
+	GetMesh()->SetupAttachment(GetRootComponent());
 
 	// Create a camera boom...
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
@@ -85,37 +95,39 @@ void APlayerBase::GetLifetimeReplicatedProps(TArray <FLifetimeProperty>& OutLife
 
 void APlayerBase::OnHealthUpdate()
 {
-	//Client Specific functionality
-	if(IsLocallyControlled())
-	{
-		FString healthMessage = FString::Printf(TEXT(" %f health remaining."), _currentHealth);
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Blue, healthMessage);
 
 	
-	}
+		////Client Specific functionality
+		//if (IsLocallyControlled())
+		//{
+		//}
 
-	//Server specific functionality
-	if(GetLocalRole() == ROLE_Authority)
-	{
-		//FString healthMessage = FString::Printf(TEXT("%s now has %f health remaining."), *GetFName().ToString(), _currentHealth);
-		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, healthMessage);
-
-		
-
-	}
+		////Server specific functionality
+		//if (GetLocalRole() == ROLE_Authority)
+		//{
+		//}
 
 
-	//All machines
-	if (_currentHealth <= 0)
-	{
-
-		ActivateRagdoll();
-
-	}
+		//All machines
+		if (_currentHealth <= 0)
+		{
+			Die();
+			
+		}
 
 	
 
 }
+
+
+float APlayerBase::TakeDamage(float _damageTaken, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* _otherActor)
+{
+	float _damageApplied = _currentHealth - _damageTaken;
+	SetCurrentHealth(_damageApplied);
+
+	return _damageApplied;
+}
+
 
 void APlayerBase::SetCurrentHealth(float _hpValue)
 {
@@ -126,25 +138,84 @@ void APlayerBase::SetCurrentHealth(float _hpValue)
 	}
 }
 
-float APlayerBase::TakeDamage(float _damageTaken, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* _otherActor)
-{
-	float _damageApplied = _currentHealth - _damageTaken;
-	SetCurrentHealth(_damageApplied);
 
-	return _damageApplied;
+
+void APlayerBase::Die()
+{
+	bIsDead = true;
+
+	//Disable Inputs
+	/*AController* _controller = GetController();
+	ACharacterController* _playerController = Cast<ACharacterController>(_controller);
+	if (IsLocallyControlled())
+	{
+		_playerController->DisableControls();
+	}*/
+
+	if(GetLocalRole() == ROLE_Authority)
+	{
+		MultiDie();
+
+		//start timer to respawn
+		GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &APlayerBase::HandleRespawnTimer, 5.f, false);
+
+	}
+
+
+	
+
+	
 }
 
-void APlayerBase::ActivateRagdoll()
+void APlayerBase::MultiDie_Implementation()
 {
+	//Ragdoll
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 	GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
 	GetMesh()->SetSimulatePhysics(true);
+
+	
+}
+
+void APlayerBase::Respawn()
+{
+	bIsDead = false;
+
+	AController* _controller = GetController();
+	AGameModeBase* GM = GetWorld()->GetAuthGameMode();
+
+	ACharacterController* _playerController = Cast<ACharacterController>(_controller);
+
+	//Enable Inputs (not working somehow)
+	/*if(IsLocallyControlled())
+	{
+		_playerController->EnableControls();
+
+	}*/
+
+	if (AProjectMGameModeBase* _gameMode = Cast<AProjectMGameModeBase>(GM))
+	{
+
+		_gameMode->Respawn(_playerController);
+
+	}
+	
+}
+
+
+
+void APlayerBase::HandleRespawnTimer()
+{
+	Respawn();
 }
 
 void APlayerBase::OnRep_CurrentHealth()
 {
 	OnHealthUpdate();
 }
+
+
 
 
 

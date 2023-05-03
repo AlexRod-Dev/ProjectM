@@ -9,6 +9,7 @@
 #include "Particles/ParticleSystem.h"
 #include "Kismet/GameplayStatics.h"
 #include "PlayerBase.h"
+#include "EnemyBase.h"
 #include "UObject/ConstructorHelpers.h"
 
 
@@ -92,9 +93,16 @@ void ABulletBase::OnProjectileImpact(UPrimitiveComponent* HitComponent, AActor* 
 	if(OtherActor)
 	{
 		//for Teammates
-		if(APlayerBase* character = Cast<APlayerBase>(OtherActor))
+		if(APlayerBase* player = Cast<APlayerBase>(OtherActor))
 		{
-			character->TakeDamage(_damage, FDamageEvent(), nullptr, this);
+			if(HasAuthority())
+			player->TakeDamage(_damage, FDamageEvent(), nullptr, this);
+		}
+
+		if(AEnemyBase* enemy = Cast<AEnemyBase>(OtherActor))
+		{
+			if (HasAuthority())
+				enemy->TakeDamage(_damage, FDamageEvent(), nullptr, this);
 		}
 	
 	

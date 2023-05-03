@@ -72,6 +72,16 @@ void ACharacterController::MoveRight(float AxisValue)
 	}
 }
 
+void ACharacterController::DisableControls()
+{
+	DisableInput(this);
+}
+
+void ACharacterController::EnableControls()
+{
+	EnableInput(this);
+}
+
 
 
 

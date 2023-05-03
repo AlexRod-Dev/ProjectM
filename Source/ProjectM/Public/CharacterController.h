@@ -35,6 +35,9 @@ public:
 
 	void MoveRight(float AxisValue);
 
+	void DisableControls();
+
+	void EnableControls();
 	
 
 

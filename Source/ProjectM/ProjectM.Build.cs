@@ -12,7 +12,7 @@ public class ProjectM : ModuleRules
 
 		PrivateDependencyModuleNames.AddRange(new string[] {"AIModule", "NavigationSystem"});
 
-		PrivateDependencyModuleNames.AddRange(new string[] {  });
+		PrivateDependencyModuleNames.AddRange(new string[] {"GameplayTasks"});
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });

@@ -24,12 +24,12 @@ protected:
 
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AI", meta = (AllowPrivateAccess = true))
-	TObjectPtr<UBehaviorTree> BehaviorTree;
+	TObjectPtr<UBehaviorTree> _behaviorTree;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI", meta = (AllowPrivateAccess = true))
-	TObjectPtr<UBehaviorTreeComponent> BehaviorTreeComponent;
+	TObjectPtr<UBehaviorTreeComponent> _behaviorTreeComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI", meta = (AllowPrivateAccess = true))
-	TObjectPtr<UBlackboardComponent> BlackboardComponent;
+	TObjectPtr<UBlackboardComponent> _blackboardComponent;
 	
 };

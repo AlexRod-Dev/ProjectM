@@ -57,8 +57,6 @@ void ACharacterController::MoveForward(float AxisValue)
 	{
 		APawn* const PlayerPawn = GetPawn();
 		PlayerPawn->AddMovementInput(FVector(1.0f,0.0f,0.0f), AxisValue);
-		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("%f = AxisValue"), AxisValue));
-	
 		
 	}
 }

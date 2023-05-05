@@ -10,8 +10,8 @@
 
 AEnemyAIController::AEnemyAIController()
 {
-	BehaviorTreeComponent = CreateDefaultSubobject<UBehaviorTreeComponent>(TEXT("Behavior Tree Component"));
-	BlackboardComponent = CreateDefaultSubobject<UBlackboardComponent>(TEXT("Blackboard Component"));
+	_behaviorTreeComponent = CreateDefaultSubobject<UBehaviorTreeComponent>(TEXT("Behavior Tree Component"));
+	_blackboardComponent = CreateDefaultSubobject<UBlackboardComponent>(TEXT("Blackboard Component"));
 
 
 
@@ -21,11 +21,13 @@ void AEnemyAIController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (IsValid(BehaviorTree.Get()))
+	UE_LOG(LogTemp, Warning, TEXT("Encontrei BT"));
+	if (IsValid(_behaviorTree.Get()))
 	{
-		RunBehaviorTree(BehaviorTree.Get());
-		BehaviorTreeComponent->StartTree(*BehaviorTree.Get());
+		RunBehaviorTree(_behaviorTree.Get());
+		_behaviorTreeComponent->StartTree(*_behaviorTree.Get());
 
+		UE_LOG(LogTemp, Warning, TEXT("Encontrei BT"));
 	}
 }
 
@@ -33,10 +35,10 @@ void AEnemyAIController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 
-	if(IsValid(Blackboard.Get()) && IsValid(BehaviorTree.Get()))
+	if(IsValid(Blackboard.Get()) && IsValid(_behaviorTree.Get()))
 	{
-		Blackboard->InitializeBlackboard(*BehaviorTree.Get()->BlackboardAsset.Get());
-
+		Blackboard->InitializeBlackboard(*_behaviorTree.Get()->BlackboardAsset.Get());
+		UE_LOG(LogTemp, Warning, TEXT("Encontrei o pawn"));
 	}
 
 }

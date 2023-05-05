@@ -64,7 +64,7 @@ void AProjectMGameModeBase::Tick(float DeltaTime)
 			_world->SpawnActor<AEnemyBase>(EnemyBlueprint, _enemySpawnLocation, FRotator::ZeroRotator);
 		}
 	}
-
+	
 
 
 }
@@ -123,8 +123,7 @@ void AProjectMGameModeBase::HandleStartingNewPlayer_Implementation(APlayerContro
 
 void AProjectMGameModeBase::Respawn(ACharacterController* _playerController)
 {
-	if(HasAuthority())
-	{
+	
 		FVector Location = FVector(-900.0f, 550.0f, 92.0f);
 		if(APawn* Pawn = GetWorld()->SpawnActor<APawn>(DefaultPawnClass, Location, FRotator::ZeroRotator))
 		{
@@ -132,7 +131,7 @@ void AProjectMGameModeBase::Respawn(ACharacterController* _playerController)
 
 			
 		}
-	}
+	
 	
 	
 
@@ -141,5 +140,3 @@ void AProjectMGameModeBase::Respawn(ACharacterController* _playerController)
 void AProjectMGameModeBase::CheckEnemyAlive()
 {
 }
-
-

@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "EnemyBase.h"
+
+#include "PlayerBase.h"
 #include "Components/CapsuleComponent.h"
 
 
@@ -14,6 +16,7 @@ AEnemyBase::AEnemyBase()
 
 	_currentHealth = _maxHealth;
 
+	_damage = 30.0f;
 }
 
 // Called when the game starts or when spawned
@@ -35,7 +38,14 @@ float AEnemyBase::TakeDamage(float _damageTaken, FDamageEvent const& DamageEvent
 	float _damageApplied = _currentHealth - _damageTaken;
 	SetCurrentHealth(_damageApplied);
 
+	
+	
 	return _damageApplied;
+}
+
+void AEnemyBase::AttackPlayer()
+{
+	PerformSphereTrace();
 }
 
 
@@ -87,6 +97,69 @@ void AEnemyBase::MultiDie_Implementation()
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 	GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
 	GetMesh()->SetSimulatePhysics(true);
+
+
+}
+
+void AEnemyBase::PerformSphereTrace()
+{
+	FVector StartLocation = GetActorLocation();
+	FVector EndLocation = GetActorForwardVector() * 250.0f; 
+	float Radius = 100.f;
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(this);  // Ignore the current character
+	TArray<FHitResult> HitResults;
+
+	// Perform the Sphere Trace
+	bool bHit = GetWorld()->SweepMultiByChannel(HitResults, StartLocation,
+		EndLocation,
+		FQuat::Identity,
+		ECC_Pawn,  // Example collision channel
+		FCollisionShape::MakeSphere(Radius),
+		Params
+	);
+
+	if (bHit)
+	{
+		
+		// Handle the hit result
+		OnSphereTraceComplete(HitResults,Radius);
+	}
+	
+}
+
+void AEnemyBase::OnSphereTraceComplete(const TArray<FHitResult>& HitResults, float radius)
+{
+	// Handle the hit result here
+	// You can access information such as HitResult.Actor, HitResult.Location, etc.
+	
+	for(const FHitResult& HitResult : HitResults)
+	{
+		AActor* HitActor = HitResult.GetActor();
+		UE_LOG(LogTemp, Warning, TEXT("actor Hit: %s "), *HitActor->GetName());
+
+
+		if(HitActor && HitActor->IsA(APlayerBase::StaticClass()))
+		{
+		
+			APlayerBase* HitCharacter = Cast<APlayerBase>(HitActor);
+			if(HitCharacter)
+			{
+				HitCharacter->TakeDamage((_damage), FDamageEvent(), nullptr, this);
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("nao bati num player i guess"));
+		
+			}
+		}
+		// Example: Draw a debug sphere at the hit location
+	
+		FColor SphereColor = FColor::Red;
+	
+		DrawDebugSphere(GetWorld(), HitResult.Location, radius, 16, SphereColor, false, 5.f);
+	
+	}
 
 
 }

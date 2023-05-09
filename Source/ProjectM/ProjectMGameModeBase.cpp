@@ -7,6 +7,7 @@
 #include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/Engine.h"
+#include "Containers/Array.h"
 #include "Kismet/KismetMathLibrary.h"
 
 
@@ -62,6 +63,8 @@ void AProjectMGameModeBase::Tick(float DeltaTime)
 			//Enemy Spawned (Change static location to  dynamic
 			FVector _enemySpawnLocation = FVector(-2100.0f, 70.0f, 0.0f);
 			_world->SpawnActor<AEnemyBase>(EnemyBlueprint, _enemySpawnLocation, FRotator::ZeroRotator);
+			
+
 		}
 	}
 	
@@ -89,7 +92,7 @@ void AProjectMGameModeBase::HandleStartingNewPlayer_Implementation(APlayerContro
 
 	FTransform tSpawnTransform;
 	TArray<AActor*> _foundEntries;
-	int32 jogadores = _foundEntries.Num();
+	int32 _players = _foundEntries.Num();
 
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACharacterController::StaticClass(), _foundEntries);
 
@@ -123,14 +126,30 @@ void AProjectMGameModeBase::HandleStartingNewPlayer_Implementation(APlayerContro
 
 void AProjectMGameModeBase::Respawn(ACharacterController* _playerController)
 {
-	
-		FVector Location = FVector(-900.0f, 550.0f, 92.0f);
+	FTransform tSpawnTransform;
+	TArray<AActor*> _foundEntries;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACharacterController::StaticClass(), _foundEntries);
+
+	if(_foundEntries.Num() > 0)
+	{
+		float randPlayerIndex = FMath::RandRange(0, _foundEntries.Num());
+
+		if(_foundEntries[randPlayerIndex])
+		tSpawnTransform = _foundEntries[randPlayerIndex]->GetActorTransform();
+		FVector Location = tSpawnTransform.GetLocation();
+
 		if(APawn* Pawn = GetWorld()->SpawnActor<APawn>(DefaultPawnClass, Location, FRotator::ZeroRotator))
 		{
-			_playerController->Possess(Pawn);
-
 			
+			_playerController->Possess(Pawn);
 		}
+	}else
+	{
+		UE_LOG(LogTemp,Warning, TEXT("You all ded"));
+	}
+	
+	
+	
 	
 	
 	

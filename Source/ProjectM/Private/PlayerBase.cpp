@@ -160,10 +160,6 @@ void APlayerBase::Die()
 		GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &APlayerBase::HandleRespawnTimer, 5.f, false);
 
 	}
-
-
-	
-
 	
 }
 
@@ -181,7 +177,7 @@ void APlayerBase::MultiDie_Implementation()
 void APlayerBase::Respawn()
 {
 	bIsDead = false;
-
+	
 	AController* _controller = GetController();
 	AGameModeBase* GM = GetWorld()->GetAuthGameMode();
 
@@ -196,9 +192,8 @@ void APlayerBase::Respawn()
 
 	if (AProjectMGameModeBase* _gameMode = Cast<AProjectMGameModeBase>(GM))
 	{
-
 		_gameMode->Respawn(_playerController);
-
+		Destroy();
 	}
 	
 }

@@ -92,11 +92,11 @@ void ABulletBase::OnProjectileImpact(UPrimitiveComponent* HitComponent, AActor* 
 {
 	if(OtherActor)
 	{
-		//for Teammates
+		//for Teammates take half hp
 		if(APlayerBase* player = Cast<APlayerBase>(OtherActor))
 		{
 			if(HasAuthority())
-			player->TakeDamage(_damage, FDamageEvent(), nullptr, this);
+			player->TakeDamage((_damage / 2), FDamageEvent(), nullptr, this);
 		}
 
 		if(AEnemyBase* enemy = Cast<AEnemyBase>(OtherActor))
@@ -104,11 +104,7 @@ void ABulletBase::OnProjectileImpact(UPrimitiveComponent* HitComponent, AActor* 
 			if (HasAuthority())
 				enemy->TakeDamage(_damage, FDamageEvent(), nullptr, this);
 		}
-	
-	
 		
-		//UGameplayStatics::ApplyPointDamage(OtherActor, _damage, NormalImpulse, Hit, GetInstigator()->Controller, this, _damageType);
-
 	}
 
 	Destroy();

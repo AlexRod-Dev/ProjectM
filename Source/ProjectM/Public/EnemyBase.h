@@ -39,10 +39,17 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Health")
 	void SetCurrentHealth(float _hpValue);
 
+	//Function for the attack
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void AttackPlayer();
+	
+	// Perform a Sphere Trace
+	void PerformSphereTrace();
 
 protected:
 	float _maxHealth;
 	float _currentHealth;
+	float _damage;
 
 	/** RepNotify for changes made to current health.*/
 	UFUNCTION()
@@ -59,6 +66,8 @@ protected:
 	void MultiDie();
 	void MultiDie_Implementation();
 
-
+	// Handle the Sphere Trace result
+	UFUNCTION()
+	void OnSphereTraceComplete(const TArray<FHitResult>& HitResults,float radius);
 
 };

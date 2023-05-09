@@ -15,7 +15,7 @@ UEnemyBTTask_FindClosestPlayer::UEnemyBTTask_FindClosestPlayer()
 	NodeName = TEXT("Find Closest Player");
 	
 	BlackboardKey.AddVectorFilter(this, GET_MEMBER_NAME_CHECKED(UEnemyBTTask_FindClosestPlayer, BlackboardKey));
-
+	
 	bNotifyTick = true;
 }
 
@@ -35,7 +35,16 @@ void UEnemyBTTask_FindClosestPlayer::TickTask(UBehaviorTreeComponent& OwnerComp,
 	
 	//Get AI Pawn            {  } is a modern way to initialize aka initializer list
 	AEnemyAIController* _aiEnemyController {(Cast<AEnemyAIController>(OwnerComp.GetAIOwner()))};
-	const APawn* _aiPawn {_aiEnemyController->GetPawn()};
+	if(_aiEnemyController == nullptr)
+	{
+		FinishLatentTask(OwnerComp,EBTNodeResult::Failed);
+	}
+	
+	APawn* _aiPawn {_aiEnemyController->GetPawn()};
+	if(_aiPawn == nullptr)
+	{
+		FinishLatentTask(OwnerComp,EBTNodeResult::Failed);
+	}
 
 	APawn* _closestPlayer{nullptr};
 	float _closestDistance{TNumericLimits<float>::Max()};
@@ -49,16 +58,19 @@ void UEnemyBTTask_FindClosestPlayer::TickTask(UBehaviorTreeComponent& OwnerComp,
 		{
 			
 			float _distance = FVector::Distance(_aiPawn->GetActorLocation(), _pawn->GetActorLocation());
-			//If this pawn is closer update the variable
+			//If this pawn is closer update the location variable
 			if(_distance<_closestDistance)
 			{
-				_closestPlayer = _pawn;
-				_closestDistance = _distance;
+					_closestPlayer = _pawn;
+					_closestDistance = _distance;
+		
 			}
 		}
 	}
-		_aiEnemyController->GetBlackboardComponent()->SetValueAsVector(BlackboardKey.SelectedKeyName, _closestPlayer->GetActorLocation());
-
+	if(_closestPlayer!=nullptr)
+	{
+		_aiEnemyController->GetBlackboardComponent()->SetValueAsVector("TargetLocation", _closestPlayer->GetActorLocation());
+	}
 	// Continue the task
 	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
 

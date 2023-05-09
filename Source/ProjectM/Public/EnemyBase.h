@@ -46,10 +46,18 @@ public:
 	// Perform a Sphere Trace
 	void PerformSphereTrace();
 
+	void StartAttackTimer();
+
 protected:
 	float _maxHealth;
 	float _currentHealth;
 	float _damage;
+
+	float _attackSpeed;
+	FTimerHandle AttackTimerHandle;
+	bool bIsAttacking;
+
+	
 
 	/** RepNotify for changes made to current health.*/
 	UFUNCTION()

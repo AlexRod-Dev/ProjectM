@@ -82,12 +82,23 @@ void UEnemyBTTask_ChasePlayer::TickTask(UBehaviorTreeComponent& OwnerComp, uint8
 		_aiEnemyController->MoveToLocation(_currentTargetLocation);
 		_previousTargetLocation = _currentTargetLocation;
 	}
-
 	
 	//check if ai has reached the location
-	// if(_aiEnemyController->GetPathFollowingComponent()->HasReachedDestination())
+	FVector _aiActorLocation = _aiPawn->GetActorLocation();
+	float _distanceToPlayer = FVector::Dist(_currentTargetLocation, _aiActorLocation);
+
+	UE_LOG(LogTemp, Warning, TEXT("Distance to player: %f"), _distanceToPlayer);
+	float _attackDistance = 80.0f;
+	if(_distanceToPlayer <= _attackDistance)
+	{
+		
+		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
+	}
+	// else
 	// {
-	// 	FinishLatentTask(OwnerComp,EBTNodeResult::Succeeded);
+	// 	FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 	// }
+	
+	
 
 }

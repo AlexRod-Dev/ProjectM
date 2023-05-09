@@ -17,6 +17,10 @@ AEnemyBase::AEnemyBase()
 	_currentHealth = _maxHealth;
 
 	_damage = 30.0f;
+
+	_attackSpeed = 1.0f;
+
+	bIsAttacking = false;
 }
 
 // Called when the game starts or when spawned
@@ -45,7 +49,12 @@ float AEnemyBase::TakeDamage(float _damageTaken, FDamageEvent const& DamageEvent
 
 void AEnemyBase::AttackPlayer()
 {
-	PerformSphereTrace();
+	if(bIsAttacking!=false)
+	{
+	
+		PerformSphereTrace();
+		bIsAttacking = true;
+	}
 }
 
 
@@ -125,6 +134,19 @@ void AEnemyBase::PerformSphereTrace()
 		// Handle the hit result
 		OnSphereTraceComplete(HitResults,Radius);
 	}
+
+	bIsAttacking = false;
+	
+}
+
+void AEnemyBase::StartAttackTimer()
+{
+	GetWorld()->GetTimerManager().ClearTimer(AttackTimerHandle);
+
+	float _attackInterval = 1.0f / _attackSpeed;
+
+	
+	GetWorld()->GetTimerManager().SetTimer(AttackTimerHandle, this, &AEnemyBase::AttackPlayer, _attackInterval, true);
 	
 }
 

@@ -26,12 +26,16 @@ void ACharacterController::BeginPlay()
 {
 	Super::BeginPlay();
 
+	bIsAlive = true;
+
 }
 
 // Called every frame
 void ACharacterController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	UE_LOG(LogTemp, Warning, TEXT("Controller Name: %s | is Alive: %s "), *GetName(),(GetIsAlive() ? TEXT("True") : TEXT("False")));
 
 }
 
@@ -55,8 +59,11 @@ void ACharacterController::MoveForward(float AxisValue)
 {
 	if(AxisValue != 0.0f)
 	{
-		APawn* const PlayerPawn = GetPawn();
-		PlayerPawn->AddMovementInput(FVector(1.0f,0.0f,0.0f), AxisValue);
+		APawn* const _playerPawn = GetPawn();
+		if(_playerPawn != nullptr)
+		{
+			_playerPawn->AddMovementInput(FVector(1.0f,0.0f,0.0f), AxisValue);
+		}
 		
 	}
 }
@@ -65,8 +72,11 @@ void ACharacterController::MoveRight(float AxisValue)
 {
 	if(AxisValue != 0.0f)
 	{
-		APawn* const PlayerPawn = GetPawn();
-		PlayerPawn->AddMovementInput(FVector(0.0f, 1.0f, 0.0f), AxisValue);
+		APawn* const _playerPawn = GetPawn();
+		if(_playerPawn != nullptr)
+		{
+			_playerPawn->AddMovementInput(FVector(0.0f, 1.0f, 0.0f), AxisValue);
+		}
 	}
 }
 
@@ -80,11 +90,13 @@ void ACharacterController::EnableControls()
 	EnableInput(this);
 }
 
+	bool ACharacterController::GetIsAlive()
+	{
+	return bIsAlive;
+	}
 
 
-
-
-void ACharacterController::StartShoot()
+	void ACharacterController::StartShoot()
 {
 
 	if (!bIsFiringWeapon)
@@ -106,17 +118,22 @@ void ACharacterController::StopShoot()
 
 void ACharacterController::HandleShoot_Implementation()
 {
-	APawn* const PlayerPawn = GetPawn();
+	APawn* const _playerPawn = GetPawn();
 
-	FVector _spawnLocation = PlayerPawn->GetActorLocation() + (PlayerPawn->GetActorForwardVector() * 50.0f);
-	FRotator _spawnRotation = PlayerPawn->GetActorRotation();
+	if(_playerPawn != nullptr)
+	{
+		FVector _spawnLocation = _playerPawn->GetActorLocation() + (_playerPawn->GetActorForwardVector() * 50.0f);
+		FRotator _spawnRotation = _playerPawn->GetActorRotation();
 	
-	FActorSpawnParameters _spawnParameters;
-	_spawnParameters.Instigator = GetInstigator();
-	_spawnParameters.Owner = this;
+		FActorSpawnParameters _spawnParameters;
+		_spawnParameters.Instigator = GetInstigator();
+		_spawnParameters.Owner = this;
 
-	ABulletBase* _spawnedBullet = GetWorld()->SpawnActor<ABulletBase>(_spawnLocation, _spawnRotation, _spawnParameters);
+		ABulletBase* _spawnedBullet = GetWorld()->SpawnActor<ABulletBase>(_spawnLocation, _spawnRotation, _spawnParameters);
 	
 
+	}
+	
+	
 }
 

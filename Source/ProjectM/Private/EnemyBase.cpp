@@ -4,6 +4,7 @@
 
 #include "PlayerBase.h"
 #include "Components/CapsuleComponent.h"
+#include "CharacterController.h"
 
 
 // Sets default values
@@ -42,8 +43,6 @@ float AEnemyBase::TakeDamage(float _damageTaken, FDamageEvent const& DamageEvent
 	float _damageApplied = _currentHealth - _damageTaken;
 	SetCurrentHealth(_damageApplied);
 
-	
-	
 	return _damageApplied;
 }
 
@@ -75,8 +74,10 @@ void AEnemyBase::OnHealthUpdate()
 	//All machines
 	if (_currentHealth <= 0)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("sup yall its me ded"));
+		UE_LOG(LogTemp, Warning, TEXT("sup yall its me its ded, hello ded im dad"));
 		Die();
+		
+		
 
 	}
 
@@ -90,6 +91,7 @@ void AEnemyBase::OnRep_CurrentHealth()
 void AEnemyBase::Die()
 {
 
+	
 	if (GetLocalRole() == ROLE_Authority)
 	{
 		MultiDie();

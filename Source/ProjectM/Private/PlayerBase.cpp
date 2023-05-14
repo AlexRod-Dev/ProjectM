@@ -142,15 +142,21 @@ void APlayerBase::SetCurrentHealth(float _hpValue)
 
 void APlayerBase::Die()
 {
-	bIsDead = true;
+	
+
 
 	//Disable Inputs
-	/*AController* _controller = GetController();
+	AController* _controller = GetInstigatorController();
 	ACharacterController* _playerController = Cast<ACharacterController>(_controller);
-	if (IsLocallyControlled())
+
+	if(_playerController != nullptr)
 	{
-		_playerController->DisableControls();
-	}*/
+		_playerController->bIsAlive = false;
+	}
+	// if (IsLocallyControlled())
+	// {
+	// 	_playerController->DisableControls();
+	// }
 
 	if(GetLocalRole() == ROLE_Authority)
 	{

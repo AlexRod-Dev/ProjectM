@@ -18,7 +18,6 @@ AProjectMGameModeBase::AProjectMGameModeBase()
 	PlayerControllerClass = ACharacterController::StaticClass();
 
 
-
 	// set default pawn class to our Blueprinted character
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBP(TEXT("/Game/Blueprints/BP_PlayerBase"));
 
@@ -127,33 +126,32 @@ void AProjectMGameModeBase::HandleStartingNewPlayer_Implementation(APlayerContro
 void AProjectMGameModeBase::Respawn(ACharacterController* _playerController)
 {
 	FTransform tSpawnTransform;
-	TArray<AActor*> _foundEntries;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACharacterController::StaticClass(), _foundEntries);
-
-	if(_foundEntries.Num() > 0)
+	
+	UWorld* _world = GetWorld();
+	if(_world != nullptr)
 	{
-		float randPlayerIndex = FMath::RandRange(0, _foundEntries.Num());
-
-		if(_foundEntries[randPlayerIndex])
-		tSpawnTransform = _foundEntries[randPlayerIndex]->GetActorTransform();
-		FVector Location = tSpawnTransform.GetLocation();
-
-		if(APawn* Pawn = GetWorld()->SpawnActor<APawn>(DefaultPawnClass, Location, FRotator::ZeroRotator))
+		for(FConstPlayerControllerIterator it = _world->GetPlayerControllerIterator(); it; ++it)
 		{
-			
-			_playerController->Possess(Pawn);
-		}
-	}else
-	{
-		UE_LOG(LogTemp,Warning, TEXT("You all ded"));
-	}
-	
-	
-	
-	
-	
-	
+			ACharacterController* _players = Cast<ACharacterController>(it->Get());
+			if(_players->GetIsAlive())
+			{
+				tSpawnTransform = _players->GetPawn()->GetActorTransform();
+				FVector Location = tSpawnTransform.GetLocation();
 
+				if(APawn* Pawn = GetWorld()->SpawnActor<APawn>(DefaultPawnClass, Location, FRotator::ZeroRotator))
+				{
+				 	_playerController->Possess(Pawn);
+				 	_playerController->bIsAlive = true;
+				 	break;
+				}
+			}
+			else
+			{
+				//means everyone is dead so end the game
+				UE_LOG(LogTemp,Warning, TEXT("You all ded"));
+			}
+		}
+	}
 }
 
 void AProjectMGameModeBase::CheckEnemyAlive()

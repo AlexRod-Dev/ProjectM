@@ -39,13 +39,17 @@ public:
 
 	void EnableControls();
 	
+	bool GetIsAlive();
 
+	bool bIsAlive;
 
 protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category="Gameplay|Projectile")
     TSubclassOf<class ABulletBase> _projectileClass;
 
+	
+	
 	// Delay between shots in seconds
     UPROPERTY(EditDefaultsOnly, Category="Gameplay")
     float _fireRate;

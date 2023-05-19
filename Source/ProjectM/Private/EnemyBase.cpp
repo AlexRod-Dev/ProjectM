@@ -5,6 +5,9 @@
 #include "PlayerBase.h"
 #include "Components/CapsuleComponent.h"
 #include "CharacterController.h"
+#include "../ProjectMGameModeBase.h"
+#include "Kismet/GameplayStatics.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 
 // Sets default values
@@ -17,11 +20,15 @@ AEnemyBase::AEnemyBase()
 
 	_currentHealth = _maxHealth;
 
-	_damage = 30.0f;
+	_damage = 25.0f;
 
 	_attackSpeed = 1.0f;
 
 	bIsAttacking = false;
+
+	
+	
+	
 }
 
 // Called when the game starts or when spawned
@@ -29,6 +36,14 @@ void AEnemyBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	AProjectMGameModeBase* _gameMode = Cast<AProjectMGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
+
+	if(_gameMode != nullptr)
+	{
+		bIsDead = false;
+		_gameMode->_enemyAlive++;
+	
+	}
 }
 
 // Called every frame
@@ -48,11 +63,10 @@ float AEnemyBase::TakeDamage(float _damageTaken, FDamageEvent const& DamageEvent
 
 void AEnemyBase::AttackPlayer()
 {
-	if(bIsAttacking!=false)
+	if(bIsAttacking!=true)
 	{
-	
 		PerformSphereTrace();
-		bIsAttacking = true;
+		bIsAttacking = false;
 	}
 }
 
@@ -76,9 +90,7 @@ void AEnemyBase::OnHealthUpdate()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("sup yall its me its ded, hello ded im dad"));
 		Die();
-		
-		
-
+	
 	}
 
 }
@@ -95,7 +107,22 @@ void AEnemyBase::Die()
 	if (GetLocalRole() == ROLE_Authority)
 	{
 		MultiDie();
-	
+
+		
+		AProjectMGameModeBase* _gameMode = Cast<AProjectMGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
+
+		if(_gameMode != nullptr)
+		{
+			if(bIsDead == false)
+			_gameMode->_enemyAlive--;
+
+			bIsDead = true;
+			_gameMode->CheckEnemyAlive();
+			GetWorld()->GetTimerManager().SetTimer(DestroyActorTimerHandle, this, &AEnemyBase::DestroyActor, 25, false);
+		
+			
+		}
+
 	}
 
 
@@ -115,28 +142,26 @@ void AEnemyBase::MultiDie_Implementation()
 void AEnemyBase::PerformSphereTrace()
 {
 	FVector StartLocation = GetActorLocation();
-	FVector EndLocation = GetActorForwardVector() * 250.0f; 
-	float Radius = 100.f;
+	FVector EndLocation = GetActorLocation();
+	float Radius = 75.f;
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(this);  // Ignore the current character
 	TArray<FHitResult> HitResults;
 
-	// Perform the Sphere Trace
-	bool bHit = GetWorld()->SweepMultiByChannel(HitResults, StartLocation,
-		EndLocation,
-		FQuat::Identity,
-		ECC_Pawn,  // Example collision channel
-		FCollisionShape::MakeSphere(Radius),
-		Params
-	);
-
-	if (bHit)
-	{
+//	if(HasAuthority())
+//	{
 		
-		// Handle the hit result
-		OnSphereTraceComplete(HitResults,Radius);
-	}
-
+		// Perform the Sphere Trace
+		bool bHit = GetWorld()->SweepMultiByChannel(HitResults, StartLocation, EndLocation,FQuat::Identity, ECC_Pawn,FCollisionShape::MakeSphere(Radius),Params);
+		
+		if (bHit)
+		{
+			// Handle the hit result
+			OnSphereTraceComplete(HitResults,Radius);
+		}
+	
+	
+//	}
 	bIsAttacking = false;
 	
 }
@@ -155,8 +180,6 @@ void AEnemyBase::StartAttackTimer()
 void AEnemyBase::OnSphereTraceComplete(const TArray<FHitResult>& HitResults, float radius)
 {
 	// Handle the hit result here
-	// You can access information such as HitResult.Actor, HitResult.Location, etc.
-	
 	for(const FHitResult& HitResult : HitResults)
 	{
 		AActor* HitActor = HitResult.GetActor();
@@ -166,10 +189,10 @@ void AEnemyBase::OnSphereTraceComplete(const TArray<FHitResult>& HitResults, flo
 		if(HitActor && HitActor->IsA(APlayerBase::StaticClass()))
 		{
 		
-			APlayerBase* HitCharacter = Cast<APlayerBase>(HitActor);
-			if(HitCharacter)
+			APlayerBase* _hitPlayer = Cast<APlayerBase>(HitActor);
+			if(_hitPlayer)
 			{
-				HitCharacter->TakeDamage((_damage), FDamageEvent(), nullptr, this);
+				_hitPlayer->TakeDamage((_damage), FDamageEvent(), nullptr, this);
 			}
 			else
 			{
@@ -177,16 +200,47 @@ void AEnemyBase::OnSphereTraceComplete(const TArray<FHitResult>& HitResults, flo
 		
 			}
 		}
-		// Example: Draw a debug sphere at the hit location
-	
+		
+		// Draw debug sphere
 		FColor SphereColor = FColor::Red;
-	
-		DrawDebugSphere(GetWorld(), HitResult.Location, radius, 16, SphereColor, false, 5.f);
+		//DrawDebugSphere(GetWorld(), HitResult.Location, radius, 16, SphereColor, false, 2.f);
 	
 	}
 
 
 }
 
+
+
+void AEnemyBase::ApplyKnockback(FVector KnockbackDirection, float KnockbackStrength)
+{
+	// Normalize the knockback direction and apply the knockback strength
+	FVector KnockbackForce = KnockbackDirection.GetSafeNormal() * KnockbackStrength;
+
+	// Apply the knockback force to the character's movement component
+	UCharacterMovementComponent* _characterMovement = GetCharacterMovement();
+	if (_characterMovement)
+	{
+		UE_LOG(LogTemp,Warning, TEXT("character movement : %p"), _characterMovement)
+		_characterMovement->AddImpulse(KnockbackForce, true);
+	}
+}
+
+bool AEnemyBase::MultiApplyKnockback_Validate(FVector KnockbackDirection, float KnockbackStrength)
+{
+	return true;
+}
+
+void AEnemyBase::MultiApplyKnockback_Implementation(FVector KnockbackDirection, float KnockbackStrength)
+{
+	// Call the original ApplyKnockback function to apply the effect on the server
+	ApplyKnockback(KnockbackDirection, KnockbackStrength);
+}
+
+void AEnemyBase::DestroyActor()
+{
+	GetWorld()->GetTimerManager().ClearTimer(DestroyActorTimerHandle);
+	Destroy();
+}
 
 

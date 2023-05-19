@@ -40,7 +40,7 @@ public:
 
     // Particle used when the projectile impacts against another object and explodes.
     UPROPERTY(EditAnywhere, Category = "Effects")
-    class UParticleSystem* _explosionEffect;
+    class UParticleSystem* _bloodEffect;
 
 	//The damage type and damage that will be done by this projectile
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Damage")

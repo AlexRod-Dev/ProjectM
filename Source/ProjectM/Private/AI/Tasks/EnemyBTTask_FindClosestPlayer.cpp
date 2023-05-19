@@ -8,6 +8,7 @@
 #include "EngineUtils.h"
 #include "NavigationSystem.h"
 #include "PlayerBase.h"
+#include "CharacterController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
 UEnemyBTTask_FindClosestPlayer::UEnemyBTTask_FindClosestPlayer()
@@ -49,28 +50,53 @@ void UEnemyBTTask_FindClosestPlayer::TickTask(UBehaviorTreeComponent& OwnerComp,
 	APawn* _closestPlayer{nullptr};
 	float _closestDistance{TNumericLimits<float>::Max()};
 
-	//Iterate over all pawns in the world
-	for(TActorIterator<APlayerBase> It(GetWorld()); It; ++It)
+	UWorld* _world = GetWorld();
+	if(_world != nullptr)
 	{
-		APawn* _pawn = *It;
-		//Ignore own pawn
-		if(_pawn != _aiPawn)
+		for(FConstPlayerControllerIterator it = _world->GetPlayerControllerIterator(); it; ++it)
 		{
-			
-			float _distance = FVector::Distance(_aiPawn->GetActorLocation(), _pawn->GetActorLocation());
-			//If this pawn is closer update the location variable
-			if(_distance<_closestDistance)
+			ACharacterController* _players = Cast<ACharacterController>(it->Get());
+			if(_players->GetIsAlive())
 			{
-					_closestPlayer = _pawn;
-					_closestDistance = _distance;
-		
+				APawn* _pawn = _players->GetPawn();
+				float _distance = FVector::Distance(_aiPawn->GetActorLocation(), _pawn->GetActorLocation());
+
+				//If this pawn is closer update the location variable
+				 	if(_distance<_closestDistance)
+				 	{
+				 		_closestPlayer = _pawn;
+				 		_closestDistance = _distance;
+				 	}
 			}
 		}
+		if(_closestPlayer!=nullptr)
+			{
+				_aiEnemyController->GetBlackboardComponent()->SetValueAsVector("TargetLocation", _closestPlayer->GetActorLocation());
+			}
 	}
-	if(_closestPlayer!=nullptr)
-	{
-		_aiEnemyController->GetBlackboardComponent()->SetValueAsVector("TargetLocation", _closestPlayer->GetActorLocation());
-	}
+	
+	// //Iterate over all pawns in the world
+	// for(TActorIterator<APlayerBase> It(GetWorld()); It; ++It)
+	// {
+	// 	APawn* _pawn = *It;
+	// 	//Ignore own pawn
+	// 	if(_pawn != _aiPawn)
+	// 	{
+	// 		
+	// 		float _distance = FVector::Distance(_aiPawn->GetActorLocation(), _pawn->GetActorLocation());
+	// 		//If this pawn is closer update the location variable
+	// 		if(_distance<_closestDistance)
+	// 		{
+	// 				_closestPlayer = _pawn;
+	// 				_closestDistance = _distance;
+	// 	
+	// 		}
+	// 	}
+	// }
+	// if(_closestPlayer!=nullptr)
+	// {
+	// 	_aiEnemyController->GetBlackboardComponent()->SetValueAsVector("TargetLocation", _closestPlayer->GetActorLocation());
+	// }
 	// Continue the task
 	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
 

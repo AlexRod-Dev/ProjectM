@@ -38,7 +38,6 @@ void AEnemyAIController::OnPossess(APawn* InPawn)
 	if(IsValid(Blackboard.Get()) && IsValid(_behaviorTree.Get()))
 	{
 		Blackboard->InitializeBlackboard(*_behaviorTree.Get()->BlackboardAsset.Get());
-		UE_LOG(LogTemp, Warning, TEXT("Encontrei o pawn"));
 	}
 
 }

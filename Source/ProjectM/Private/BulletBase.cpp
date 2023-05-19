@@ -49,10 +49,10 @@ ABulletBase::ABulletBase()
 		StaticMesh->SetRelativeScale3D(FVector(0.1f, 0.1f, 0.1f));
 	}
 
-	static ConstructorHelpers::FObjectFinder<UParticleSystem> DefaultExplosionEffect(TEXT("/Game/StarterContent/Particles/P_Explosion.P_Explosion"));
-	if (DefaultExplosionEffect.Succeeded())
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> DefaultBloodEffect(TEXT("/Game/StarterContent/Particles/P_Blood_Splat_Cone.P_Blood_Splat_Cone"));
+	if (DefaultBloodEffect.Succeeded())
 	{
-		_explosionEffect = DefaultExplosionEffect.Object;
+		_bloodEffect = DefaultBloodEffect.Object;
 	}
 
 	//Definition for the Projectile Movement Component.
@@ -76,9 +76,7 @@ void ABulletBase::BeginPlay()
 
 void ABulletBase::Destroyed()
 {
-	FVector _spawnLocation = GetActorLocation();
-	UGameplayStatics::SpawnEmitterAtLocation(this, _explosionEffect, _spawnLocation, FRotator::ZeroRotator, true, EPSCPoolMethod::AutoRelease);
-
+	
 }
 
 // Called every frame
@@ -97,12 +95,35 @@ void ABulletBase::OnProjectileImpact(UPrimitiveComponent* HitComponent, AActor* 
 		{
 			if(HasAuthority())
 			player->TakeDamage((_damage / 2), FDamageEvent(), nullptr, this);
+
+			FVector _spawnLocation = GetActorLocation();
+			UGameplayStatics::SpawnEmitterAtLocation(this, _bloodEffect, _spawnLocation, FRotator::ZeroRotator, true, EPSCPoolMethod::AutoRelease);
+
 		}
 
 		if(AEnemyBase* enemy = Cast<AEnemyBase>(OtherActor))
 		{
+			//calculate knockback direction
+			//FVector _knockbackDirection = enemy->GetActorLocation() - OtherActor->GetActorLocation();
+			FVector _knockbackDirection = enemy->GetActorForwardVector() * -1;
+		//	_knockbackDirection.Normalize();
+			//Apply knockback force
+			float _knockbackForce = 1000.0f;
+			
 			if (HasAuthority())
+			{
 				enemy->TakeDamage(_damage, FDamageEvent(), nullptr, this);
+				
+				
+				
+			}
+			enemy->MultiApplyKnockback(_knockbackDirection,_knockbackForce);
+			enemy->ApplyKnockback(_knockbackDirection,_knockbackForce);
+			// Call the MultiApplyKnockback function to apply the knockback effect
+			
+			FVector _spawnLocation = GetActorLocation();
+			UGameplayStatics::SpawnEmitterAtLocation(this, _bloodEffect, _spawnLocation, FRotator::ZeroRotator, true, EPSCPoolMethod::AutoRelease);
+
 		}
 		
 	}
@@ -110,4 +131,6 @@ void ABulletBase::OnProjectileImpact(UPrimitiveComponent* HitComponent, AActor* 
 	Destroy();
 
 }
+
+
 

@@ -48,14 +48,24 @@ public:
 
 	void StartAttackTimer();
 
+	UFUNCTION(BlueprintCallable, Category = "Knockback")
+	void ApplyKnockback(FVector KnockbackDirection, float KnockbackStrength);
+	
+	UFUNCTION(Server, Reliable, WithValidation, BlueprintCallable, Category = "Knockback")
+	void MultiApplyKnockback(FVector KnockbackDirection, float KnockbackStrength);
+
+	
+
 protected:
 	float _maxHealth;
 	float _currentHealth;
 	float _damage;
+	bool bIsDead;
 
 	float _attackSpeed;
 	FTimerHandle AttackTimerHandle;
 	bool bIsAttacking;
+	FTimerHandle DestroyActorTimerHandle;
 
 	
 
@@ -74,8 +84,12 @@ protected:
 	void MultiDie();
 	void MultiDie_Implementation();
 
+
+
 	// Handle the Sphere Trace result
 	UFUNCTION()
 	void OnSphereTraceComplete(const TArray<FHitResult>& HitResults,float radius);
 
+private:
+	void DestroyActor();
 };

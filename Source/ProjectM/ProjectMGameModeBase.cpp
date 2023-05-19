@@ -8,6 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Engine/Engine.h"
 #include "Containers/Array.h"
+#include "EnemySpawner.h"
 #include "Kismet/KismetMathLibrary.h"
 
 
@@ -48,26 +49,11 @@ void AProjectMGameModeBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	_enemyTimer -= DeltaTime;
+	if(GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Blue, FString::Printf(TEXT("Enemies Alive: %d"), _enemyAlive));
 
-	if(_enemyTimer < 0.0f)
-	{
-		_enemyTimer = 5.0f;
-
-		UWorld* _world = GetWorld();
-
-		if(_world)
-		{
-
-			//Enemy Spawned (Change static location to  dynamic
-			FVector _enemySpawnLocation = FVector(-2100.0f, 70.0f, 0.0f);
-			_world->SpawnActor<AEnemyBase>(EnemyBlueprint, _enemySpawnLocation, FRotator::ZeroRotator);
-			
-
-		}
-	}
+	CheckEnemyAlive();
 	
-
 
 }
 
@@ -156,4 +142,12 @@ void AProjectMGameModeBase::Respawn(ACharacterController* _playerController)
 
 void AProjectMGameModeBase::CheckEnemyAlive()
 {
+	if(_enemyAlive == 0)
+	{
+
+		fSpawnEnemy.Broadcast();
+		UE_LOG(LogTemp,Warning, TEXT("All enemies dead"));
+		
+
+	}
 }

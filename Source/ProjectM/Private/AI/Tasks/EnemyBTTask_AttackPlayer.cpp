@@ -25,6 +25,7 @@ EBTNodeResult::Type UEnemyBTTask_AttackPlayer::ExecuteTask(UBehaviorTreeComponen
 	if(EnemyPawn)
 	{
 		EnemyPawn->PerformSphereTrace();
+	
 	}
 	
 

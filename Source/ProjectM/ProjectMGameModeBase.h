@@ -11,6 +11,7 @@
 
 #include "ProjectMGameModeBase.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FSpawnEnemy);
 
 UCLASS()
 class PROJECTM_API AProjectMGameModeBase : public AGameModeBase
@@ -22,13 +23,15 @@ class PROJECTM_API AProjectMGameModeBase : public AGameModeBase
 public:
 	AProjectMGameModeBase();
 
-	UPROPERTY(EditAnywhere, Category = "Spawn")
-	TSubclassOf<class AEnemyBase>EnemyBlueprint;
 
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void BeginPlay() override;
 
+	UPROPERTY(BlueprintAssignable, Category = "MyEvent")
+	FSpawnEnemy fSpawnEnemy;
+
+	
 
 protected:
 
@@ -44,6 +47,8 @@ public:
 	float _enemyTimer;
 
 	int32 _enemyAlive;
+
+	int32 _waveCount;
 
 
 };

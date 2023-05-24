@@ -44,9 +44,16 @@ void AEnemySpawner::SpawnEnemy()
 				_world->SpawnActor<AEnemyBase>(BasicEnemyBlueprint, _enemySpawnLocation, FRotator::ZeroRotator);
 			}
 	}
+
+	AProjectMGameModeBase* _gameMode = Cast<AProjectMGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
+
+	TArray<AActor*> _foundEntries;
 	
-	_enemiesToSpawn = ++_enemyIncrement;
-	
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACharacterController::StaticClass(), _foundEntries);
+	int32 _players = _foundEntries.Num();
+
+	_enemiesToSpawn = ++_enemyIncrement + _players;
+	_gameMode->_waveCount++;
 }
 
 // Called every frame

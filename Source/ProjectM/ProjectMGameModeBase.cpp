@@ -15,9 +15,10 @@
 
 AProjectMGameModeBase::AProjectMGameModeBase()
 {
-	//use our custom PlayerController class
+	//use our custom PlayerControllesr class
 	PlayerControllerClass = ACharacterController::StaticClass();
 
+	_waveCount = -2;
 
 	// set default pawn class to our Blueprinted character
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBP(TEXT("/Game/Blueprints/BP_PlayerBase"));
@@ -45,12 +46,17 @@ void AProjectMGameModeBase::BeginPlay()
 
 }
 
+void AProjectMGameModeBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+		DOREPLIFETIME(AProjectMGameModeBase, _enemyAlive);
+		DOREPLIFETIME(AProjectMGameModeBase, _waveCount);
+}
+
 void AProjectMGameModeBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if(GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Blue, FString::Printf(TEXT("Enemies Alive: %d"), _enemyAlive));
 
 	CheckEnemyAlive();
 	
@@ -142,12 +148,20 @@ void AProjectMGameModeBase::Respawn(ACharacterController* _playerController)
 
 void AProjectMGameModeBase::CheckEnemyAlive()
 {
-	if(_enemyAlive == 0)
+	if(_enemyAlive >= 0)
 	{
 
 		fSpawnEnemy.Broadcast();
-		UE_LOG(LogTemp,Warning, TEXT("All enemies dead"));
-		
 
 	}
+}
+
+void AProjectMGameModeBase::UpdateEnemiesAlive_Implementation(int32 _enemies)
+{
+	_enemyAlive = _enemies;
+}
+
+bool AProjectMGameModeBase::UpdateEnemiesAlive_Validate(int32 _newValue)
+{
+	return true;
 }

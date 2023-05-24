@@ -28,6 +28,9 @@ public:
 
 	virtual void BeginPlay() override;
 
+	/** Property replication */
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 	UPROPERTY(BlueprintAssignable, Category = "MyEvent")
 	FSpawnEnemy fSpawnEnemy;
 
@@ -46,9 +49,21 @@ public:
 		
 	float _enemyTimer;
 
+	UPROPERTY(BlueprintReadWrite,Replicated, Category="spawn")
 	int32 _enemyAlive;
 
+	UPROPERTY(BlueprintReadWrite,Replicated, Category="Spawn")
 	int32 _waveCount;
 
+	//Getter for Current Enemies Alive
+	UFUNCTION(BlueprintPure, Category = "Spawn")
+	FORCEINLINE float GetCurrentEnemyAlive() const { return _enemyAlive; }
 
+	//Getter for Current Wave
+	UFUNCTION(BlueprintPure, Category = "Spawn")
+	FORCEINLINE float GetCurrentWave() const { return _waveCount; }
+
+	UFUNCTION(Server,Reliable, WithValidation)
+	void UpdateEnemiesAlive(int32 _enemies);
+	
 };

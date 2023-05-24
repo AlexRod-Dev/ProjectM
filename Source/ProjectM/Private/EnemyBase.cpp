@@ -42,6 +42,7 @@ void AEnemyBase::BeginPlay()
 	{
 		bIsDead = false;
 		_gameMode->_enemyAlive++;
+		_gameMode->UpdateEnemiesAlive(_gameMode->_enemyAlive);
 	
 	}
 }

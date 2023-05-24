@@ -95,19 +95,6 @@ void APlayerBase::GetLifetimeReplicatedProps(TArray <FLifetimeProperty>& OutLife
 
 void APlayerBase::OnHealthUpdate()
 {
-
-	
-		////Client Specific functionality
-		//if (IsLocallyControlled())
-		//{
-		//}
-
-		////Server specific functionality
-		//if (GetLocalRole() == ROLE_Authority)
-		//{
-		//}
-
-
 		//All machines
 		if (_currentHealth <= 0)
 		{
@@ -115,7 +102,15 @@ void APlayerBase::OnHealthUpdate()
 			
 		}
 
-	
+	////Client Specific functionality
+	//if (IsLocallyControlled())
+	//{
+	//}
+
+	////Server specific functionality
+	//if (GetLocalRole() == ROLE_Authority) or if(HasAuthority())
+	//{
+	//}
 
 }
 

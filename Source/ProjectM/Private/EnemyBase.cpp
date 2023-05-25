@@ -5,8 +5,7 @@
 #include "PlayerBase.h"
 #include "Components/CapsuleComponent.h"
 #include "CharacterController.h"
-#include "../ProjectMGameModeBase.h"
-#include "Kismet/GameplayStatics.h"
+#include "ProjectMGameStateBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 
@@ -25,26 +24,20 @@ AEnemyBase::AEnemyBase()
 	_attackSpeed = 1.0f;
 
 	bIsAttacking = false;
-
-	
-	
-	
 }
 
 // Called when the game starts or when spawned
 void AEnemyBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	AProjectMGameModeBase* _gameMode = Cast<AProjectMGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
 
-	if(_gameMode != nullptr)
-	{
-		bIsDead = false;
-		_gameMode->_enemyAlive++;
-		_gameMode->UpdateEnemiesAlive(_gameMode->_enemyAlive);
+	bIsAlive = true;
+
 	
-	}
+	
+		GetWorld()->GetGameState<AProjectMGameStateBase>()->UpdateEnemiesAlive(1);
+	
+		
 }
 
 // Called every frame
@@ -56,7 +49,12 @@ void AEnemyBase::Tick(float DeltaTime)
 
 float AEnemyBase::TakeDamage(float _damageTaken, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* _otherActor)
 {
+
+
+	
 	float _damageApplied = _currentHealth - _damageTaken;
+	
+	if(bIsAlive)
 	SetCurrentHealth(_damageApplied);
 
 	return _damageApplied;
@@ -103,30 +101,12 @@ void AEnemyBase::OnRep_CurrentHealth()
 
 void AEnemyBase::Die()
 {
-
-	
-	if (GetLocalRole() == ROLE_Authority)
+	bIsAlive = false;
+	if (HasAuthority())
 	{
+		GetWorld()->GetGameState<AProjectMGameStateBase>()->UpdateEnemiesAlive(-1);
 		MultiDie();
-
-		
-		AProjectMGameModeBase* _gameMode = Cast<AProjectMGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
-
-		if(_gameMode != nullptr)
-		{
-			if(bIsDead == false)
-			_gameMode->_enemyAlive--;
-
-			bIsDead = true;
-			_gameMode->CheckEnemyAlive();
-			GetWorld()->GetTimerManager().SetTimer(DestroyActorTimerHandle, this, &AEnemyBase::DestroyActor, 25, false);
-		
-			
-		}
-
 	}
-
-
 }
 
 void AEnemyBase::MultiDie_Implementation()
@@ -211,8 +191,6 @@ void AEnemyBase::OnSphereTraceComplete(const TArray<FHitResult>& HitResults, flo
 
 }
 
-
-
 void AEnemyBase::ApplyKnockback(FVector KnockbackDirection, float KnockbackStrength)
 {
 	// Normalize the knockback direction and apply the knockback strength
@@ -235,13 +213,18 @@ bool AEnemyBase::MultiApplyKnockback_Validate(FVector KnockbackDirection, float 
 void AEnemyBase::MultiApplyKnockback_Implementation(FVector KnockbackDirection, float KnockbackStrength)
 {
 	// Call the original ApplyKnockback function to apply the effect on the server
-	ApplyKnockback(KnockbackDirection, KnockbackStrength);
+	//ApplyKnockback(KnockbackDirection, KnockbackStrength);
+
+	// Normalize the knockback direction and apply the knockback strength
+	FVector KnockbackForce = KnockbackDirection.GetSafeNormal() * KnockbackStrength;
+
+	// Apply the knockback force to the character's movement component
+	UCharacterMovementComponent* _characterMovement = GetCharacterMovement();
+	if (_characterMovement)
+	{
+		_characterMovement->AddImpulse(KnockbackForce, true);
+	}
 }
 
-void AEnemyBase::DestroyActor()
-{
-	GetWorld()->GetTimerManager().ClearTimer(DestroyActorTimerHandle);
-	Destroy();
-}
 
 

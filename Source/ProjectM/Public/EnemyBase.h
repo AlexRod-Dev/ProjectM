@@ -54,19 +54,19 @@ public:
 	UFUNCTION(Server, Reliable, WithValidation, BlueprintCallable, Category = "Knockback")
 	void MultiApplyKnockback(FVector KnockbackDirection, float KnockbackStrength);
 
+	bool IsAlive(){return bIsAlive;}
 	
 
 protected:
 	float _maxHealth;
 	float _currentHealth;
 	float _damage;
-	bool bIsDead;
 
 	float _attackSpeed;
 	FTimerHandle AttackTimerHandle;
 	bool bIsAttacking;
-	FTimerHandle DestroyActorTimerHandle;
 
+	bool bIsAlive;
 	
 
 	/** RepNotify for changes made to current health.*/
@@ -90,6 +90,4 @@ protected:
 	UFUNCTION()
 	void OnSphereTraceComplete(const TArray<FHitResult>& HitResults,float radius);
 
-private:
-	void DestroyActor();
 };

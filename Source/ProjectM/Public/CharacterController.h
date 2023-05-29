@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Templates/SubclassOf.h"
 #include "GameFramework/PlayerController.h"
-#include "BulletBase.h"
+#include "Net/UnrealNetwork.h"
 #include "CharacterController.generated.h"
 
 UCLASS()
@@ -43,12 +43,11 @@ public:
 
 	bool bIsAlive;
 
+
 protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category="Gameplay|Projectile")
     TSubclassOf<class ABulletBase> _projectileClass;
-
-	
 	
 	// Delay between shots in seconds
     UPROPERTY(EditDefaultsOnly, Category="Gameplay")

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "CharacterController.h"
 #include "EnemyBase.generated.h"
 
 UCLASS()
@@ -23,6 +24,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	ACharacterController* _damagedFrom;
+	
 	//Event for Taking Damage
 	UFUNCTION(BlueprintCallable, Category = "Health")
 	virtual float TakeDamage(float _damageTaken, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* _otherActor) override;
@@ -55,7 +58,8 @@ public:
 	void MultiApplyKnockback(FVector KnockbackDirection, float KnockbackStrength);
 
 	bool IsAlive(){return bIsAlive;}
-	
+
+
 
 protected:
 	float _maxHealth;

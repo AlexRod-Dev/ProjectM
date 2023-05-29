@@ -3,6 +3,7 @@
 
 #include "ProjectMGameModeBase.h"
 #include "CharacterController.h"
+#include "ProjectMPlayerState.h"
 #include "UObject/SoftObjectPtr.h"
 #include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
@@ -16,6 +17,9 @@ AProjectMGameModeBase::AProjectMGameModeBase()
 {
 	//use our custom PlayerController class
 	PlayerControllerClass = ACharacterController::StaticClass();
+
+	//Use custom playerState
+	PlayerStateClass = AProjectMPlayerState::StaticClass();
 
 
 	// set default pawn class to our Blueprinted character

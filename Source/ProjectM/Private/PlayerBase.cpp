@@ -103,7 +103,7 @@ void APlayerBase::OnHealthUpdate()
 		//}
 
 		////Server specific functionality
-		//if (GetLocalRole() == ROLE_Authority)
+		//if (HasAuthority())
 		//{
 		//}
 

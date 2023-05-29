@@ -4,8 +4,8 @@
 
 #include "PlayerBase.h"
 #include "Components/CapsuleComponent.h"
-#include "CharacterController.h"
 #include "ProjectMGameStateBase.h"
+#include "ProjectMPlayerState.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 
@@ -24,6 +24,8 @@ AEnemyBase::AEnemyBase()
 	_attackSpeed = 1.0f;
 
 	bIsAttacking = false;
+	
+	_damagedFrom = nullptr;
 }
 
 // Called when the game starts or when spawned
@@ -33,11 +35,8 @@ void AEnemyBase::BeginPlay()
 
 	bIsAlive = true;
 
+	GetWorld()->GetGameState<AProjectMGameStateBase>()->UpdateEnemiesAlive(1);
 	
-	
-		GetWorld()->GetGameState<AProjectMGameStateBase>()->UpdateEnemiesAlive(1);
-	
-		
 }
 
 // Called every frame
@@ -47,10 +46,14 @@ void AEnemyBase::Tick(float DeltaTime)
 
 }
 
-float AEnemyBase::TakeDamage(float _damageTaken, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* _otherActor)
+float AEnemyBase::TakeDamage(float _damageTaken, FDamageEvent const& DamageEvent, AController* _instigatorController, AActor* _otherActor)
 {
+	AController* _controller =_otherActor->GetInstigatorController();
 
-
+	if(_instigatorController != nullptr)
+	{
+		_damagedFrom = Cast<ACharacterController>(_instigatorController);
+	}
 	
 	float _damageApplied = _currentHealth - _damageTaken;
 	
@@ -74,7 +77,7 @@ void AEnemyBase::AttackPlayer()
 
 void AEnemyBase::SetCurrentHealth(float _hpValue)
 {
-	if (GetLocalRole() == ROLE_Authority)
+	if (HasAuthority())
 	{
 		_currentHealth = FMath::Clamp(_hpValue, 0.f, _maxHealth);
 		OnHealthUpdate();
@@ -87,9 +90,7 @@ void AEnemyBase::OnHealthUpdate()
 	//All machines
 	if (_currentHealth <= 0)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("sup yall its me its ded, hello ded im dad"));
 		Die();
-	
 	}
 
 }
@@ -102,9 +103,24 @@ void AEnemyBase::OnRep_CurrentHealth()
 void AEnemyBase::Die()
 {
 	bIsAlive = false;
+	UWorld* _world = GetWorld();
+	if(_world)
+	{
+		int32 _waveNumber = Cast<AProjectMGameStateBase>(_world->GetGameState())->GetCurrentWave();
+	
+		if(_damagedFrom !=nullptr)
+		{
+		
+			_damagedFrom->GetPlayerState<AProjectMPlayerState>()->AddScore(1+_waveNumber);
+			//	Cast<AProjectMPlayerState>(_damagedFrom->PlayerState)->AddScore(1 + _waveNumber);
+		}
+		
+	}
+	
+	
 	if (HasAuthority())
 	{
-		GetWorld()->GetGameState<AProjectMGameStateBase>()->UpdateEnemiesAlive(-1);
+		_world->GetGameState<AProjectMGameStateBase>()->UpdateEnemiesAlive(-1);
 		MultiDie();
 	}
 }

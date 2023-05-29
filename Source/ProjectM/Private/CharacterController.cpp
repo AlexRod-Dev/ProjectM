@@ -3,9 +3,12 @@
 
 #include "CharacterController.h"
 #include "GameFramework/Pawn.h"
+#include "BulletBase.h"
 #include "PlayerBase.h"
+#include "ProjectMGameStateBase.h"
+#include "ProjectMPlayerState.h"
 
-// Sets default values
+	// Sets default values
 ACharacterController::ACharacterController()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -35,8 +38,20 @@ void ACharacterController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	UE_LOG(LogTemp, Warning, TEXT("Controller Name: %s | is Alive: %s "), *GetName(),(GetIsAlive() ? TEXT("True") : TEXT("False")));
+	//UE_LOG(LogTemp, Warning, TEXT("Controller Name: %s | is Alive: %s "), *GetName(),(GetIsAlive() ? TEXT("True") : TEXT("False")));
 
+	// Get the player state from the controller and cast it to our custom class type
+	AProjectMPlayerState* _playerState = Cast<AProjectMPlayerState>(GetPlayerState<AProjectMPlayerState>());
+
+	// Check if the custom player state is valid
+	if (_playerState != nullptr)
+	{
+		// Access the custom player state's properties or functions
+		int32 Score = _playerState->GetScore();
+		UE_LOG(LogTemp,Warning,TEXT("Score: %d"), Score);
+		
+	}
+	
 }
 
 // Called to bind functionality to input
@@ -95,6 +110,7 @@ void ACharacterController::EnableControls()
 	return bIsAlive;
 	}
 
+	
 
 	void ACharacterController::StartShoot()
 {
@@ -130,10 +146,16 @@ void ACharacterController::HandleShoot_Implementation()
 		_spawnParameters.Owner = this;
 
 		ABulletBase* _spawnedBullet = GetWorld()->SpawnActor<ABulletBase>(_spawnLocation, _spawnRotation, _spawnParameters);
-	
+
+			if(_spawnedBullet)
+			{
+				_spawnedBullet->_instigatorController =	Cast<ACharacterController>(this);
+			}
 
 	}
 	
 	
 }
+
+
 

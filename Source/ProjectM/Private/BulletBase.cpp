@@ -2,6 +2,7 @@
 
 
 #include "BulletBase.h"
+
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
@@ -104,15 +105,15 @@ void ABulletBase::OnProjectileImpact(UPrimitiveComponent* HitComponent, AActor* 
 		if(AEnemyBase* enemy = Cast<AEnemyBase>(OtherActor))
 		{
 			//calculate knockback direction
-			//FVector _knockbackDirection = enemy->GetActorLocation() - OtherActor->GetActorLocation();
-			FVector _knockbackDirection = enemy->GetActorForwardVector() * -1;
-		//	_knockbackDirection.Normalize();
+			FVector _knockbackDirection = enemy->GetActorLocation() - OtherActor->GetActorLocation();
+			_knockbackDirection.Normalize();
 			//Apply knockback force
 			float _knockbackForce = 1000.0f;
 			
 			if (HasAuthority())
 			{
-				enemy->TakeDamage(_damage, FDamageEvent(), nullptr, this);
+				
+				enemy->TakeDamage(_damage, FDamageEvent(), _instigatorController, this);
 				
 				
 				

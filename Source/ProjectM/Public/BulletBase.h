@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "CharacterController.h"
 #include "BulletBase.generated.h"
 
 UCLASS()
@@ -50,7 +51,8 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Damage")
     float _damage;
 
-
+	UPROPERTY(BlueprintReadWrite, Category = "Bullet")
+	 ACharacterController* _instigatorController;
 
 protected:
 	UFUNCTION(Category="Projectile")

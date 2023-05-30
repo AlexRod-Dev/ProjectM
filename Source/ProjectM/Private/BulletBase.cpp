@@ -104,22 +104,15 @@ void ABulletBase::OnProjectileImpact(UPrimitiveComponent* HitComponent, AActor* 
 
 		if(AEnemyBase* enemy = Cast<AEnemyBase>(OtherActor))
 		{
-			//calculate knockback direction
-			FVector _knockbackDirection = enemy->GetActorLocation() - OtherActor->GetActorLocation();
-			_knockbackDirection.Normalize();
-			//Apply knockback force
-			float _knockbackForce = 1000.0f;
-			
 			if (HasAuthority())
 			{
 				
 				enemy->TakeDamage(_damage, FDamageEvent(), _instigatorController, this);
-				
-				
-				
 			}
-			enemy->MultiApplyKnockback(_knockbackDirection,_knockbackForce);
-			enemy->ApplyKnockback(_knockbackDirection,_knockbackForce);
+
+			FVector _knockbackDirection = -Hit.Normal;
+			float _knockbackStrenght = 1000.f;
+			enemy->ApplyKnockback(_knockbackStrenght,_knockbackDirection);
 			// Call the MultiApplyKnockback function to apply the knockback effect
 			
 			FVector _spawnLocation = GetActorLocation();

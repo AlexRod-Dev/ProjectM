@@ -20,6 +20,10 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+private:
+	UPROPERTY(EditAnywhere, Category = "Health")
+	UClass* HealthPickupClass;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -52,11 +56,9 @@ public:
 	void StartAttackTimer();
 
 	UFUNCTION(BlueprintCallable, Category = "Knockback")
-	void ApplyKnockback(FVector KnockbackDirection, float KnockbackStrength);
+	void ApplyKnockback(float _knockbackStrength, FVector _knockbackDirection);
 	
-	UFUNCTION(Server, Reliable, WithValidation, BlueprintCallable, Category = "Knockback")
-	void MultiApplyKnockback(FVector KnockbackDirection, float KnockbackStrength);
-
+	
 	bool IsAlive(){return bIsAlive;}
 
 
@@ -88,10 +90,13 @@ protected:
 	void MultiDie();
 	void MultiDie_Implementation();
 
+	UFUNCTION(Server, Reliable, WithValidation, BlueprintCallable, Category = "Knockback")
+	void ServerApplyKnockback(float _knockbackStrength, FVector _knockbackDirection);
 
 
 	// Handle the Sphere Trace result
 	UFUNCTION()
 	void OnSphereTraceComplete(const TArray<FHitResult>& HitResults,float radius);
 
+	
 };

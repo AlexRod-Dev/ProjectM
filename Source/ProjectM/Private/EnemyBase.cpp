@@ -2,6 +2,8 @@
 
 #include "EnemyBase.h"
 
+#include "EnemyAIController.h"
+#include "HealthPickup.h"
 #include "PlayerBase.h"
 #include "Components/CapsuleComponent.h"
 #include "ProjectMGameStateBase.h"
@@ -26,6 +28,13 @@ AEnemyBase::AEnemyBase()
 	bIsAttacking = false;
 	
 	_damagedFrom = nullptr;
+
+	// Set the health pickup class
+	static ConstructorHelpers::FClassFinder<AHealthPickup> HealthPickupClassFinder(TEXT("/Game/Blueprints/BP_HealthPickup"));
+	if (HealthPickupClassFinder.Succeeded())
+	{
+		HealthPickupClass = HealthPickupClassFinder.Class;
+	}
 }
 
 // Called when the game starts or when spawned
@@ -110,9 +119,7 @@ void AEnemyBase::Die()
 	
 		if(_damagedFrom !=nullptr)
 		{
-		
 			_damagedFrom->GetPlayerState<AProjectMPlayerState>()->AddScore(1+_waveNumber);
-			//	Cast<AProjectMPlayerState>(_damagedFrom->PlayerState)->AddScore(1 + _waveNumber);
 		}
 		
 	}
@@ -133,8 +140,24 @@ void AEnemyBase::MultiDie_Implementation()
 	GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
 	GetMesh()->SetSimulatePhysics(true);
 
+	// Spawn health pickup actor
+	if (HealthPickupClass)
+	{
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = this;
+		FVector SpawnLocation = GetActorLocation();
+		float ZOffset = 50.0f;
+		SpawnLocation.Z -= ZOffset;
+		FRotator SpawnRotation = GetActorRotation();
+
+		
+		AHealthPickup* HealthPickup = GetWorld()->SpawnActor<AHealthPickup>(HealthPickupClass, SpawnLocation, SpawnRotation, SpawnParams);
+	}
+
 
 }
+
+
 
 void AEnemyBase::PerformSphereTrace()
 {
@@ -180,9 +203,7 @@ void AEnemyBase::OnSphereTraceComplete(const TArray<FHitResult>& HitResults, flo
 	for(const FHitResult& HitResult : HitResults)
 	{
 		AActor* HitActor = HitResult.GetActor();
-		UE_LOG(LogTemp, Warning, TEXT("actor Hit: %s "), *HitActor->GetName());
-
-
+	
 		if(HitActor && HitActor->IsA(APlayerBase::StaticClass()))
 		{
 		
@@ -207,40 +228,36 @@ void AEnemyBase::OnSphereTraceComplete(const TArray<FHitResult>& HitResults, flo
 
 }
 
-void AEnemyBase::ApplyKnockback(FVector KnockbackDirection, float KnockbackStrength)
+void AEnemyBase::ApplyKnockback(float _knockbackStrength,FVector _knockbackDirection)
 {
-	// Normalize the knockback direction and apply the knockback strength
-	FVector KnockbackForce = KnockbackDirection.GetSafeNormal() * KnockbackStrength;
-
-	// Apply the knockback force to the character's movement component
-	UCharacterMovementComponent* _characterMovement = GetCharacterMovement();
-	if (_characterMovement)
+	AController* _controller = GetController();
+	if(_controller)
 	{
-		UE_LOG(LogTemp,Warning, TEXT("character movement : %p"), _characterMovement)
-		_characterMovement->AddImpulse(KnockbackForce, true);
+		AEnemyAIController* _aiController = Cast<AEnemyAIController>(_controller);
+
+		if(_aiController)
+		{
+			_aiController->ApplyKnockback(_knockbackStrength,_knockbackDirection);
+
+			if (GetNetMode() == NM_Client)
+			{
+				ServerApplyKnockback(_knockbackStrength, _knockbackDirection);
+			}
+		}
 	}
+	
 }
 
-bool AEnemyBase::MultiApplyKnockback_Validate(FVector KnockbackDirection, float KnockbackStrength)
+void AEnemyBase::ServerApplyKnockback_Implementation( float _knockbackStrength, FVector _knockbackDirection)
+{
+	ApplyKnockback(_knockbackStrength,_knockbackDirection);
+}
+
+bool AEnemyBase::ServerApplyKnockback_Validate(float KnockbackStrength,FVector KnockbackDirection)
 {
 	return true;
 }
 
-void AEnemyBase::MultiApplyKnockback_Implementation(FVector KnockbackDirection, float KnockbackStrength)
-{
-	// Call the original ApplyKnockback function to apply the effect on the server
-	//ApplyKnockback(KnockbackDirection, KnockbackStrength);
-
-	// Normalize the knockback direction and apply the knockback strength
-	FVector KnockbackForce = KnockbackDirection.GetSafeNormal() * KnockbackStrength;
-
-	// Apply the knockback force to the character's movement component
-	UCharacterMovementComponent* _characterMovement = GetCharacterMovement();
-	if (_characterMovement)
-	{
-		_characterMovement->AddImpulse(KnockbackForce, true);
-	}
-}
 
 
 

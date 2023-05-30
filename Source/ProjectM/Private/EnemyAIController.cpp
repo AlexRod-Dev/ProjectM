@@ -5,7 +5,7 @@
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
-
+#include "GameFramework/Character.h"
 
 
 AEnemyAIController::AEnemyAIController()
@@ -40,4 +40,30 @@ void AEnemyAIController::OnPossess(APawn* InPawn)
 		Blackboard->InitializeBlackboard(*_behaviorTree.Get()->BlackboardAsset.Get());
 	}
 
+}
+
+void AEnemyAIController::ApplyKnockback(float _knockbackStrength, FVector _knockbackDirection)
+{
+	APawn* _controlledPawn = GetPawn();
+	if(_controlledPawn)
+	{
+		ACharacter* _controlledCharacter = Cast<ACharacter>(_controlledPawn);
+		if(_controlledCharacter)
+		{
+			FVector _launchVelocity = _knockbackDirection * _knockbackStrength;
+			_controlledCharacter->LaunchCharacter(_launchVelocity,true,true);
+
+			if (GetNetMode() == NM_Client)
+			{
+				ServerApplyKnockback(_knockbackStrength, _knockbackDirection);
+			}
+		}
+		
+	
+	}
+}
+
+void AEnemyAIController::ServerApplyKnockback_Implementation(float _knockbackStrength, FVector _knockbackDirection)
+{
+	ApplyKnockback(_knockbackStrength, _knockbackDirection);
 }

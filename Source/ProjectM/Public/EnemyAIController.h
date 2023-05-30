@@ -31,5 +31,14 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI", meta = (AllowPrivateAccess = true))
 	TObjectPtr<UBlackboardComponent> _blackboardComponent;
+
+public:
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void ApplyKnockback(float KnockbackStrength, FVector KnockbackDirection);
+
+protected:
+	UFUNCTION(Server, Reliable)
+	void ServerApplyKnockback(float KnockbackStrength, FVector KnockbackDirection);
+
 	
 };

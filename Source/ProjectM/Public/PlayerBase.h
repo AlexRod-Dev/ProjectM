@@ -85,10 +85,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Health")
 	void SetCurrentHealth(float _hpValue);
 
-	//Event for Taking Damage
+	//Function for Taking Damage
 	UFUNCTION(BlueprintCallable, Category = "Health")
 	virtual float TakeDamage(float _damageTaken, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* _otherActor) override;
 
+	//Function for Recover Health
+	UFUNCTION(BlueprintCallable, Category = "Health")
+	virtual float RecoverHealth(float _amount);
+	
 	void Die();
 
 	UFUNCTION(NetMulticast, Reliable)

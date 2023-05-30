@@ -128,6 +128,14 @@ float APlayerBase::TakeDamage(float _damageTaken, FDamageEvent const& DamageEven
 	return _damageApplied;
 }
 
+float APlayerBase::RecoverHealth(float _amount)
+{
+	float _healthApplied = _currentHealth + _amount;
+	SetCurrentHealth(_healthApplied);
+
+	return _healthApplied;
+}
+
 
 void APlayerBase::SetCurrentHealth(float _hpValue)
 {

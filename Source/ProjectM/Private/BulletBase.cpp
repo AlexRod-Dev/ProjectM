@@ -3,6 +3,7 @@
 
 #include "BulletBase.h"
 
+#include "BoxBase.h"
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
@@ -92,32 +93,41 @@ void ABulletBase::OnProjectileImpact(UPrimitiveComponent* HitComponent, AActor* 
 	if(OtherActor)
 	{
 		//for Teammates take half hp
-		if(APlayerBase* player = Cast<APlayerBase>(OtherActor))
+		if(APlayerBase* _player = Cast<APlayerBase>(OtherActor))
 		{
 			if(HasAuthority())
-			player->TakeDamage((_damage / 2), FDamageEvent(), nullptr, this);
+			_player->TakeDamage((_damage / 2), FDamageEvent(), nullptr, this);
 
 			FVector _spawnLocation = GetActorLocation();
 			UGameplayStatics::SpawnEmitterAtLocation(this, _bloodEffect, _spawnLocation, FRotator::ZeroRotator, true, EPSCPoolMethod::AutoRelease);
 
 		}
-
-		if(AEnemyBase* enemy = Cast<AEnemyBase>(OtherActor))
+		//for normal enemies
+		if(AEnemyBase* _enemy = Cast<AEnemyBase>(OtherActor))
 		{
 			if (HasAuthority())
 			{
 				
-				enemy->TakeDamage(_damage, FDamageEvent(), _instigatorController, this);
+				_enemy->TakeDamage(_damage, FDamageEvent(), _instigatorController, this);
 			}
 
 			FVector _knockbackDirection = -Hit.Normal;
 			float _knockbackStrenght = 1000.f;
-			enemy->ApplyKnockback(_knockbackStrenght,_knockbackDirection);
+			_enemy->ApplyKnockback(_knockbackStrenght,_knockbackDirection);
 			// Call the MultiApplyKnockback function to apply the knockback effect
 			
 			FVector _spawnLocation = GetActorLocation();
 			UGameplayStatics::SpawnEmitterAtLocation(this, _bloodEffect, _spawnLocation, FRotator::ZeroRotator, true, EPSCPoolMethod::AutoRelease);
 
+		}
+
+		//for objects (in this case the box)
+		if(ABoxBase* _box = Cast<ABoxBase>(OtherActor))
+		{
+			if(HasAuthority())
+			{
+				_box->ServerTakeDamage(35.f);
+			}
 		}
 		
 	}

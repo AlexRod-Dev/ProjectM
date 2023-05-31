@@ -2,6 +2,8 @@
 
 
 #include "CharacterController.h"
+
+#include "BoxBase.h"
 #include "GameFramework/Pawn.h"
 #include "BulletBase.h"
 #include "PlayerBase.h"
@@ -22,6 +24,13 @@ ACharacterController::ACharacterController()
 
 	bIsFiringWeapon = false;
 
+	_spawnDistance = 100.f;
+	// Set the health pickup class
+	static ConstructorHelpers::FClassFinder<ABoxBase> BoxClassFinder(TEXT("/Game/Blueprints/BP_BoxBase"));
+	if (BoxClassFinder.Succeeded())
+	{
+		BoxClass = BoxClassFinder.Class;
+	}
 }
 
 // Called when the game starts or when spawned
@@ -67,6 +76,8 @@ void ACharacterController::SetupInputComponent()
 	//Bind Fire Button to Action(function)
 	InputComponent->BindAction("Fire", IE_Pressed, this, &ACharacterController::StartShoot);
 
+	//Bind Use Item button
+	InputComponent->BindAction("UseItem", IE_Pressed,this, &ACharacterController::ServerSpawnBox);
 
 }
 
@@ -120,7 +131,7 @@ void ACharacterController::EnableControls()
 		bIsFiringWeapon = true;
 		UWorld* _world = GetWorld();
 		_world->GetTimerManager().SetTimer(_firingTimer, this, &ACharacterController::StopShoot, _fireRate, false);
-		HandleShoot();
+		ServerShoot();
 
 	}
 
@@ -132,7 +143,29 @@ void ACharacterController::StopShoot()
 
 }
 
-void ACharacterController::HandleShoot_Implementation()
+	void ACharacterController::ServerSpawnBox_Implementation()
+	{
+	APawn* _playerPawn = GetPawn();
+	if(_playerPawn)
+	{
+		FVector _spawnLocation = _playerPawn->GetActorLocation() + _playerPawn->GetActorForwardVector() * _spawnDistance;
+		FRotator _spawnRotation = FRotator(1,1,1);
+
+		FActorSpawnParameters _spawnParams;
+		_spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+		GetWorld()->SpawnActor<ABoxBase>(BoxClass, _spawnLocation,_spawnRotation, _spawnParams);
+	}
+	
+	
+}
+
+	bool ACharacterController::ServerSpawnBox_Validate()
+	{
+		return true;
+	}
+
+	void ACharacterController::ServerShoot_Implementation()
 {
 	APawn* const _playerPawn = GetPawn();
 

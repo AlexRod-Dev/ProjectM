@@ -21,6 +21,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+private:
+	UPROPERTY(EditAnywhere, Category = "Health")
+	UClass* BoxClass;
 	
 
 public:	
@@ -66,10 +69,16 @@ protected:
 
 	// Server function for spawning projectiles.
     UFUNCTION(Server, Reliable)
-    void HandleShoot();
+    void ServerShoot();
 
 	// A timer handle used for providing the fire rate delay in-between spawns.
 	FTimerHandle _firingTimer;
 
-	
+	UFUNCTION(Server,Reliable,WithValidation)
+	void ServerSpawnBox();
+	bool ServerSpawnBox_Validate();
+	void ServerSpawnBox_Implementation();
+
+	UPROPERTY(EditAnywhere)
+	float _spawnDistance;
 };

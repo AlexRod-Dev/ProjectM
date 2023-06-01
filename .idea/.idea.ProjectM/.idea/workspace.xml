@@ -9,14 +9,35 @@
   <component name="ChangeListManager">
     <list default="true" id="534929b2-979d-4c39-bc4a-9a8db12e89fc" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectM/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectM/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/DefaultInput.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultInput.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/BP_EnemyBase.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/BP_EnemyBase.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/BP_HealthPickup.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/BP_HealthPickup.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Characters/Mannequins/Animations/ABP_Manny.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Characters/Mannequins/Animations/ABP_Manny.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Maps/TestMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Maps/TestMap.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/BulletBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Private/BulletBase.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/CharacterController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Private/CharacterController.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Public/CharacterController.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Public/CharacterController.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectM.sln.DotSettings.user" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/AI/Tasks/EnemyBTTask_AttackPlayer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Private/AI/Tasks/EnemyBTTask_AttackPlayer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/AI/Tasks/EnemyBTTask_ChasePlayer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Private/AI/Tasks/EnemyBTTask_ChasePlayer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/AI/Tasks/EnemyBTTask_FindClosestPlayer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Private/AI/Tasks/EnemyBTTask_FindClosestPlayer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/BoxBase.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/BulletBase.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/CharacterController.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/EnemyAIController.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/EnemyBase.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/EnemySpawner.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/HealthPickup.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/MyGameInstance.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/PlayerBase.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/ProjectMGameStateBase.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/ProjectMPlayerState.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/ProjectMGameModeBase.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/ProjectMGameModeBase.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Public/BoxBase.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Public/BulletBase.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Public/CharacterController.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Public/EnemyAIController.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Public/EnemyBase.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Public/EnemySpawner.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Public/HealthPickup.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Public/MyGameInstance.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Public/PlayerBase.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Public/ProjectMGameStateBase.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Public/ProjectMPlayerState.h" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -199,7 +220,8 @@
       <workItem from="1685372401854" duration="10425000" />
       <workItem from="1685387583552" duration="6378000" />
       <workItem from="1685411393225" duration="10973000" />
-      <workItem from="1685465651015" duration="9229000" />
+      <workItem from="1685465651015" duration="11311000" />
+      <workItem from="1685585531560" duration="451000" />
     </task>
     <servers />
   </component>

@@ -1,17 +1,17 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "BulletBase.h"
+#include "Player/BulletBase.h"
 
-#include "BoxBase.h"
+#include "Player/BoxBase.h"
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "GameFramework/DamageType.h"
 #include "Particles/ParticleSystem.h"
 #include "Kismet/GameplayStatics.h"
-#include "PlayerBase.h"
-#include "EnemyBase.h"
+#include "Player/PlayerBase.h"
+#include "Enemies/EnemyBase.h"
 #include "UObject/ConstructorHelpers.h"
 
 

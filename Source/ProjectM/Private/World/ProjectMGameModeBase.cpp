@@ -1,9 +1,9 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 
-#include "ProjectMGameModeBase.h"
-#include "CharacterController.h"
-#include "ProjectMPlayerState.h"
+#include "World/ProjectMGameModeBase.h"
+#include "Player/CharacterController.h"
+#include "Player/ProjectMPlayerState.h"
 #include "UObject/SoftObjectPtr.h"
 #include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"

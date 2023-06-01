@@ -1,14 +1,14 @@
 	// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "CharacterController.h"
+#include "Player/CharacterController.h"
 
-#include "BoxBase.h"
+#include "Player/BoxBase.h"
 #include "GameFramework/Pawn.h"
-#include "BulletBase.h"
-#include "PlayerBase.h"
-#include "ProjectMGameStateBase.h"
-#include "ProjectMPlayerState.h"
+#include "Player/BulletBase.h"
+#include "Player/PlayerBase.h"
+#include "World/ProjectMGameStateBase.h"
+#include "Player/ProjectMPlayerState.h"
 
 	// Sets default values
 ACharacterController::ACharacterController()

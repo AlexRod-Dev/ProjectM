@@ -4,11 +4,11 @@
 #include "AI/Tasks/EnemyBTTask_FindClosestPlayer.h"
 
 #include "AIController.h"
-#include "EnemyAIController.h"
+#include "Enemies/EnemyAIController.h"
 #include "EngineUtils.h"
 #include "NavigationSystem.h"
-#include "PlayerBase.h"
-#include "CharacterController.h"
+#include "Player/PlayerBase.h"
+#include "Player/CharacterController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
 UEnemyBTTask_FindClosestPlayer::UEnemyBTTask_FindClosestPlayer()

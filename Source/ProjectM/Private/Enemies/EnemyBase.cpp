@@ -1,13 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "EnemyBase.h"
+#include "Enemies/EnemyBase.h"
 
-#include "EnemyAIController.h"
-#include "HealthPickup.h"
-#include "PlayerBase.h"
+#include "Enemies/EnemyAIController.h"
+#include "Pickups/HealthPickup.h"
+#include "Player/PlayerBase.h"
 #include "Components/CapsuleComponent.h"
-#include "ProjectMGameStateBase.h"
-#include "ProjectMPlayerState.h"
+#include "World/ProjectMGameStateBase.h"
+#include "Player/ProjectMPlayerState.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 

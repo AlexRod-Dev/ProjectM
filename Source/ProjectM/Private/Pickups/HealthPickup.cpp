@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "HealthPickup.h"
+#include "Pickups/HealthPickup.h"
 
-#include "PlayerBase.h"
+#include "Player/PlayerBase.h"
 
 // Sets default values
 AHealthPickup::AHealthPickup()

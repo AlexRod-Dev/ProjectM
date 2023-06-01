@@ -5,7 +5,7 @@
 
 #include "AIController.h"
 #include "DrawDebugHelpers.h"
-#include "EnemyBase.h"
+#include "Enemies/EnemyBase.h"
 #include "EngineUtils.h"
 
 UEnemyBTTask_AttackPlayer::UEnemyBTTask_AttackPlayer()

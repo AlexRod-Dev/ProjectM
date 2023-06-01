@@ -3,7 +3,7 @@
 
 #include "AI/Tasks/EnemyBTTask_ChasePlayer.h"
 
-#include "EnemyAIController.h"
+#include "Enemies/EnemyAIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
 UEnemyBTTask_ChasePlayer::UEnemyBTTask_ChasePlayer()

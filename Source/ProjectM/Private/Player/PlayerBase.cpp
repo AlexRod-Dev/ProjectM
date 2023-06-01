@@ -1,19 +1,19 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "PlayerBase.h"
+#include "Player/PlayerBase.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/PrimitiveComponent.h"
-#include "CharacterController.h"
+#include "Player/CharacterController.h"
 #include "UObject/SoftObjectPtr.h"
 #include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "../ProjectMGameModeBase.h"
+#include "World/ProjectMGameModeBase.h"
 #include "Engine/World.h"
 
 

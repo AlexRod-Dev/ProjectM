@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "CharacterController.h"
+#include "Player/CharacterController.h"
 #include "EnemyBase.generated.h"
 
 UCLASS()

@@ -4,10 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "CharacterController.h"
+#include "Player/CharacterController.h"
 #include "Net/UnrealNetwork.h"
-#include "EnemyBase.h"
-#include "PlayerBase.h"
+#include "Enemies/EnemyBase.h"
+#include "Player/PlayerBase.h"
 #include "ProjectMGameModeBase.generated.h"
 
 //DECLARE_DYNAMIC_MULTICAST_DELEGATE(FSpawnEnemy);

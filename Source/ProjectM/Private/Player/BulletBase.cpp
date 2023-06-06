@@ -126,7 +126,7 @@ void ABulletBase::OnProjectileImpact(UPrimitiveComponent* HitComponent, AActor* 
 		{
 			if(HasAuthority())
 			{
-				_box->ServerTakeDamage(35.f);
+				_box->ServerTakeDamage(_damage);
 			}
 		}
 		

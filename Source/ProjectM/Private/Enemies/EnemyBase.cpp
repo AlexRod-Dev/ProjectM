@@ -9,6 +9,7 @@
 #include "World/ProjectMGameStateBase.h"
 #include "Player/ProjectMPlayerState.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Player/BoxBase.h"
 
 
 // Sets default values
@@ -210,7 +211,7 @@ void AEnemyBase::OnSphereTraceComplete(const TArray<FHitResult>& HitResults, flo
 			APlayerBase* _hitPlayer = Cast<APlayerBase>(HitActor);
 			if(_hitPlayer)
 			{
-				_hitPlayer->TakeDamage((_damage), FDamageEvent(), nullptr, this);
+				_hitPlayer->TakeDamage(_damage, FDamageEvent(), nullptr, this);
 			}
 			else
 			{
@@ -218,6 +219,15 @@ void AEnemyBase::OnSphereTraceComplete(const TArray<FHitResult>& HitResults, flo
 		
 			}
 		}
+		if(HitActor && HitActor->IsA(ABoxBase::StaticClass()))
+		{
+			ABoxBase* _hitBox = Cast<ABoxBase>(HitActor);
+			if(_hitBox)
+			{
+				_hitBox->ServerTakeDamage(_damage);
+			}
+		}
+		
 		
 		// Draw debug sphere
 		FColor SphereColor = FColor::Red;

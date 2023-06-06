@@ -19,11 +19,17 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	
-
-private:
-	
-	UPROPERTY(Replicated)
+	UPROPERTY(BlueprintReadOnly,Replicated)
 	float _health;
+
+	
+	
+private:
+	UMaterialInterface* _redMaterial;
+	UMaterialInterface* _yellowMaterial;
+	UPROPERTY(ReplicatedUsing=OnRep_Material)
+	UMaterialInterface* _currentColor;
+
 	
 
 public:	
@@ -43,8 +49,18 @@ public:
 	void ServerTakeDamage(float _damage);
 	bool ServerTakeDamage_Validate(float _damage);
 	void ServerTakeDamage_Implementation(float _damage);
-	
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerChangeBoxColor(UMaterialInterface* _material);
+	void ServerChangeBoxColor_Implementation(UMaterialInterface* _material);
+	bool ServerChangeBoxColor_Validate(UMaterialInterface* _material);
+	void ChangeBoxColor(ABoxBase* _box, UMaterialInterface* _material);
+
+protected:
+
 	/** Property replication */
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
+	UFUNCTION()
+	void OnRep_Material();
 };

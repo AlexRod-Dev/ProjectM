@@ -39,7 +39,7 @@ ABulletBase::ABulletBase()
 	}
 
 	//Definition for the Mesh that will serve as your visual representation.
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> DefaultMesh(TEXT("/Game/StarterContent/Shapes/Shape_Sphere.Shape_Sphere"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> DefaultMesh(TEXT("/Game/Assets/Meshes/Shape_Sphere.Shape_Sphere"));
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	StaticMesh->SetupAttachment(RootComponent);
 
@@ -51,7 +51,7 @@ ABulletBase::ABulletBase()
 		StaticMesh->SetRelativeScale3D(FVector(0.1f, 0.1f, 0.1f));
 	}
 
-	static ConstructorHelpers::FObjectFinder<UParticleSystem> DefaultBloodEffect(TEXT("/Game/StarterContent/Particles/P_Blood_Splat_Cone.P_Blood_Splat_Cone"));
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> DefaultBloodEffect(TEXT("/Game/Assets/Particles/P_Blood_Splat_Cone.P_Blood_Splat_Cone"));
 	if (DefaultBloodEffect.Succeeded())
 	{
 		_bloodEffect = DefaultBloodEffect.Object;

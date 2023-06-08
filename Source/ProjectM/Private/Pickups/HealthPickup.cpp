@@ -64,6 +64,7 @@ void AHealthPickup::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedCompo
 		APlayerBase* _playerCharacter = Cast<APlayerBase>(OtherActor);
 		if(_playerCharacter)
 		{
+			//does nothing if current health > 99.f
 			if(_playerCharacter->GetCurrentHealth() > _playerCharacter->GetMaxHealth()-0.1f)
 			{
 				return;

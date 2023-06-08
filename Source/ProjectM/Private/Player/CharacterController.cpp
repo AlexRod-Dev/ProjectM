@@ -5,6 +5,7 @@
 
 #include "Player/BoxBase.h"
 #include "GameFramework/Pawn.h"
+#include "Pickups/WeaponBase.h"
 #include "Player/BulletBase.h"
 #include "Player/PlayerBase.h"
 #include "World/ProjectMGameStateBase.h"
@@ -26,7 +27,7 @@ ACharacterController::ACharacterController()
 
 	_spawnDistance = 100.f;
 	// Set the health pickup class
-	static ConstructorHelpers::FClassFinder<ABoxBase> BoxClassFinder(TEXT("/Game/Blueprints/BP_BoxBase"));
+	static ConstructorHelpers::FClassFinder<ABoxBase> BoxClassFinder(TEXT("/Game/Blueprints/Objects/BP_BoxBase"));
 	if (BoxClassFinder.Succeeded())
 	{
 		BoxClass = BoxClassFinder.Class;
@@ -56,9 +57,7 @@ void ACharacterController::Tick(float DeltaTime)
 	if (_playerState != nullptr)
 	{
 		// Access the custom player state's properties or functions
-		int32 Score = _playerState->GetScore();
-		UE_LOG(LogTemp,Warning,TEXT("Score: %d"), Score);
-		
+		int32 Score = _playerState->GetScore();		
 	}
 	
 }
@@ -79,6 +78,7 @@ void ACharacterController::SetupInputComponent()
 	//Bind Use Item button
 	InputComponent->BindAction("UseItem", IE_Pressed,this, &ACharacterController::ServerSpawnBox);
 
+	InputComponent->BindAction("NextWeap", IE_Pressed, this, &ACharacterController::EnableControls);
 }
 
 void ACharacterController::MoveForward(float AxisValue)
@@ -113,6 +113,7 @@ void ACharacterController::DisableControls()
 
 void ACharacterController::EnableControls()
 {
+
 	EnableInput(this);
 }
 

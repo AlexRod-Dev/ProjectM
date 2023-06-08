@@ -15,6 +15,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "World/ProjectMGameModeBase.h"
 #include "Engine/World.h"
+#include "Pickups/WeaponPickup.h"
 
 
 APlayerBase::APlayerBase()
@@ -32,6 +33,8 @@ APlayerBase::APlayerBase()
 	_currentHealth = _maxHealth;
 
 	bIsDead = false;
+
+	
 
 
 	//Set size for player capsule
@@ -76,11 +79,28 @@ void APlayerBase::BeginPlay()
 {
 	Super::BeginPlay();
 
+	_currentWeapIndex = 0;
+
+	_equippedWeapon = _weaponInventory[0];
+
+	if(_equippedWeapon != nullptr)
+	{
+		// Spawn the pistol at the player's hand socket
+		AWeaponBase* SpawnedPistol = GetWorld()->SpawnActor<AWeaponBase>(_equippedWeapon, GetMesh()->GetSocketLocation("WeaponSocket"), GetMesh()->GetSocketRotation("WeaponSocket"));
+
+		// Attach the pistol to the player's hand socket
+		SpawnedPistol->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, "WeaponSocket");
+  
+	}
+
 }
 
 void APlayerBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+
+	
 }
 
 
@@ -166,7 +186,7 @@ void APlayerBase::Die()
 	// 	_playerController->DisableControls();
 	// }
 
-	if(GetLocalRole() == ROLE_Authority)
+	if(HasAuthority())
 	{
 		MultiDie();
 
@@ -218,6 +238,51 @@ void APlayerBase::HandleRespawnTimer()
 {
 	Respawn();
 }
+
+void APlayerBase::SwapWeapon(int32 _index)
+{
+	if(_weaponInventory.IsValidIndex(_index))
+	{
+		//_equippedWeapon = _weaponInventory[_index];
+	}
+}
+
+void APlayerBase::AddWeapon(AWeaponBase* _weapon)
+{
+	if(_weapon)
+	{
+		//_weaponInventory.Add(_weapon);
+
+	
+			UE_LOG(LogTemp,Warning,TEXT("weap: %s"),*_weaponInventory[0]->GetName())
+		
+		
+	}
+}
+
+TArray<TSubclassOf<AWeaponBase>> APlayerBase::GetWeaponInventory()
+{
+	return _weaponInventory;
+}
+
+void APlayerBase::PickupWeapon_Implementation(AWeaponPickup* _weaponPickup)
+{
+	
+	if(_weaponPickup)
+	{
+		AWeaponBase* _weap = Cast<AWeaponBase>(_weaponPickup->WeaponClass);
+		
+	//	AddWeapon(_weaponPickup->WeaponClass);
+	}
+}
+
+bool APlayerBase::PickupWeapon_Validate(AWeaponPickup* _weaponPickup)
+{
+	return true;
+}
+
+
+
 
 void APlayerBase::OnRep_CurrentHealth()
 {

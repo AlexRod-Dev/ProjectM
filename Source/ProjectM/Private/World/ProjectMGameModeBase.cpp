@@ -23,7 +23,7 @@ AProjectMGameModeBase::AProjectMGameModeBase()
 
 
 	// set default pawn class to our Blueprinted character
-	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBP(TEXT("/Game/Blueprints/BP_PlayerBase"));
+	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBP(TEXT("/Game/Blueprints/Player/BP_PlayerBase"));
 
 	if(PlayerPawnBP.Class != nullptr)
 	{
@@ -31,7 +31,7 @@ AProjectMGameModeBase::AProjectMGameModeBase()
 	}
 
 	// set default controller to our Blueprinted controller
-	static ConstructorHelpers::FClassFinder<ACharacterController> PlayerController(TEXT("/Game/Blueprints/BP_CharacterController"));
+	static ConstructorHelpers::FClassFinder<ACharacterController> PlayerController(TEXT("/Game/Blueprints/Player/BP_CharacterController"));
 	if(PlayerController.Class != NULL)
 	{
 		PlayerControllerClass = PlayerController.Class;

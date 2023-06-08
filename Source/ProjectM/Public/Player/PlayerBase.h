@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Pickups/WeaponBase.h"
 #include "Net/UnrealNetwork.h"
 #include "PlayerBase.generated.h"
 
@@ -103,4 +104,23 @@ public:
 	void Respawn();
 
 	void HandleRespawnTimer();
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category ="Weapon")
+	TArray<TSubclassOf<AWeaponBase>> _weaponInventory;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Weapon")
+	int32 _currentWeapIndex;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category ="Weapon")
+	TSubclassOf<AWeaponBase> _equippedWeapon;
+
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	void SwapWeapon(int32 _index);
+
+	UFUNCTION(Server, Reliable, WithValidation, Category = "Weapon")
+	void PickupWeapon(class AWeaponPickup* _weaponPickup);
+
+	void AddWeapon(AWeaponBase* _weapon);
+
+	TArray<TSubclassOf<AWeaponBase>> GetWeaponInventory();
 };

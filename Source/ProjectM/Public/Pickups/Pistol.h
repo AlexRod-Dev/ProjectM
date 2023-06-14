@@ -17,5 +17,5 @@ class PROJECTM_API APistol : public AWeaponBase
 public:
 	APistol();
 	
-	virtual void Fire() override;
+	virtual void Fire(APlayerBase* _player, UWorld* _world) override;
 };

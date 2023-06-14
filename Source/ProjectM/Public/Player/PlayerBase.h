@@ -105,22 +105,37 @@ public:
 
 	void HandleRespawnTimer();
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category ="Weapon")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Replicated, Category ="Weapon")
 	TArray<TSubclassOf<AWeaponBase>> _weaponInventory;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Weapon")
+	UPROPERTY(Replicated,BlueprintReadOnly, Category = "Weapon")
 	int32 _currentWeapIndex;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category ="Weapon")
+	
+	int32 GetCurrentWeapIndex();
+	
+	UPROPERTY(ReplicatedUsing = OnRep_EquippedWeapon, VisibleAnywhere, BlueprintReadOnly, Category ="Weapon")
 	TSubclassOf<AWeaponBase> _equippedWeapon;
 
-	UFUNCTION(BlueprintCallable, Category = "Weapon")
-	void SwapWeapon(int32 _index);
+	UFUNCTION()
+	void OnRep_EquippedWeapon();
+	
+	UPROPERTY()
+	AWeaponBase* SpawnedWeapon;
+
+	void EquipWeapon(int32 _index);
+	
+	UFUNCTION(Server, Reliable, WithValidation, BlueprintCallable, Category = "Weapon")
+	void Server_EquipWeapon(int32 _index);
 
 	UFUNCTION(Server, Reliable, WithValidation, Category = "Weapon")
-	void PickupWeapon(class AWeaponPickup* _weaponPickup);
+	void PickupWeapon(TSubclassOf<AWeaponBase> _weaponPickup);
+	
+	UFUNCTION(Server, Reliable, WithValidation)
+	void AddWeapon(TSubclassOf<AWeaponBase> _weapon);
 
-	void AddWeapon(AWeaponBase* _weapon);
-
+	
+	
 	TArray<TSubclassOf<AWeaponBase>> GetWeaponInventory();
+
+
 };

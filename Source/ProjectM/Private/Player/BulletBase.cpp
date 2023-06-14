@@ -31,6 +31,9 @@ ABulletBase::ABulletBase()
 	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("RootComponent"));
 	SphereComponent->InitSphereRadius(2.0f);
 	SphereComponent->SetCollisionProfileName(TEXT("BlockAllDynamic"));
+
+	//SphereComponent->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);
+	//SphereComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECollisionResponse::ECR_Ignore);
 	RootComponent = SphereComponent;
 
 	if(GetLocalRole() == ROLE_Authority)
@@ -39,16 +42,16 @@ ABulletBase::ABulletBase()
 	}
 
 	//Definition for the Mesh that will serve as your visual representation.
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> DefaultMesh(TEXT("/Game/Assets/Meshes/Shape_Sphere.Shape_Sphere"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> DefaultMesh(TEXT("/Game/Assets/Weapons/StaticMeshes/Pistol_Ammo_Static.Pistol_Ammo_Static"));
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	StaticMesh->SetupAttachment(RootComponent);
-
+	
 	//Set the Static Mesh and its position/scale if you successfully found a mesh asset to use.
 	if (DefaultMesh.Succeeded())
 	{
 		StaticMesh->SetStaticMesh(DefaultMesh.Object);
 		StaticMesh->SetRelativeLocation(FVector(0.0f, 0.0f, -2.0f));
-		StaticMesh->SetRelativeScale3D(FVector(0.1f, 0.1f, 0.1f));
+		StaticMesh->SetRelativeScale3D(FVector(1.5f, 1.5f, 1.5f));
 	}
 
 	static ConstructorHelpers::FObjectFinder<UParticleSystem> DefaultBloodEffect(TEXT("/Game/Assets/Particles/P_Blood_Splat_Cone.P_Blood_Splat_Cone"));
@@ -64,7 +67,7 @@ ABulletBase::ABulletBase()
 	ProjectileMovementComponent->MaxSpeed = 1500.0f;
 	ProjectileMovementComponent->bRotationFollowsVelocity = true;
 	ProjectileMovementComponent->ProjectileGravityScale = 0.0f;
-
+	
 }
 
 // Called when the game starts or when spawned
@@ -86,6 +89,11 @@ void ABulletBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void ABulletBase::SetInitialVelocity(const FVector& _velocity)
+{
+	ProjectileMovementComponent->Velocity = _velocity;
 }
 
 void ABulletBase::OnProjectileImpact(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
@@ -128,6 +136,10 @@ void ABulletBase::OnProjectileImpact(UPrimitiveComponent* HitComponent, AActor* 
 			{
 				_box->ServerTakeDamage(_damage);
 			}
+		}
+		if(ABulletBase* _bullet = Cast<ABulletBase>(OtherActor))
+		{
+			return;
 		}
 		
 	}

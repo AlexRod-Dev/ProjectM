@@ -4,16 +4,16 @@
 #include "Pickups/WeaponBase.h"
 
 
-AWeaponBase::AWeaponBase(UStaticMesh* InBaseMesh)
+AWeaponBase::AWeaponBase(USkeletalMesh* InBaseMesh)
 {
 
-	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WeaponMesh"));
+	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponMesh"));
 	RootComponent = WeaponMesh;
 
 	if(InBaseMesh)
 	{
-		WeaponMesh->SetStaticMesh(InBaseMesh);
-		WeaponMesh->SetCollisionProfileName(TEXT("NoCollision"));
+		WeaponMesh->SetSkeletalMesh(InBaseMesh);
+		WeaponMesh->SetCollisionProfileName(TEXT("BlockAllDynamic"));
 	}
 	
 }
@@ -28,7 +28,8 @@ void AWeaponBase::BeginPlay()
 	Super::BeginPlay();
 }
 
-void AWeaponBase::Fire_Implementation()
+
+void AWeaponBase::Fire_Implementation(APlayerBase* _player, UWorld* _world)
 {
 }
 

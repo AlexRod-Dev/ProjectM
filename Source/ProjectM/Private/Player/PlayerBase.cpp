@@ -85,12 +85,16 @@ void APlayerBase::BeginPlay()
 
 	if(_equippedWeapon != nullptr)
 	{
-		// Spawn the pistol at the player's hand socket
-		AWeaponBase* SpawnedPistol = GetWorld()->SpawnActor<AWeaponBase>(_equippedWeapon, GetMesh()->GetSocketLocation("WeaponSocket"), GetMesh()->GetSocketRotation("WeaponSocket"));
-
-		// Attach the pistol to the player's hand socket
-		SpawnedPistol->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, "WeaponSocket");
+		if(HasAuthority())
+		{
+			// Spawn the pistol at the player's hand socket
+			SpawnedWeapon = GetWorld()->SpawnActor<AWeaponBase>(_equippedWeapon, GetMesh()->GetSocketLocation("WeaponSocket"), GetMesh()->GetSocketRotation("WeaponSocket"));
+	
+			// Attach the pistol to the player's hand socket
+			SpawnedWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, "WeaponSocket");
   
+		}
+	
 	}
 
 }
@@ -111,6 +115,9 @@ void APlayerBase::GetLifetimeReplicatedProps(TArray <FLifetimeProperty>& OutLife
 
 	//Replicate current health.
 	DOREPLIFETIME(APlayerBase, _currentHealth);
+	DOREPLIFETIME(APlayerBase, _weaponInventory);
+	DOREPLIFETIME(APlayerBase, _equippedWeapon);
+	DOREPLIFETIME(APlayerBase, _currentWeapIndex);
 }
 
 void APlayerBase::OnHealthUpdate()
@@ -239,23 +246,19 @@ void APlayerBase::HandleRespawnTimer()
 	Respawn();
 }
 
-void APlayerBase::SwapWeapon(int32 _index)
-{
-	if(_weaponInventory.IsValidIndex(_index))
-	{
-		//_equippedWeapon = _weaponInventory[_index];
-	}
-}
 
-void APlayerBase::AddWeapon(AWeaponBase* _weapon)
+
+
+
+void APlayerBase::AddWeapon_Implementation(TSubclassOf<AWeaponBase> _weapon)
 {
 	if(_weapon)
 	{
-		//_weaponInventory.Add(_weapon);
-
+		if(HasAuthority())
+		{
+			_weaponInventory.Add(_weapon);
+		}
 	
-			UE_LOG(LogTemp,Warning,TEXT("weap: %s"),*_weaponInventory[0]->GetName())
-		
 		
 	}
 }
@@ -265,28 +268,117 @@ TArray<TSubclassOf<AWeaponBase>> APlayerBase::GetWeaponInventory()
 	return _weaponInventory;
 }
 
-void APlayerBase::PickupWeapon_Implementation(AWeaponPickup* _weaponPickup)
+void APlayerBase::PickupWeapon_Implementation(TSubclassOf<AWeaponBase> _weaponPickup)
 {
 	
 	if(_weaponPickup)
 	{
-		AWeaponBase* _weap = Cast<AWeaponBase>(_weaponPickup->WeaponClass);
-		
-	//	AddWeapon(_weaponPickup->WeaponClass);
+		if(!_weaponInventory.Contains(_weaponPickup))
+		{
+			AddWeapon(_weaponPickup);
+		}
 	}
 }
 
-bool APlayerBase::PickupWeapon_Validate(AWeaponPickup* _weaponPickup)
+void APlayerBase::OnRep_CurrentHealth()
+{
+	OnHealthUpdate();
+}
+
+int32 APlayerBase::GetCurrentWeapIndex()
+{
+	return _currentWeapIndex;
+}
+
+void APlayerBase::OnRep_EquippedWeapon()
+{
+	EquipWeapon(_currentWeapIndex);
+}
+
+
+void APlayerBase::EquipWeapon(int32 _index)
+{
+	UE_LOG(LogTemp,Warning, TEXT("Client:: %d"), _index);
+
+	
+	//Server_EquipWeapon(_index);
+	
+	
+	 if(_weaponInventory.IsValidIndex(_index))
+	 {
+	
+	 	_currentWeapIndex = _index;
+	 	_equippedWeapon = _weaponInventory[_index];
+	
+	 	if(SpawnedWeapon)
+	 	{
+	 		SpawnedWeapon->Destroy();
+	 	}
+	 	
+	 	// if(_equippedWeapon != nullptr)
+	 	// {
+	 		// Spawn the pistol at the player's hand socket
+	 	SpawnedWeapon = GetWorld()->SpawnActor<AWeaponBase>(_equippedWeapon, GetMesh()->GetSocketLocation("WeaponSocket"), GetMesh()->GetSocketRotation("WeaponSocket"));
+	
+	 		// Attach the pistol to the player's hand socket
+	 		SpawnedWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, "WeaponSocket");
+	
+	 		
+	}
+	
+}
+
+void APlayerBase::Server_EquipWeapon_Implementation(int32 _index)
+{
+	UE_LOG(LogTemp,Warning, TEXT("Server:: %d"), _index);
+	if(_weaponInventory.IsValidIndex(_index))
+	{
+
+		if(HasAuthority())
+		{
+			_currentWeapIndex = _index;
+			_equippedWeapon = _weaponInventory[_index];
+
+			
+			if(SpawnedWeapon)
+			{
+				SpawnedWeapon->Destroy();
+			
+			}
+		
+			if(_equippedWeapon != nullptr)
+			{
+				// Spawn the pistol at the player's hand socket
+				SpawnedWeapon = GetWorld()->SpawnActor<AWeaponBase>(_equippedWeapon, GetMesh()->GetSocketLocation("WeaponSocket"), GetMesh()->GetSocketRotation("WeaponSocket"));
+
+				// Attach the pistol to the player's hand socket
+				SpawnedWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, "WeaponSocket");
+
+			
+			}
+			
+		}
+
+
+	}
+	
+}
+
+
+bool APlayerBase::AddWeapon_Validate(TSubclassOf<AWeaponBase> _weapon)
+{
+	return true;
+}
+
+bool APlayerBase::PickupWeapon_Validate(TSubclassOf<AWeaponBase> _weaponPickup)
 {
 	return true;
 }
 
 
-
-
-void APlayerBase::OnRep_CurrentHealth()
+bool APlayerBase::Server_EquipWeapon_Validate(int32 _index)
 {
-	OnHealthUpdate();
+	return true;
 }
 
 

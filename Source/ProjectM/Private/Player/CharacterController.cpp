@@ -78,7 +78,11 @@ void ACharacterController::SetupInputComponent()
 	//Bind Use Item button
 	InputComponent->BindAction("UseItem", IE_Pressed,this, &ACharacterController::ServerSpawnBox);
 
-	InputComponent->BindAction("NextWeap", IE_Pressed, this, &ACharacterController::EnableControls);
+	InputComponent->BindAction("PreviousWeap", IE_Pressed, this, &ACharacterController::PreviousWeapon);
+	InputComponent->BindAction("NextWeap", IE_Pressed, this, &ACharacterController::NextWeapon);
+	
+	
+
 }
 
 void ACharacterController::MoveForward(float AxisValue)
@@ -126,7 +130,7 @@ void ACharacterController::EnableControls()
 
 	void ACharacterController::StartShoot()
 {
-
+	
 	if (!bIsFiringWeapon)
 	{
 		bIsFiringWeapon = true;
@@ -161,6 +165,54 @@ void ACharacterController::StopShoot()
 	
 }
 
+void ACharacterController::PreviousWeapon()
+{
+	APawn* _playerPawn = GetPawn();
+
+	if(_playerPawn)
+	{
+		APlayerBase* _player = Cast<APlayerBase>(_playerPawn);
+
+		if(_player)
+		{
+			if(_player->GetCurrentWeapIndex() == 0)
+			{
+				_player->Server_EquipWeapon(_player->_weaponInventory.Num()-1);
+				
+			}else
+			{
+				_player->Server_EquipWeapon(_player->GetCurrentWeapIndex()-1);
+			}
+		}
+	}
+	
+	
+}
+
+void ACharacterController::NextWeapon()
+{
+	APawn* _playerPawn = GetPawn();
+
+	if(_playerPawn)
+	{
+		APlayerBase* _player = Cast<APlayerBase>(_playerPawn);
+
+		if(_player)
+		{
+			if(_player->GetCurrentWeapIndex() >= _player->_weaponInventory.Num()-1)
+			{
+				_player->Server_EquipWeapon(0);
+				
+			}else
+			{
+				_player->Server_EquipWeapon(_player->GetCurrentWeapIndex()+1);
+			}
+		}
+	}
+}
+
+
+
 	bool ACharacterController::ServerSpawnBox_Validate()
 	{
 		return true;
@@ -172,19 +224,28 @@ void ACharacterController::StopShoot()
 
 	if(_playerPawn != nullptr)
 	{
-		FVector _spawnLocation = _playerPawn->GetActorLocation() + (_playerPawn->GetActorForwardVector() * 50.0f);
-		FRotator _spawnRotation = _playerPawn->GetActorRotation();
-	
-		FActorSpawnParameters _spawnParameters;
-		_spawnParameters.Instigator = GetInstigator();
-		_spawnParameters.Owner = this;
-
-		ABulletBase* _spawnedBullet = GetWorld()->SpawnActor<ABulletBase>(_spawnLocation, _spawnRotation, _spawnParameters);
-
-			if(_spawnedBullet)
-			{
-				_spawnedBullet->_instigatorController =	Cast<ACharacterController>(this);
-			}
+		APlayerBase* _player = Cast<APlayerBase>(_playerPawn);
+		if(_player)
+		{
+			TSubclassOf<AWeaponBase> _weapon = _player->_equippedWeapon;
+			if(_weapon)
+				
+				_weapon->GetDefaultObject<AWeaponBase>()->Fire(_player,GetWorld());
+		}
+		
+		// FVector _spawnLocation = _playerPawn->GetActorLocation() + (_playerPawn->GetActorForwardVector() * 50.0f);
+		// FRotator _spawnRotation = _playerPawn->GetActorRotation();
+		//
+		// FActorSpawnParameters _spawnParameters;
+		// _spawnParameters.Instigator = GetInstigator();
+		// _spawnParameters.Owner = this;
+		//
+		// ABulletBase* _spawnedBullet = GetWorld()->SpawnActor<ABulletBase>(_spawnLocation, _spawnRotation, _spawnParameters);
+		//
+		// 	if(_spawnedBullet)
+		// 	{
+		// 		_spawnedBullet->_instigatorController =	Cast<ACharacterController>(this);
+		// 	}
 
 	}
 	

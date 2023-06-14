@@ -30,6 +30,7 @@ AEnemyBase::AEnemyBase()
 	
 	_damagedFrom = nullptr;
 
+
 	// Set the health pickup class
 	static ConstructorHelpers::FClassFinder<AHealthPickup> HealthPickupClassFinder(TEXT("/Game/Blueprints/BP_HealthPickup"));
 	if (HealthPickupClassFinder.Succeeded())
@@ -60,7 +61,7 @@ float AEnemyBase::TakeDamage(float _damageTaken, FDamageEvent const& DamageEvent
 {
 	AController* _controller =_otherActor->GetInstigatorController();
 
-	if(_instigatorController != nullptr)
+	if(_controller != nullptr)
 	{
 		_damagedFrom = Cast<ACharacterController>(_instigatorController);
 	}

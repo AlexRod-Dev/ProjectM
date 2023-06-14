@@ -79,6 +79,11 @@ protected:
 	bool ServerSpawnBox_Validate();
 	void ServerSpawnBox_Implementation();
 
+	void PreviousWeapon();
+	
+	void NextWeapon();
+	
+	
 	UPROPERTY(EditAnywhere)
 	float _spawnDistance;
 };

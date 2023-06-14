@@ -13,7 +13,7 @@ class PROJECTM_API AWeaponBase : public AActor
 
 
 public:
-	AWeaponBase(UStaticMesh* InBaseMesh);
+	AWeaponBase(USkeletalMesh* InBaseMesh);
 	AWeaponBase(const FObjectInitializer& ObjectInitializer);
 
 	
@@ -33,13 +33,20 @@ public:
 	int32 _ammoCapacity;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+	int32 _currentAmmo;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 	float _reloadTime;
 
+	UPROPERTY(EditAnywhere, Category = "Health")
+	UClass* BulletClass;
+	
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
-	UStaticMeshComponent* WeaponMesh;
+	USkeletalMeshComponent* WeaponMesh;
 
 	UFUNCTION(NetMulticast, Reliable, BlueprintCallable, Category = "Weapon")
-	virtual void Fire();
+	virtual void Fire(APlayerBase* _player, UWorld* _world);
 
 	void Reload();
 

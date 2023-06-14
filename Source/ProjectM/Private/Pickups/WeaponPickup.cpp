@@ -44,10 +44,11 @@ void AWeaponPickup::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedCompo
 
 		if(_player)
 		{
-			_player->PickupWeapon(this);
+			_player->PickupWeapon(WeaponClass);
+			Destroy();
 		}
 	}
-	Destroy();
+
 	
 }
 

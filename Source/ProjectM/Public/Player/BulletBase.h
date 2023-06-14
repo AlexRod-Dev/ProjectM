@@ -54,6 +54,8 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category = "Bullet")
 	 ACharacterController* _instigatorController;
 
+	void SetInitialVelocity(const FVector& _velocity);
+	
 protected:
 	UFUNCTION(Category="Projectile")
 		void OnProjectileImpact(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);

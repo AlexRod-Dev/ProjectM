@@ -18,4 +18,6 @@ public:
 	APistol();
 	
 	virtual void Fire(APlayerBase* _player, UWorld* _world) override;
+
+	virtual void Reload() override;
 };

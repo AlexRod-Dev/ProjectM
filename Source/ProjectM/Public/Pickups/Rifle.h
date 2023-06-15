@@ -17,4 +17,6 @@ class PROJECTM_API ARifle : public AWeaponBase
 	ARifle();
 	
 	virtual void Fire(APlayerBase* _player, UWorld* _world) override;
+
+	virtual void Reload() override;
 };

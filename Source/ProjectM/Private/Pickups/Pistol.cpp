@@ -30,25 +30,43 @@ void APistol::Fire(APlayerBase* _player, UWorld* _world)
 
 	UE_LOG(LogTemp, Warning, TEXT("Shoot Pistol"));
 
-	
-	if(_world)
+	if(_currentAmmo > 0)
 	{
-		FVector _spawnLocation = _player->GetActorLocation() + (_player->GetActorForwardVector() * 50.0f);
-		FRotator _spawnRotation = _player->GetActorRotation();
-	
-		FActorSpawnParameters _spawnParameters;
-		_spawnParameters.Instigator = _player->GetInstigator();
-		_spawnParameters.Owner = _player;
-
-		ABulletBase* _spawnedBullet = _world->SpawnActor<ABulletBase>(BulletClass, _spawnLocation, _spawnRotation, _spawnParameters);
-
-		
-		if(_spawnedBullet)
+		if(_world)
 		{
-			_spawnedBullet->_instigatorController =	Cast<ACharacterController>(_player->GetController());
+			FVector _spawnLocation = _player->GetActorLocation() + (_player->GetActorForwardVector() * 50.0f);
+			FRotator _spawnRotation = _player->GetActorRotation();
+	
+			FActorSpawnParameters _spawnParameters;
+			_spawnParameters.Instigator = _player->GetInstigator();
+			_spawnParameters.Owner = _player;
+
+			ABulletBase* _spawnedBullet = _world->SpawnActor<ABulletBase>(BulletClass, _spawnLocation, _spawnRotation, _spawnParameters);
+
+			_currentAmmo--;
+			if(_currentAmmo<0)
+				_currentAmmo = 0;
+		//	if(GEngine)
+		//		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Current Pistol Ammo: %d"), _currentAmmo);
+			if(_spawnedBullet)
+			{
+				_spawnedBullet->_instigatorController =	Cast<ACharacterController>(_player->GetController());
+			}
+		}
+		else
+		{
+			//Play empty magazine sound
 		}
 	}
-
-	
 }
+
+void APistol::Reload()
+{
+	Super::Reload();
+
+	_currentAmmo = _ammoCapacity;
+}
+
+
+
 

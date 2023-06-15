@@ -116,6 +116,7 @@ public:
 	UPROPERTY(ReplicatedUsing = OnRep_EquippedWeapon, VisibleAnywhere, BlueprintReadOnly, Category ="Weapon")
 	TSubclassOf<AWeaponBase> _equippedWeapon;
 
+	TSubclassOf<AWeaponBase> GetEquippedWeapon();
 	UFUNCTION()
 	void OnRep_EquippedWeapon();
 	

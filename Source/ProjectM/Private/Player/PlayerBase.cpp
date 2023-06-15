@@ -290,6 +290,11 @@ int32 APlayerBase::GetCurrentWeapIndex()
 	return _currentWeapIndex;
 }
 
+TSubclassOf<AWeaponBase> APlayerBase::GetEquippedWeapon()
+{
+	return _equippedWeapon;
+}
+
 void APlayerBase::OnRep_EquippedWeapon()
 {
 	EquipWeapon(_currentWeapIndex);

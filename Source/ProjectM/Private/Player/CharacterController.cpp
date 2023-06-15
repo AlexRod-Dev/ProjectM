@@ -75,6 +75,7 @@ void ACharacterController::SetupInputComponent()
 	//Bind Fire Button to Action(function)
 	InputComponent->BindAction("Fire", IE_Pressed, this, &ACharacterController::StartShoot);
 
+	InputComponent->BindAction("Reload", IE_Pressed, this, &ACharacterController::ServerReload);
 	//Bind Use Item button
 	InputComponent->BindAction("UseItem", IE_Pressed,this, &ACharacterController::ServerSpawnBox);
 
@@ -148,6 +149,60 @@ void ACharacterController::StopShoot()
 
 }
 
+
+	void ACharacterController::ServerShoot_Implementation()
+{
+	APawn* const _playerPawn = GetPawn();
+
+	if(_playerPawn != nullptr)
+	{
+		APlayerBase* _player = Cast<APlayerBase>(_playerPawn);
+		if(_player)
+		{
+			TSubclassOf<AWeaponBase> _weapon = _player->_equippedWeapon;
+			
+			if(_weapon)
+				
+				_weapon->GetDefaultObject<AWeaponBase>()->Fire(_player,GetWorld());
+		}
+		
+		// FVector _spawnLocation = _playerPawn->GetActorLocation() + (_playerPawn->GetActorForwardVector() * 50.0f);
+		// FRotator _spawnRotation = _playerPawn->GetActorRotation();
+		//
+		// FActorSpawnParameters _spawnParameters;
+		// _spawnParameters.Instigator = GetInstigator();
+		// _spawnParameters.Owner = this;
+		//
+		// ABulletBase* _spawnedBullet = GetWorld()->SpawnActor<ABulletBase>(_spawnLocation, _spawnRotation, _spawnParameters);
+		//
+		// 	if(_spawnedBullet)
+		// 	{
+		// 		_spawnedBullet->_instigatorController =	Cast<ACharacterController>(this);
+		// 	}
+
+	}
+	
+	
+}
+
+
+void ACharacterController::ServerReload_Implementation()
+	{
+		APawn* const _playerPawn = GetPawn();
+		
+		if(_playerPawn != nullptr)
+		{
+			APlayerBase* _player = Cast<APlayerBase>(_playerPawn);
+			if(_player)
+			{
+				TSubclassOf<AWeaponBase> _weapon = _player->_equippedWeapon;
+				if(_weapon)
+					
+					_weapon->GetDefaultObject<AWeaponBase>()->Reload();
+			}
+		}
+	}
+
 	void ACharacterController::ServerSpawnBox_Implementation()
 	{
 	APawn* _playerPawn = GetPawn();
@@ -218,39 +273,7 @@ void ACharacterController::NextWeapon()
 		return true;
 	}
 
-	void ACharacterController::ServerShoot_Implementation()
-{
-	APawn* const _playerPawn = GetPawn();
 
-	if(_playerPawn != nullptr)
-	{
-		APlayerBase* _player = Cast<APlayerBase>(_playerPawn);
-		if(_player)
-		{
-			TSubclassOf<AWeaponBase> _weapon = _player->_equippedWeapon;
-			if(_weapon)
-				
-				_weapon->GetDefaultObject<AWeaponBase>()->Fire(_player,GetWorld());
-		}
-		
-		// FVector _spawnLocation = _playerPawn->GetActorLocation() + (_playerPawn->GetActorForwardVector() * 50.0f);
-		// FRotator _spawnRotation = _playerPawn->GetActorRotation();
-		//
-		// FActorSpawnParameters _spawnParameters;
-		// _spawnParameters.Instigator = GetInstigator();
-		// _spawnParameters.Owner = this;
-		//
-		// ABulletBase* _spawnedBullet = GetWorld()->SpawnActor<ABulletBase>(_spawnLocation, _spawnRotation, _spawnParameters);
-		//
-		// 	if(_spawnedBullet)
-		// 	{
-		// 		_spawnedBullet->_instigatorController =	Cast<ACharacterController>(this);
-		// 	}
-
-	}
-	
-	
-}
 
 
 

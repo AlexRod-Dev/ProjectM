@@ -11,6 +11,7 @@ AShotgun::AShotgun() : AWeaponBase(LoadObject<USkeletalMesh>(nullptr, TEXT("/Gam
 	_damage = 40.0f;
 	_fireRate = 0.1f;
 	_ammoCapacity = 30;
+	_currentAmmo = _ammoCapacity;
 	_reloadTime = 2.0f;
 
 	static ConstructorHelpers::FClassFinder<ABulletBase> AmmoClassFinder(TEXT("/Game/Blueprints/Objects/Weapons/BP_Bullet_Shotgun"));
@@ -27,38 +28,55 @@ void AShotgun::Fire(APlayerBase* _player, UWorld* _world)
 
 	UE_LOG(LogTemp, Warning, TEXT("Shoot Shotgun"));
 
-	if (_world)
+	if(_currentAmmo>0)
 	{
-		const int32 _numPellets = 8; // Number of shotgun pellets
-		const float _spreadAngle = 20.0f; // Spread angle of the shotgun pellets
-
-		const FVector _shootDirection = _player->GetActorForwardVector(); // Get the direction to shoot
-
-		FVector _spawnLocation = _player->GetActorLocation() + (_player->GetActorForwardVector() * 50.0f);
-		FRotator _spawnRotation = _player->GetActorRotation();
-	
-		// Loop over the number of shotgun pellets
-		for (int32 PelletIndex = 0; PelletIndex < _numPellets; ++PelletIndex)
+		if (_world)
 		{
-			// Calculate the spread direction based on the spread angle
-			const FVector _spreadDirection = FMath::VRandCone(_shootDirection, FMath::DegreesToRadians(_spreadAngle));
-			
-			// Spawn a shotgun bullet at the weapon's muzzle location and rotation
-			FActorSpawnParameters _spawnParams;
-			_spawnParams.Owner = _player;
-			_spawnParams.Instigator = _player->GetInstigator();
-			
-			ABulletBase* ShotgunBullet = _world->SpawnActor<ABulletBase>(BulletClass, _spawnLocation, _spawnRotation, _spawnParams);
+			const int32 _numPellets = 8; // Number of shotgun pellets
+			const float _spreadAngle = 20.0f; // Spread angle of the shotgun pellets
 
-			if (ShotgunBullet)
+			const FVector _shootDirection = _player->GetActorForwardVector(); // Get the direction to shoot
+
+			FVector _spawnLocation = _player->GetActorLocation() + (_player->GetActorForwardVector() * 50.0f);
+			FRotator _spawnRotation = _player->GetActorRotation();
+	
+			// Loop over the number of shotgun pellets
+			for (int32 PelletIndex = 0; PelletIndex < _numPellets; ++PelletIndex)
 			{
-				//ShotgunBullet->
-				// Set properties for the shotgun bullet, such as initial velocity and damage
-				ShotgunBullet->SetInitialVelocity(_spreadDirection * 1000.f);
+				// Calculate the spread direction based on the spread angle
+				const FVector _spreadDirection = FMath::VRandCone(_shootDirection, FMath::DegreesToRadians(_spreadAngle));
+			
+				// Spawn a shotgun bullet at the weapon's muzzle location and rotation
+				FActorSpawnParameters _spawnParams;
+				_spawnParams.Owner = _player;
+				_spawnParams.Instigator = _player->GetInstigator();
+			
+				ABulletBase* ShotgunBullet = _world->SpawnActor<ABulletBase>(BulletClass, _spawnLocation, _spawnRotation, _spawnParams);
+				_currentAmmo--;
+				if(_currentAmmo<0)
+					_currentAmmo = 0;
 				
+				
+				if (ShotgunBullet)
+				{
+					//ShotgunBullet->
+					// Set properties for the shotgun bullet, such as initial velocity and damage
+					ShotgunBullet->SetInitialVelocity(_spreadDirection * 1000.f);
+				
+				}
 			}
 		}
+		else
+		{
+			//Play sound
+		}
+		
 	}
+}
 
+void AShotgun::Reload()
+{
+	Super::Reload();
 
+	_currentAmmo = _ammoCapacity;
 }

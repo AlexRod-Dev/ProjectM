@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Net/UnrealNetwork.h"
 #include "WeaponBase.generated.h"
 
 
@@ -22,6 +23,7 @@ protected:
 
 	
 
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 	float _damage;
@@ -29,11 +31,18 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 	float _fireRate;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+	UPROPERTY(Replicated,EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 	int32 _ammoCapacity;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+	UPROPERTY(Replicated,EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 	int32 _currentAmmo;
+
+	UFUNCTION(BlueprintPure, Category = "Weapon")
+	// ReSharper disable once UnrealHeaderToolError
+	int32 GetCurrentAmmo();
+	
+	UFUNCTION(BlueprintPure, Category = "Weapon")
+	int32 GetMaxAmmo();
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 	float _reloadTime;
@@ -48,8 +57,8 @@ public:
 	UFUNCTION(NetMulticast, Reliable, BlueprintCallable, Category = "Weapon")
 	virtual void Fire(APlayerBase* _player, UWorld* _world);
 
-	void Reload();
+	UFUNCTION(NetMulticast, Reliable, BlueprintCallable, Category = "Weapon")
+	virtual void Reload();
 
-
-	
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 };

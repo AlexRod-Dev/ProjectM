@@ -17,5 +17,7 @@ class PROJECTM_API AShotgun : public AWeaponBase
 	AShotgun();
 	
 	virtual void Fire(APlayerBase* _player, UWorld* _world) override;
+
+	virtual void Reload() override;
 	
 };

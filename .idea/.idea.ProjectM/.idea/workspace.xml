@@ -9,29 +9,21 @@
   <component name="ChangeListManager">
     <list default="true" id="534929b2-979d-4c39-bc4a-9a8db12e89fc" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectM/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectM/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/DefaultInput.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultInput.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Assets/Materials/M_Tech_Hex_Tile_Pulse.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Assets/Materials/M_Tech_Hex_Tile_Pulse.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Assets/Weapons/Mesh_Pistol.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Assets/Weapons/Mesh_Pistol.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Player/BP_Pistol.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Player/BP_PlayerBase.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Player/BP_PlayerBase.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Characters/Mannequins/Materials/Instances/Quinn/MI_Quinn_02.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Characters/Mannequins/Materials/Instances/Quinn/MI_Quinn_02.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Characters/Mannequins/Materials/M_Mannequin.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Characters/Mannequins/Materials/M_Mannequin.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Characters/Mannequins/Meshes/SKM_Manny.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Characters/Mannequins/Meshes/SKM_Manny.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Characters/Mannequins/Meshes/SK_Mannequin.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Characters/Mannequins/Meshes/SK_Mannequin.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Objects/Weapons/BP_Bullet_Pistol.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Objects/Weapons/BP_Bullet_Pistol.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Objects/Weapons/BP_Bullet_Rifle.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Objects/Weapons/BP_Bullet_Rifle.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Objects/Weapons/BP_Bullet_Shotgun.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Objects/Weapons/BP_Bullet_Shotgun.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Maps/TestMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Maps/TestMap.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/StarterContent/Materials/M_Tech_Hex_Tile.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/StarterContent/Materials/M_Tech_Hex_Tile.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/StarterContent/Materials/M_Wood_Oak.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/StarterContent/Materials/M_Wood_Oak.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/Enemies/EnemyBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Private/Enemies/EnemyBase.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Main.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Main.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/Pickups/Pistol.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Private/Pickups/Pistol.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/Pickups/Rifle.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Private/Pickups/Rifle.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/Pickups/Shotgun.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Private/Pickups/Shotgun.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/Pickups/WeaponBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Private/Pickups/WeaponBase.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/Pickups/WeaponPickup.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Private/Pickups/WeaponPickup.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/Player/BulletBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Private/Player/BulletBase.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/Player/CharacterController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Private/Player/CharacterController.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/Player/PlayerBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Private/Player/PlayerBase.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/ProjectM/Public/Pickups/Pistol.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Public/Pickups/Pistol.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Public/Pickups/Rifle.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Public/Pickups/Rifle.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Public/Pickups/Shotgun.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Public/Pickups/Shotgun.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/ProjectM/Public/Pickups/WeaponBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Public/Pickups/WeaponBase.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Public/Player/BulletBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Public/Player/BulletBase.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/ProjectM/Public/Player/CharacterController.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Public/Player/CharacterController.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/ProjectM/Public/Player/PlayerBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Public/Player/PlayerBase.h" afterDir="false" />
     </list>
@@ -208,7 +200,8 @@
       <workItem from="1686653197328" duration="13399000" />
       <workItem from="1686745852154" duration="11157000" />
       <workItem from="1686762541782" duration="3976000" />
-      <workItem from="1686776403921" duration="713000" />
+      <workItem from="1686776403921" duration="1451000" />
+      <workItem from="1686783984322" duration="10334000" />
     </task>
     <servers />
   </component>

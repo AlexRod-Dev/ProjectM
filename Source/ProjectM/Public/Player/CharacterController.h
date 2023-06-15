@@ -71,6 +71,9 @@ protected:
     UFUNCTION(Server, Reliable)
     void ServerShoot();
 
+	UFUNCTION(Server, Reliable)
+	void ServerReload();
+
 	// A timer handle used for providing the fire rate delay in-between spawns.
 	FTimerHandle _firingTimer;
 

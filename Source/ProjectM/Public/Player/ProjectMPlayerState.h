@@ -14,24 +14,23 @@ class PROJECTM_API AProjectMPlayerState : public APlayerState
 {
 	GENERATED_BODY()
 
-	
-
 public:
 	AProjectMPlayerState();
-	
+
 	UFUNCTION(BlueprintCallable, Category = "Score")
 	void AddScore(int32 _points);
 
 	UFUNCTION(BlueprintPure, Category = "Score")
 	int32 GetScore() const;
-	
+
 protected:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 private:
-	UPROPERTY(ReplicatedUsing = OnRep_Score, BlueprintReadWrite,Category = "Score", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(ReplicatedUsing = OnRep_Score, BlueprintReadWrite, Category = "Score",
+		meta = (AllowPrivateAccess = "true"))
 	int32 _score;
 
-	
-	void OnRep_Score();
+
+	virtual void OnRep_Score() override;
 };

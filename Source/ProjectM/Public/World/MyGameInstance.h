@@ -17,5 +17,4 @@ class PROJECTM_API UMyGameInstance : public UGameInstance
 
 	//	UPROPERTY()
 	//	TArray<TObjectPtr<ULocalPlayer>> LocalPlayers;
-	
 };

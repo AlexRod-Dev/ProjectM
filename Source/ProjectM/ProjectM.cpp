@@ -3,4 +3,4 @@
 #include "ProjectM.h"
 #include "Modules/ModuleManager.h"
 
-IMPLEMENT_PRIMARY_GAME_MODULE( FDefaultGameModuleImpl, ProjectM, "ProjectM" );
+IMPLEMENT_PRIMARY_GAME_MODULE(FDefaultGameModuleImpl, ProjectM, "ProjectM");

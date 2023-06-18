@@ -8,7 +8,7 @@
 // Sets default values
 ABoxBase::ABoxBase()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
@@ -17,23 +17,22 @@ ABoxBase::ABoxBase()
 	_health = 100.f;
 
 	// Get a reference to the material you want to apply to the mesh
-	_redMaterial = LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/LevelPrototyping/Materials/M_Solid_Red.M_Solid_Red"));
-	_yellowMaterial = LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/LevelPrototyping/Materials/M_Solid_Yellow.M_Solid_Yellow"));
-
+	_redMaterial = LoadObject<UMaterialInterface>(
+		nullptr, TEXT("/Game/LevelPrototyping/Materials/M_Solid_Red.M_Solid_Red"));
+	_yellowMaterial = LoadObject<UMaterialInterface>(
+		nullptr, TEXT("/Game/LevelPrototyping/Materials/M_Solid_Yellow.M_Solid_Yellow"));
 }
 
 // Called when the game starts or when spawned
 void ABoxBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
 void ABoxBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void ABoxBase::ServerDestroyBox_Implementation()
@@ -50,26 +49,23 @@ void ABoxBase::ServerTakeDamage_Implementation(float _damage)
 {
 	_health -= _damage;
 
-	
-	if(_health < 70.f && _health > 40.f)
+
+	if (_health < 70.f && _health > 40.f)
 	{
 		_currentColor = _yellowMaterial;
-		ChangeBoxColor(this,_currentColor);
-		
+		ChangeBoxColor(this, _currentColor);
 	}
 
-	if(_health <=40.f && _health > 0.1f)
+	if (_health <= 40.f && _health > 0.1f)
 	{
 		_currentColor = _redMaterial;
-		ChangeBoxColor(this,_currentColor);
-		
+		ChangeBoxColor(this, _currentColor);
 	}
 
-	if(_health <= 0.0f)
+	if (_health <= 0.0f)
 	{
 		ServerDestroyBox();
 	}
-
 }
 
 bool ABoxBase::ServerChangeBoxColor_Validate(UMaterialInterface* _material)
@@ -79,7 +75,7 @@ bool ABoxBase::ServerChangeBoxColor_Validate(UMaterialInterface* _material)
 
 void ABoxBase::ChangeBoxColor(ABoxBase* _box, UMaterialInterface* _material)
 {
-	if(HasAuthority())
+	if (HasAuthority())
 	{
 		_box->ServerChangeBoxColor(_material);
 	}
@@ -88,11 +84,11 @@ void ABoxBase::ChangeBoxColor(ABoxBase* _box, UMaterialInterface* _material)
 
 void ABoxBase::ServerChangeBoxColor_Implementation(UMaterialInterface* _material)
 {
-	if(HasAuthority())
-	StaticMesh->SetMaterial(0, _material);
-	
+	if (HasAuthority())
+	{
+		StaticMesh->SetMaterial(0, _material);
+	}
 }
-
 
 
 void ABoxBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -104,11 +100,10 @@ void ABoxBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetime
 
 void ABoxBase::OnRep_Material()
 {
-	StaticMesh->SetMaterial(0,_currentColor);
+	StaticMesh->SetMaterial(0, _currentColor);
 }
 
 bool ABoxBase::ServerTakeDamage_Validate(float _damage)
 {
 	return true;
 }
-

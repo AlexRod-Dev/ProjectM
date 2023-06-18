@@ -15,7 +15,7 @@
 // Sets default values
 AEnemyBase::AEnemyBase()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	_maxHealth = 100.0f;
@@ -27,12 +27,13 @@ AEnemyBase::AEnemyBase()
 	_attackSpeed = 1.0f;
 
 	bIsAttacking = false;
-	
+
 	_damagedFrom = nullptr;
 
 
 	// Set the health pickup class
-	static ConstructorHelpers::FClassFinder<AHealthPickup> HealthPickupClassFinder(TEXT("/Game/Blueprints/BP_HealthPickup"));
+	static ConstructorHelpers::FClassFinder<AHealthPickup> HealthPickupClassFinder(
+		TEXT("/Game/Blueprints/BP_HealthPickup"));
 	if (HealthPickupClassFinder.Succeeded())
 	{
 		HealthPickupClass = HealthPickupClassFinder.Class;
@@ -47,43 +48,42 @@ void AEnemyBase::BeginPlay()
 	bIsAlive = true;
 
 	GetWorld()->GetGameState<AProjectMGameStateBase>()->UpdateEnemiesAlive(1);
-	
 }
 
 // Called every frame
 void AEnemyBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
-float AEnemyBase::TakeDamage(float _damageTaken, FDamageEvent const& DamageEvent, AController* _instigatorController, AActor* _otherActor)
+float AEnemyBase::TakeDamage(float _damageTaken, const FDamageEvent& DamageEvent, AController* _instigatorController,
+                             AActor* _otherActor)
 {
-	AController* _controller =_otherActor->GetInstigatorController();
+	AController* _controller = _otherActor->GetInstigatorController();
 
-	if(_controller != nullptr)
+	if (_controller != nullptr)
 	{
 		_damagedFrom = Cast<ACharacterController>(_instigatorController);
 	}
-	
+
 	float _damageApplied = _currentHealth - _damageTaken;
-	
-	if(bIsAlive)
-	SetCurrentHealth(_damageApplied);
+
+	if (bIsAlive)
+	{
+		SetCurrentHealth(_damageApplied);
+	}
 
 	return _damageApplied;
 }
 
 void AEnemyBase::AttackPlayer()
 {
-	if(bIsAttacking!=true)
+	if (bIsAttacking != true)
 	{
 		PerformSphereTrace();
 		bIsAttacking = false;
 	}
 }
-
-
 
 
 void AEnemyBase::SetCurrentHealth(float _hpValue)
@@ -97,13 +97,11 @@ void AEnemyBase::SetCurrentHealth(float _hpValue)
 
 void AEnemyBase::OnHealthUpdate()
 {
-
 	//All machines
 	if (_currentHealth <= 0)
 	{
 		Die();
 	}
-
 }
 
 void AEnemyBase::OnRep_CurrentHealth()
@@ -115,18 +113,17 @@ void AEnemyBase::Die()
 {
 	bIsAlive = false;
 	UWorld* _world = GetWorld();
-	if(_world)
+	if (_world)
 	{
 		int32 _waveNumber = Cast<AProjectMGameStateBase>(_world->GetGameState())->GetCurrentWave();
-	
-		if(_damagedFrom !=nullptr)
+
+		if (_damagedFrom != nullptr)
 		{
-			_damagedFrom->GetPlayerState<AProjectMPlayerState>()->AddScore(1+_waveNumber);
+			_damagedFrom->GetPlayerState<AProjectMPlayerState>()->AddScore(1 + _waveNumber);
 		}
-		
 	}
-	
-	
+
+
 	if (HasAuthority())
 	{
 		_world->GetGameState<AProjectMGameStateBase>()->UpdateEnemiesAlive(-1);
@@ -152,13 +149,11 @@ void AEnemyBase::MultiDie_Implementation()
 		SpawnLocation.Z -= ZOffset;
 		FRotator SpawnRotation = GetActorRotation();
 
-		
-		AHealthPickup* HealthPickup = GetWorld()->SpawnActor<AHealthPickup>(HealthPickupClass, SpawnLocation, SpawnRotation, SpawnParams);
+
+		AHealthPickup* HealthPickup = GetWorld()->SpawnActor<AHealthPickup>(
+			HealthPickupClass, SpawnLocation, SpawnRotation, SpawnParams);
 	}
-
-
 }
-
 
 
 void AEnemyBase::PerformSphereTrace()
@@ -167,25 +162,25 @@ void AEnemyBase::PerformSphereTrace()
 	FVector EndLocation = GetActorLocation();
 	float Radius = 75.f;
 	FCollisionQueryParams Params;
-	Params.AddIgnoredActor(this);  // Ignore the current character
+	Params.AddIgnoredActor(this); // Ignore the current character
 	TArray<FHitResult> HitResults;
 
-//	if(HasAuthority())
-//	{
-		
-		// Perform the Sphere Trace
-		bool bHit = GetWorld()->SweepMultiByChannel(HitResults, StartLocation, EndLocation,FQuat::Identity, ECC_Pawn,FCollisionShape::MakeSphere(Radius),Params);
-		
-		if (bHit)
-		{
-			// Handle the hit result
-			OnSphereTraceComplete(HitResults,Radius);
-		}
-	
-	
-//	}
+	//	if(HasAuthority())
+	//	{
+
+	// Perform the Sphere Trace
+	bool bHit = GetWorld()->SweepMultiByChannel(HitResults, StartLocation, EndLocation, FQuat::Identity, ECC_Pawn,
+	                                            FCollisionShape::MakeSphere(Radius), Params);
+
+	if (bHit)
+	{
+		// Handle the hit result
+		OnSphereTraceComplete(HitResults, Radius);
+	}
+
+
+	//	}
 	bIsAttacking = false;
-	
 }
 
 void AEnemyBase::StartAttackTimer()
@@ -194,61 +189,55 @@ void AEnemyBase::StartAttackTimer()
 
 	float _attackInterval = 1.0f / _attackSpeed;
 
-	
+
 	GetWorld()->GetTimerManager().SetTimer(AttackTimerHandle, this, &AEnemyBase::AttackPlayer, _attackInterval, true);
-	
 }
 
 void AEnemyBase::OnSphereTraceComplete(const TArray<FHitResult>& HitResults, float radius)
 {
 	// Handle the hit result here
-	for(const FHitResult& HitResult : HitResults)
+	for (const FHitResult& HitResult : HitResults)
 	{
 		AActor* HitActor = HitResult.GetActor();
-	
-		if(HitActor && HitActor->IsA(APlayerBase::StaticClass()))
+
+		if (HitActor && HitActor->IsA(APlayerBase::StaticClass()))
 		{
-		
 			APlayerBase* _hitPlayer = Cast<APlayerBase>(HitActor);
-			if(_hitPlayer)
+			if (_hitPlayer)
 			{
 				_hitPlayer->TakeDamage(_damage, FDamageEvent(), nullptr, this);
 			}
 			else
 			{
 				UE_LOG(LogTemp, Warning, TEXT("nao bati num player i guess"));
-		
 			}
 		}
-		if(HitActor && HitActor->IsA(ABoxBase::StaticClass()))
+		if (HitActor && HitActor->IsA(ABoxBase::StaticClass()))
 		{
 			ABoxBase* _hitBox = Cast<ABoxBase>(HitActor);
-			if(_hitBox)
+			if (_hitBox)
 			{
 				_hitBox->ServerTakeDamage(_damage);
 			}
 		}
-		
-		
+
+
 		// Draw debug sphere
 		FColor SphereColor = FColor::Red;
 		//DrawDebugSphere(GetWorld(), HitResult.Location, radius, 16, SphereColor, false, 2.f);
-	
 	}
-
-
 }
 
-void AEnemyBase::ApplyKnockback(float _knockbackStrength,FVector _knockbackDirection)
+void AEnemyBase::ApplyKnockback(float _knockbackStrength, FVector _knockbackDirection)
 {
 	AController* _controller = GetController();
-	if(_controller)
+	if (_controller)
 	{
 		AEnemyAIController* _aiController = Cast<AEnemyAIController>(_controller);
 
-		if(_aiController)
+		if (_aiController)
 		{
-			_aiController->ApplyKnockback(_knockbackStrength,_knockbackDirection);
+			_aiController->ApplyKnockback(_knockbackStrength, _knockbackDirection);
 
 			if (GetNetMode() == NM_Client)
 			{
@@ -256,19 +245,14 @@ void AEnemyBase::ApplyKnockback(float _knockbackStrength,FVector _knockbackDirec
 			}
 		}
 	}
-	
 }
 
-void AEnemyBase::ServerApplyKnockback_Implementation( float _knockbackStrength, FVector _knockbackDirection)
+void AEnemyBase::ServerApplyKnockback_Implementation(float _knockbackStrength, FVector _knockbackDirection)
 {
-	ApplyKnockback(_knockbackStrength,_knockbackDirection);
+	ApplyKnockback(_knockbackStrength, _knockbackDirection);
 }
 
-bool AEnemyBase::ServerApplyKnockback_Validate(float KnockbackStrength,FVector KnockbackDirection)
+bool AEnemyBase::ServerApplyKnockback_Validate(float KnockbackStrength, FVector KnockbackDirection)
 {
 	return true;
 }
-
-
-
-

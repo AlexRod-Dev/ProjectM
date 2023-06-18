@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "Pickups/WeaponBase.h"
+#include "Weapons/WeaponBase.h"
 #include "Net/UnrealNetwork.h"
 #include "PlayerBase.generated.h"
 
@@ -15,7 +15,7 @@ UCLASS()
 class PROJECTM_API APlayerBase : public ACharacter
 {
 	GENERATED_BODY()
-	
+
 public:
 	// Sets default values for this pawn's properties
 	APlayerBase();
@@ -30,17 +30,16 @@ public:
 
 
 	/** Property replication */
-	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 private:
-		/** Top down camera */
+	/** Top down camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* TopDownCameraComponent;
 
 	/** Camera boom positioning the camera above the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
-
 
 protected:
 	virtual void BeginPlay() override;
@@ -88,12 +87,13 @@ public:
 
 	//Function for Taking Damage
 	UFUNCTION(BlueprintCallable, Category = "Health")
-	virtual float TakeDamage(float _damageTaken, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* _otherActor) override;
+	virtual float TakeDamage(float _damageTaken, const struct FDamageEvent& DamageEvent, AController* EventInstigator,
+	                         AActor* _otherActor) override;
 
 	//Function for Recover Health
 	UFUNCTION(BlueprintCallable, Category = "Health")
 	virtual float RecoverHealth(float _amount);
-	
+
 	void Die();
 
 	UFUNCTION(NetMulticast, Reliable)
@@ -108,35 +108,32 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Replicated, Category ="Weapon")
 	TArray<TSubclassOf<AWeaponBase>> _weaponInventory;
 
-	UPROPERTY(Replicated,BlueprintReadOnly, Category = "Weapon")
+	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Weapon")
 	int32 _currentWeapIndex;
-	
+
 	int32 GetCurrentWeapIndex();
-	
+
 	UPROPERTY(ReplicatedUsing = OnRep_EquippedWeapon, VisibleAnywhere, BlueprintReadOnly, Category ="Weapon")
 	TSubclassOf<AWeaponBase> _equippedWeapon;
 
 	TSubclassOf<AWeaponBase> GetEquippedWeapon();
 	UFUNCTION()
 	void OnRep_EquippedWeapon();
-	
+
 	UPROPERTY()
 	AWeaponBase* SpawnedWeapon;
 
 	void EquipWeapon(int32 _index);
-	
+
 	UFUNCTION(Server, Reliable, WithValidation, BlueprintCallable, Category = "Weapon")
 	void Server_EquipWeapon(int32 _index);
 
 	UFUNCTION(Server, Reliable, WithValidation, Category = "Weapon")
 	void PickupWeapon(TSubclassOf<AWeaponBase> _weaponPickup);
-	
+
 	UFUNCTION(Server, Reliable, WithValidation)
 	void AddWeapon(TSubclassOf<AWeaponBase> _weapon);
 
-	
-	
+
 	TArray<TSubclassOf<AWeaponBase>> GetWeaponInventory();
-
-
 };

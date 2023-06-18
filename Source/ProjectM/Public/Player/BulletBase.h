@@ -11,8 +11,8 @@ UCLASS()
 class PROJECTM_API ABulletBase : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	ABulletBase();
 
@@ -22,8 +22,7 @@ protected:
 
 	virtual void Destroyed() override;
 
-
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -31,33 +30,33 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
 	class USphereComponent* SphereComponent;
 
-	 // Static Mesh used to provide a visual representation of the object.
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
-    class UStaticMeshComponent* StaticMesh;
+	// Static Mesh used to provide a visual representation of the object.
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+	class UStaticMeshComponent* StaticMesh;
 
-    // Movement component for handling projectile movement.
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
-    class UProjectileMovementComponent* ProjectileMovementComponent;
+	// Movement component for handling projectile movement.
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+	class UProjectileMovementComponent* ProjectileMovementComponent;
 
-    // Particle used when the projectile impacts against another object and explodes.
-    UPROPERTY(EditAnywhere, Category = "Effects")
-    class UParticleSystem* _bloodEffect;
+	// Particle used when the projectile impacts against another object and explodes.
+	UPROPERTY(EditAnywhere, Category = "Effects")
+	class UParticleSystem* _bloodEffect;
 
 	//The damage type and damage that will be done by this projectile
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Damage")
-    TSubclassOf<class UDamageType> _damageType;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Damage")
+	TSubclassOf<class UDamageType> _damageType;
 
-    //The damage dealt by this projectile.
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Damage")
-    float _damage;
+	//The damage dealt by this projectile.
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Damage")
+	float _damage;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Bullet")
-	 ACharacterController* _instigatorController;
+	ACharacterController* _instigatorController;
 
 	void SetInitialVelocity(const FVector& _velocity);
-	
+
 protected:
 	UFUNCTION(Category="Projectile")
-		void OnProjectileImpact(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
-
+	void OnProjectileImpact(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	                        FVector NormalImpulse, const FHitResult& Hit);
 };

@@ -1,0 +1,131 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "Weapons/Pistol.h"
+
+#include "Kismet/GameplayStatics.h"
+#include "Player/BulletBase.h"
+#include "Player/CharacterController.h"
+#include "UObject/ConstructorHelpers.h"
+#include "Player/PlayerBase.h"
+#include "Sound/SoundCue.h"
+
+APistol::APistol() : AWeaponBase(
+	LoadObject<USkeletalMesh>(nullptr, TEXT("/Game/Assets/Weapons/Mesh_Pistol.Mesh_Pistol")))
+{
+
+	PrimaryActorTick.bCanEverTick = true;
+	
+	
+	_damage = 25.0f;
+	_fireRate = 0.4f;
+	_ammoCapacity = 12;
+	_currentAmmo = _ammoCapacity;
+	_reloadTime = 1.0f;
+	bIsReloading = false;
+	
+
+	bReplicates = true;
+	
+	
+
+	// Set the bullet class
+	static ConstructorHelpers::FClassFinder<ABulletBase> AmmoClassFinder(
+		TEXT("/Game/Blueprints/Objects/Weapons/BP_Bullet_Pistol"));
+	if (AmmoClassFinder.Succeeded())
+	{
+		BulletClass = AmmoClassFinder.Class;
+	}
+	
+	//Set the sounds
+	static ConstructorHelpers::FObjectFinder<USoundCue> FireSoundAsset(TEXT("/Game/Sounds/SFX/Weapons/Pistol/Cues/Pistol_Fire_Cue"));
+	if (FireSoundAsset.Succeeded())
+	{
+		//AudioComponent->SetSound(FireSoundAsset.Object);
+		FireSound = FireSoundAsset.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<USoundCue> ReloadSoundAsset(TEXT("/Game/Sounds/SFX/Weapons/Pistol/Cues/Pistol_Reload_Cue"));
+	if (ReloadSoundAsset.Succeeded())
+	{
+		ReloadSound = ReloadSoundAsset.Object;
+	}
+}
+
+void APistol::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}
+
+
+void APistol::Fire(APlayerBase* _player, UWorld* _world, float _timeSinceLastShot)
+{
+	Super::Fire(_player, _world, _timeSinceLastShot);
+
+	if(_currentAmmo > 0)
+	{
+		if (_timeSinceLastShot > _fireRate && !bIsReloading)
+		{
+			if (_world)
+			{
+				FVector _spawnLocation = _player->GetActorLocation() + (_player->GetActorForwardVector() * 53.0f);
+				FRotator _spawnRotation = _player->GetActorRotation();
+			
+				FActorSpawnParameters _spawnParameters;
+				_spawnParameters.Instigator = _player->GetInstigator();
+				_spawnParameters.Owner = _player;
+			
+				ABulletBase* _spawnedBullet = _world->SpawnActor<ABulletBase>(
+					BulletClass, _spawnLocation, _spawnRotation, _spawnParameters);
+			
+				_currentAmmo--;
+				if (_currentAmmo <= 0)
+				{
+					_currentAmmo = 0;
+				}
+			
+				if (_spawnedBullet)
+				{
+					_spawnedBullet->_instigatorController = Cast<ACharacterController>(_player->GetController());
+
+					//reset timer
+					Cast<ACharacterController>(_player->GetController())->_timeSinceLastShot = 0;
+
+				
+					if(FireSound)
+					{
+						if(HasAuthority())
+							Server_PlaySound(FireSound,_spawnLocation,_world);
+					}
+				}
+	
+			}
+		
+		}
+	}
+	
+	else
+	{
+		Reload();
+		//Play empty magazine sound
+	}
+
+
+}
+
+void APistol::Reload()
+{
+	Super::Reload();
+
+	_currentAmmo = _ammoCapacity;
+
+	if(ReloadSound != nullptr)
+	{
+		//	if(HasAuthority())
+			//	Server_PlaySound(FireSound,_spawnLocation,_world);
+		
+		UGameplayStatics::PlaySoundAtLocation(this, ReloadSound, GetActorLocation());
+
+	}
+}

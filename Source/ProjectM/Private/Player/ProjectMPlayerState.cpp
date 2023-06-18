@@ -7,13 +7,11 @@
 
 AProjectMPlayerState::AProjectMPlayerState()
 {
-
-	
 }
 
 void AProjectMPlayerState::AddScore(int32 _points)
 {
-	if(HasAuthority())
+	if (HasAuthority())
 	{
 		_score += _points;
 		OnRep_Score();
@@ -36,4 +34,3 @@ void AProjectMPlayerState::OnRep_Score()
 {
 	Super::OnRep_Score();
 }
-

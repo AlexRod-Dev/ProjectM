@@ -18,14 +18,13 @@
 // Sets default values
 ABulletBase::ABulletBase()
 {
-
 	bReplicates = true;
 
 	_damageType = UDamageType::StaticClass();
-	
+
 	_damage = 20.0f;
 
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("RootComponent"));
@@ -36,16 +35,17 @@ ABulletBase::ABulletBase()
 	//SphereComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECollisionResponse::ECR_Ignore);
 	RootComponent = SphereComponent;
 
-	if(GetLocalRole() == ROLE_Authority)
+	if (GetLocalRole() == ROLE_Authority)
 	{
 		SphereComponent->OnComponentHit.AddDynamic(this, &ABulletBase::OnProjectileImpact);
 	}
 
 	//Definition for the Mesh that will serve as your visual representation.
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> DefaultMesh(TEXT("/Game/Assets/Weapons/StaticMeshes/Pistol_Ammo_Static.Pistol_Ammo_Static"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> DefaultMesh(
+		TEXT("/Game/Assets/Weapons/StaticMeshes/Pistol_Ammo_Static.Pistol_Ammo_Static"));
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	StaticMesh->SetupAttachment(RootComponent);
-	
+
 	//Set the Static Mesh and its position/scale if you successfully found a mesh asset to use.
 	if (DefaultMesh.Succeeded())
 	{
@@ -54,7 +54,8 @@ ABulletBase::ABulletBase()
 		StaticMesh->SetRelativeScale3D(FVector(1.5f, 1.5f, 1.5f));
 	}
 
-	static ConstructorHelpers::FObjectFinder<UParticleSystem> DefaultBloodEffect(TEXT("/Game/Assets/Particles/P_Blood_Splat_Cone.P_Blood_Splat_Cone"));
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> DefaultBloodEffect(
+		TEXT("/Game/Assets/Particles/P_Blood_Splat_Cone.P_Blood_Splat_Cone"));
 	if (DefaultBloodEffect.Succeeded())
 	{
 		_bloodEffect = DefaultBloodEffect.Object;
@@ -67,7 +68,6 @@ ABulletBase::ABulletBase()
 	ProjectileMovementComponent->MaxSpeed = 1500.0f;
 	ProjectileMovementComponent->bRotationFollowsVelocity = true;
 	ProjectileMovementComponent->ProjectileGravityScale = 0.0f;
-	
 }
 
 // Called when the game starts or when spawned
@@ -81,14 +81,12 @@ void ABulletBase::BeginPlay()
 
 void ABulletBase::Destroyed()
 {
-	
 }
 
 // Called every frame
 void ABulletBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void ABulletBase::SetInitialVelocity(const FVector& _velocity)
@@ -96,57 +94,61 @@ void ABulletBase::SetInitialVelocity(const FVector& _velocity)
 	ProjectileMovementComponent->Velocity = _velocity;
 }
 
-void ABulletBase::OnProjectileImpact(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+void ABulletBase::OnProjectileImpact(UPrimitiveComponent* HitComponent, AActor* OtherActor,
+                                     UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	if(OtherActor)
+	if (OtherActor)
 	{
 		//for Teammates take half hp
-		if(APlayerBase* _player = Cast<APlayerBase>(OtherActor))
+		if (APlayerBase* _player = Cast<APlayerBase>(OtherActor))
 		{
-			if(HasAuthority())
-			_player->TakeDamage((_damage / 2), FDamageEvent(), nullptr, this);
+			if(_player == Cast<APlayerBase>(_instigatorController->GetPawn()))
+			{
+				Destroy();
+				return;
+			}
+				
+			
+			if (HasAuthority())
+			{
+				_player->TakeDamage((_damage / 2), FDamageEvent(), nullptr, this);
+			}
 
 			FVector _spawnLocation = GetActorLocation();
-			UGameplayStatics::SpawnEmitterAtLocation(this, _bloodEffect, _spawnLocation, FRotator::ZeroRotator, true, EPSCPoolMethod::AutoRelease);
-
+			UGameplayStatics::SpawnEmitterAtLocation(this, _bloodEffect, _spawnLocation, FRotator::ZeroRotator, true,
+			                                         EPSCPoolMethod::AutoRelease);
 		}
 		//for normal enemies
-		if(AEnemyBase* _enemy = Cast<AEnemyBase>(OtherActor))
+		if (AEnemyBase* _enemy = Cast<AEnemyBase>(OtherActor))
 		{
 			if (HasAuthority())
 			{
-				
 				_enemy->TakeDamage(_damage, FDamageEvent(), _instigatorController, this);
 			}
 
 			FVector _knockbackDirection = -Hit.Normal;
 			float _knockbackStrenght = 1000.f;
-			_enemy->ApplyKnockback(_knockbackStrenght,_knockbackDirection);
+			_enemy->ApplyKnockback(_knockbackStrenght, _knockbackDirection);
 			// Call the MultiApplyKnockback function to apply the knockback effect
-			
-			FVector _spawnLocation = GetActorLocation();
-			UGameplayStatics::SpawnEmitterAtLocation(this, _bloodEffect, _spawnLocation, FRotator::ZeroRotator, true, EPSCPoolMethod::AutoRelease);
 
+			FVector _spawnLocation = GetActorLocation();
+			UGameplayStatics::SpawnEmitterAtLocation(this, _bloodEffect, _spawnLocation, FRotator::ZeroRotator, true,
+			                                         EPSCPoolMethod::AutoRelease);
 		}
 
 		//for objects (in this case the box)
-		if(ABoxBase* _box = Cast<ABoxBase>(OtherActor))
+		if (ABoxBase* _box = Cast<ABoxBase>(OtherActor))
 		{
-			if(HasAuthority())
+			if (HasAuthority())
 			{
 				_box->ServerTakeDamage(_damage);
 			}
 		}
-		if(ABulletBase* _bullet = Cast<ABulletBase>(OtherActor))
+		if (ABulletBase* _bullet = Cast<ABulletBase>(OtherActor))
 		{
 			return;
 		}
-		
 	}
 
 	Destroy();
-
 }
-
-
-

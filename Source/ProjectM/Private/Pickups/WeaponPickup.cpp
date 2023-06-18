@@ -8,7 +8,7 @@
 // Sets default values
 AWeaponPickup::AWeaponPickup()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
 
@@ -21,38 +21,29 @@ AWeaponPickup::AWeaponPickup()
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WeaponMesh"));
 	StaticMesh->SetupAttachment(RootComponent);
 
-	
+
 	// Bind the OnOverlapBegin function to the OnComponentBeginOverlap event
 	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AWeaponPickup::OnComponentBeginOverlap);
-
-	
-
 }
 
 // Called when the game starts or when spawned
 void AWeaponPickup::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
-void AWeaponPickup::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void AWeaponPickup::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+                                            UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
+                                            const FHitResult& SweepResult)
 {
-	if(OtherActor != nullptr && OtherActor != this)
+	if (OtherActor != nullptr && OtherActor != this)
 	{
 		APlayerBase* _player = Cast<APlayerBase>(OtherActor);
 
-		if(_player)
+		if (_player)
 		{
 			_player->PickupWeapon(WeaponClass);
 			Destroy();
 		}
 	}
-
-	
 }
-
-
-
-
-

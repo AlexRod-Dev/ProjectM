@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -17,10 +15,9 @@ class PROJECTM_API AProjectMGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 
-	
 public:
 	AProjectMGameModeBase();
-	
+
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void BeginPlay() override;
@@ -30,16 +27,10 @@ public:
 	// FSpawnEnemy fSpawnEnemy;
 
 protected:
-
-
-	virtual void HandleStartingNewPlayer_Implementation(APlayerController* _newPlayer);
+	virtual void HandleStartingNewPlayer_Implementation(APlayerController* _newPlayer) override;
 
 public:
 	void Respawn(ACharacterController* _playerController);
-		
+
 	float _enemyTimer;
-
-
-
-
 };

@@ -10,29 +10,25 @@ UCLASS()
 class PROJECTM_API ABoxBase : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	ABoxBase();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	
-	UPROPERTY(BlueprintReadOnly,Replicated)
+
+	UPROPERTY(BlueprintReadOnly, Replicated)
 	float _health;
 
-	
-	
 private:
 	UMaterialInterface* _redMaterial;
 	UMaterialInterface* _yellowMaterial;
 	UPROPERTY(ReplicatedUsing=OnRep_Material)
 	UMaterialInterface* _currentColor;
 
-	
-
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -57,9 +53,8 @@ public:
 	void ChangeBoxColor(ABoxBase* _box, UMaterialInterface* _material);
 
 protected:
-
 	/** Property replication */
-	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	UFUNCTION()
 	void OnRep_Material();

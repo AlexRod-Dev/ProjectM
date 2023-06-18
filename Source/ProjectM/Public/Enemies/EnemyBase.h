@@ -24,15 +24,16 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Health")
 	UClass* HealthPickupClass;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	ACharacterController* _damagedFrom;
-	
+
 	//Event for Taking Damage
 	UFUNCTION(BlueprintCallable, Category = "Health")
-	virtual float TakeDamage(float _damageTaken, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* _otherActor) override;
+	virtual float TakeDamage(float _damageTaken, const struct FDamageEvent& DamageEvent, AController* EventInstigator,
+	                         AActor* _otherActor) override;
 
 	//Getter for Max Health
 	UFUNCTION(BlueprintPure, Category="Health")
@@ -49,7 +50,7 @@ public:
 	//Function for the attack
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void AttackPlayer();
-	
+
 	// Perform a Sphere Trace
 	void PerformSphereTrace();
 
@@ -57,11 +58,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Knockback")
 	void ApplyKnockback(float _knockbackStrength, FVector _knockbackDirection);
-	
-	
-	bool IsAlive(){return bIsAlive;}
 
 
+	bool IsAlive() { return bIsAlive; }
 
 protected:
 	float _maxHealth;
@@ -73,7 +72,7 @@ protected:
 	bool bIsAttacking;
 
 	bool bIsAlive;
-	
+
 
 	/** RepNotify for changes made to current health.*/
 	UFUNCTION()
@@ -82,7 +81,6 @@ protected:
 	/** Response to health being updated. Called on the server immediately after modification, and on clients in response to a RepNotify*/
 	void OnHealthUpdate();
 
-	
 
 	void Die();
 
@@ -96,7 +94,5 @@ protected:
 
 	// Handle the Sphere Trace result
 	UFUNCTION()
-	void OnSphereTraceComplete(const TArray<FHitResult>& HitResults,float radius);
-
-	
+	void OnSphereTraceComplete(const TArray<FHitResult>& HitResults, float radius);
 };

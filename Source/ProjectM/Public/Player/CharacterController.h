@@ -24,9 +24,8 @@ protected:
 private:
 	UPROPERTY(EditAnywhere, Category = "Health")
 	UClass* BoxClass;
-	
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -41,35 +40,35 @@ public:
 	void DisableControls();
 
 	void EnableControls();
-	
+
 	bool GetIsAlive();
 
 	bool bIsAlive;
 
-
+	UPROPERTY(Replicated)
+	float _timeSinceLastShot;
 protected:
-	
 	UPROPERTY(EditDefaultsOnly, Category="Gameplay|Projectile")
-    TSubclassOf<class ABulletBase> _projectileClass;
-	
+	TSubclassOf<class ABulletBase> _projectileClass;
+
 	// Delay between shots in seconds
-    UPROPERTY(EditDefaultsOnly, Category="Gameplay")
-    float _fireRate;
+	UPROPERTY(EditDefaultsOnly, Category="Gameplay")
+	float _fireRate;
 
 	// If true, you are in the process of firing projectiles.
 	bool bIsFiringWeapon;
 
 	// Function for beginning weapon fire.
-	UFUNCTION(Category="Gameplay") 
+	UFUNCTION(Category="Gameplay")
 	void StartShoot();
 
 	// Function for ending weapon fire. Once this is called, the player can use StartFire again.
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")
-    void StopShoot();  
+	void StopShoot();
 
 	// Server function for spawning projectiles.
-    UFUNCTION(Server, Reliable)
-    void ServerShoot();
+	UFUNCTION(Server, Reliable)
+	void ServerShoot();
 
 	UFUNCTION(Server, Reliable)
 	void ServerReload();
@@ -77,16 +76,22 @@ protected:
 	// A timer handle used for providing the fire rate delay in-between spawns.
 	FTimerHandle _firingTimer;
 
-	UFUNCTION(Server,Reliable,WithValidation)
+	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerSpawnBox();
 	bool ServerSpawnBox_Validate();
 	void ServerSpawnBox_Implementation();
 
 	void PreviousWeapon();
-	
+
 	void NextWeapon();
-	
-	
+
+
 	UPROPERTY(EditAnywhere)
 	float _spawnDistance;
+
+
+
+	/** Property replication */
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 };

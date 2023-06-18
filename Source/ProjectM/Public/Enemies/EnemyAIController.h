@@ -16,7 +16,6 @@ class PROJECTM_API AEnemyAIController : public AAIController
 public:
 	AEnemyAIController();
 
-
 protected:
 	virtual void BeginPlay() override;
 
@@ -39,6 +38,4 @@ public:
 protected:
 	UFUNCTION(Server, Reliable)
 	void ServerApplyKnockback(float KnockbackStrength, FVector KnockbackDirection);
-
-	
 };

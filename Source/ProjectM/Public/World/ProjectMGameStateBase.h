@@ -14,7 +14,6 @@ class PROJECTM_API AProjectMGameStateBase : public AGameStateBase
 	GENERATED_BODY()
 
 public:
-	
 	AProjectMGameStateBase();
 
 	UPROPERTY(Replicated)
@@ -27,13 +26,11 @@ public:
 	int32 GetCurrentWave() { return _currentWave; }
 
 	UFUNCTION(BlueprintCallable)
-	int32 GetEnemiesAlive() {  return _enemiesAlive; }
+	int32 GetEnemiesAlive() { return _enemiesAlive; }
 
 	UFUNCTION(BlueprintCallable, Category = "Game State")
 	void UpdateEnemiesAlive(int32 _enemies);
 
 
-	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-
-	
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 };

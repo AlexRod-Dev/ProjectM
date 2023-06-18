@@ -17,10 +17,6 @@ class PROJECTM_API UEnemyBTTask_AttackPlayer : public UBTTask_BlackboardBase
 public:
 	UEnemyBTTask_AttackPlayer();
 
-
-	
 private:
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
-	
-
 };

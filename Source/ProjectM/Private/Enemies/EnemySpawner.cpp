@@ -15,12 +15,11 @@ AEnemySpawner::AEnemySpawner()
 	PrimaryActorTick.bCanEverTick = true;
 
 	//Enables Replication
-	SetReplicates(true);
+	bReplicates = true;
 
 	_baseEnemies = 3;
 	_incrementFactor = 2;
 	_waveNumber = 1;
-
 }
 
 // Called when the game starts or when spawned
@@ -28,11 +27,10 @@ void AEnemySpawner::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if(HasAuthority())
+	if (HasAuthority())
 	{
 		SpawnWave();
 	}
-	
 }
 
 // Called every frame
@@ -40,13 +38,11 @@ void AEnemySpawner::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if(HasAuthority())
+	if (HasAuthority())
 	{
 		CheckEnemiesAlive();
 	}
 }
-
-
 
 
 void AEnemySpawner::SpawnWave_Implementation()
@@ -55,19 +51,19 @@ void AEnemySpawner::SpawnWave_Implementation()
 	FVector _enemySpawnLocation = GetActorLocation();
 
 	//Change increment factor or wave number to the number of online players
-	int32 _enemiesToSpawn = _baseEnemies + (_waveNumber-1) * _incrementFactor;
-	
-	for(int32 i = 0; i < _enemiesToSpawn; i++)
+	int32 _enemiesToSpawn = _baseEnemies + (_waveNumber - 1) * _incrementFactor;
+
+	for (int32 i = 0; i < _enemiesToSpawn; i++)
 	{
 		UWorld* _world = GetWorld();
-		
-		if(_world)
+
+		if (_world)
 		{
-			AEnemyBase* _spawnedEnemy =	_world->SpawnActor<AEnemyBase>(BasicEnemyBlueprint, _enemySpawnLocation, FRotator::ZeroRotator);
+			AEnemyBase* _spawnedEnemy = _world->SpawnActor<AEnemyBase>(BasicEnemyBlueprint, _enemySpawnLocation,
+			                                                           FRotator::ZeroRotator);
 			_activeEnemies.Add(_spawnedEnemy);
 		}
 	}
-	
 }
 
 bool AEnemySpawner::SpawnWave_Validate()
@@ -89,9 +85,9 @@ bool AEnemySpawner::IncrementWaveNumber_Validate()
 
 void AEnemySpawner::CheckEnemiesAlive_Implementation()
 {
-	for(AEnemyBase* _enemy : _activeEnemies)
+	for (AEnemyBase* _enemy : _activeEnemies)
 	{
-		if(_enemy && _enemy->IsAlive())
+		if (_enemy && _enemy->IsAlive())
 		{
 			return;
 		}
@@ -99,7 +95,6 @@ void AEnemySpawner::CheckEnemiesAlive_Implementation()
 	_activeEnemies.Empty();
 	IncrementWaveNumber();
 	SpawnWave();
-	
 }
 
 bool AEnemySpawner::CheckEnemiesAlive_Validate()
@@ -115,10 +110,4 @@ void AEnemySpawner::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLif
 	DOREPLIFETIME(AEnemySpawner, _baseEnemies);
 	DOREPLIFETIME(AEnemySpawner, _incrementFactor);
 	DOREPLIFETIME(AEnemySpawner, _activeEnemies);
-	
 }
-
-
-
-
-

@@ -21,8 +21,14 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
-	UPROPERTY(EditAnywhere, Category = "Health")
+	UPROPERTY(EditAnywhere, Category = "Pickups")
 	UClass* HealthPickupClass;
+	UPROPERTY(EditAnywhere, Category = "Pickups")
+	UClass* PistolPickupClass;
+	UPROPERTY(EditAnywhere, Category = "Pickups")
+	UClass* RiflePickupClass;
+	UPROPERTY(EditAnywhere, Category = "Pickups")
+	UClass* ShotgunPickupClass;
 
 public:
 	// Called every frame

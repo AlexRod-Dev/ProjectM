@@ -9,6 +9,7 @@
 #include "World/ProjectMGameStateBase.h"
 #include "Player/ProjectMPlayerState.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Pickups/WeaponPickup.h"
 #include "Player/BoxBase.h"
 
 
@@ -28,16 +29,42 @@ AEnemyBase::AEnemyBase()
 
 	bIsAttacking = false;
 
+	bIsAlive = true;
 	_damagedFrom = nullptr;
 
-
+	
 	// Set the health pickup class
 	static ConstructorHelpers::FClassFinder<AHealthPickup> HealthPickupClassFinder(
-		TEXT("/Game/Blueprints/BP_HealthPickup"));
+		TEXT("/Game/Blueprints/Objects/Pickups/BP_HealthPickup"));
 	if (HealthPickupClassFinder.Succeeded())
 	{
 		HealthPickupClass = HealthPickupClassFinder.Class;
 	}
+	// Set the Pistol pickup class
+	static ConstructorHelpers::FClassFinder<AWeaponPickup> PistolPickupClassFinder(
+		TEXT("/Game/Blueprints/Objects/Pickups/BP_PistolPickup"));
+	if (PistolPickupClassFinder.Succeeded())
+	{
+		PistolPickupClass = PistolPickupClassFinder.Class;
+	}
+	// Set the Rifle pickup class
+	static ConstructorHelpers::FClassFinder<AWeaponPickup> RiflePickupClassFinder(
+		TEXT("/Game/Blueprints/Objects/Pickups/BP_RiflePickup"));
+	if (RiflePickupClassFinder.Succeeded())
+	{
+		RiflePickupClass = RiflePickupClassFinder.Class;
+	}
+	// Set the Shotgun pickup class
+	static ConstructorHelpers::FClassFinder<AWeaponPickup> ShotgunPickupClassFinder(
+		TEXT("/Game/Blueprints/Objects/Pickups/BP_ShotgunPickup"));
+	if (ShotgunPickupClassFinder.Succeeded())
+	{
+		ShotgunPickupClass = ShotgunPickupClassFinder.Class;
+	}
+
+
+
+	
 }
 
 // Called when the game starts or when spawned
@@ -153,6 +180,8 @@ void AEnemyBase::MultiDie_Implementation()
 		AHealthPickup* HealthPickup = GetWorld()->SpawnActor<AHealthPickup>(
 			HealthPickupClass, SpawnLocation, SpawnRotation, SpawnParams);
 	}
+
+	
 }
 
 

@@ -11,8 +11,9 @@ ARifle::ARifle() : AWeaponBase(LoadObject<USkeletalMesh>(nullptr, TEXT("/Game/As
 {
 	_damage = 40.0f;
 	_fireRate = 0.1f;
-	_ammoCapacity = 30;
-	_currentAmmo = _ammoCapacity;
+	_totalAmmo = 60;
+	_magSize = 30;
+	_currentAmmo = _magSize;
 	_reloadTime = 2.0f;
 
 	static ConstructorHelpers::FClassFinder<ABulletBase> AmmoClassFinder(
@@ -23,18 +24,23 @@ ARifle::ARifle() : AWeaponBase(LoadObject<USkeletalMesh>(nullptr, TEXT("/Game/As
 	}
 }
 
-void ARifle::Fire(APlayerBase* _player, UWorld* _world, float _timeSinceLastShot)
+void ARifle::BeginPlay()
 {
-	Super::Fire(_player, _world, _timeSinceLastShot);
-	UE_LOG(LogTemp, Warning, TEXT("Shoot Rifle"));
-
+	Super::BeginPlay();
+	
+}
+void ARifle::ServerFire(APlayerBase* _player, UWorld* _world, float _timeSinceLastShot)
+{
+	Super::ServerFire(_player, _world, _timeSinceLastShot);
+	
+	
 	if (_currentAmmo > 0)
 	{
-		if(_timeSinceLastShot > _fireRate && !bIsReloading)
+		if(_timeSinceLastShot > _fireRate)
 		{
 			if (_world)
 			{
-				FVector _spawnLocation = _player->GetActorLocation() + (_player->GetActorForwardVector() * 53.0f);
+				FVector _spawnLocation = _player->GetActorLocation() + (_player->GetActorForwardVector() * 54.0f);
 				FRotator _spawnRotation = _player->GetActorRotation();
 
 				FActorSpawnParameters _spawnParameters;
@@ -66,11 +72,28 @@ void ARifle::Fire(APlayerBase* _player, UWorld* _world, float _timeSinceLastShot
 		Reload();
 		//Play empty magazine sound
 	}
+	
 }
 
 void ARifle::Reload()
 {
 	Super::Reload();
 
-	_currentAmmo = _ammoCapacity;
+	if(_totalAmmo == 0)
+	{
+		return;
+	}
+	
+	if(_totalAmmo < _magSize)
+	{
+		_currentAmmo = _totalAmmo;
+		_totalAmmo = 0;
+	}
+	else
+	{
+	int32 _remainingBullets = _magSize - _currentAmmo;
+		_currentAmmo += _remainingBullets;
+		_totalAmmo -= _remainingBullets;
+	}
+	
 }

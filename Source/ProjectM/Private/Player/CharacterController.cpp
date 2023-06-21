@@ -8,7 +8,6 @@
 #include "Weapons/WeaponBase.h"
 #include "Player/BulletBase.h"
 #include "Player/PlayerBase.h"
-#include "World/ProjectMGameStateBase.h"
 #include "Player/ProjectMPlayerState.h"
 #include "Weapons/Pistol.h"
 
@@ -28,7 +27,11 @@ ACharacterController::ACharacterController()
 
 	_timeSinceLastShot = 0;
 
-	_spawnDistance = 100.f;
+	bIsAlive = true;
+
+	bIsReloading = false;
+	
+	_spawnBoxDistance = 100.f;
 	// Set the health pickup class
 	static ConstructorHelpers::FClassFinder<ABoxBase> BoxClassFinder(TEXT("/Game/Blueprints/Objects/BP_BoxBase"));
 	if (BoxClassFinder.Succeeded())
@@ -75,9 +78,9 @@ void ACharacterController::SetupInputComponent()
 	InputComponent->BindAxis("MoveRight", this, &ACharacterController::MoveRight);
 
 	//Bind Fire Button to Action(function)
-	InputComponent->BindAction("Fire", IE_Pressed, this, &ACharacterController::StartShoot);
+	InputComponent->BindAction("Fire", IE_Pressed, this, &ACharacterController::ServerShoot);
 
-	InputComponent->BindAction("Reload", IE_Pressed, this, &ACharacterController::ServerReload);
+	InputComponent->BindAction("Reload", IE_Pressed, this, &ACharacterController::StartReload);
 	//Bind Use Item button
 	InputComponent->BindAction("UseItem", IE_Pressed, this, &ACharacterController::ServerSpawnBox);
 
@@ -124,88 +127,126 @@ bool ACharacterController::GetIsAlive()
 	return bIsAlive;
 }
 
-
-void ACharacterController::StartShoot()
+void ACharacterController::StartReload()
 {
-		//	if (!bIsFiringWeapon)
-		//	{
-		//bIsFiringWeapon = true;
-		//UWorld* _world = GetWorld();
-		//_world->GetTimerManager().SetTimer(_firingTimer, this, &ACharacterController::StopShoot, _fireRate, false);
-		ServerShoot();
-		//}
+		APawn* const _playerPawn = GetPawn();
+
+		if (_playerPawn != nullptr)
+		{
+			APlayerBase* _player = Cast<APlayerBase>(_playerPawn);
+			if (_player)
+			{
+				TSubclassOf<AWeaponBase> _weapon = _player->_equippedWeapon;
+				if(_weapon != nullptr)
+				{
+					if(HasAuthority())
+					{
+						bIsReloading = true;
+						
+						//get reload time of current weapon
+						_reloadTimer = _weapon->GetDefaultObject<AWeaponBase>()->_reloadTime;
+
+						//Set timer to callreload complete
+						GetWorld()->GetTimerManager().SetTimer(TimerHandle_Reload, this, &ACharacterController::ReloadComplete, _reloadTimer,false);
+					}
+					else
+					{
+						ServerStartReload();
+					}
+				}
+			}
+		}
 }
 
-void ACharacterController::StopShoot()
+
+void ACharacterController::ServerStartReload_Implementation()
 {
-	bIsFiringWeapon = false;
+	if(HasAuthority())
+	{
+		StartReload();
+	}
+}
+
+
+
+void ACharacterController::OnRep_IsReloading()
+{
+}
+
+void ACharacterController::OnRep_ReloadTimer()
+{
+}
+
+void ACharacterController::ReloadComplete()
+{
+	if(HasAuthority())
+	{
+		bIsReloading = false;
+		APawn* const _playerPawn = GetPawn();
+
+		if (_playerPawn != nullptr)
+		{
+			APlayerBase* _player = Cast<APlayerBase>(_playerPawn);
+			if (_player)
+			{
+				TSubclassOf<AWeaponBase> _weapon = _player->_equippedWeapon;
+				if (_weapon)
+
+				{
+					_weapon->GetDefaultObject<AWeaponBase>()->Reload();
+				}
+			}
+		}
+	}
+}
+
+bool ACharacterController::ServerShoot_Validate()
+{
+	return true;
 }
 
 
 void ACharacterController::ServerShoot_Implementation()
 {
-	APawn* const _playerPawn = GetPawn();
-
-	if (_playerPawn != nullptr)
+	if(!bIsReloading)
 	{
-		APlayerBase* _player = Cast<APlayerBase>(_playerPawn);
-		if (_player)
+		APawn* const _playerPawn = GetPawn();
+
+		if (_playerPawn != nullptr)
 		{
-			TSubclassOf<AWeaponBase> _weapon = _player->_equippedWeapon;
-			if(_weapon != nullptr)
-			{	
-			_weapon->GetDefaultObject<AWeaponBase>()->Fire(_player, GetWorld(),_timeSinceLastShot);
-		
-		//		APistol* _pistol = Cast<APistol>(_weapon);
-				
-		//		if(_pistol !=nullptr)
-		//		_pistol->Fire(_player, GetWorld(),_timeSinceLastShot);
-				
-				
-				// AWeaponBase* _castedWeapon = Cast<AWeaponBase>(_weapon);
-				// if (_castedWeapon)
-				// {
-				// 	_castedWeapon->Fire(_player, GetWorld());
-				//
-				// }
-			}
-		}
-
-		// FVector _spawnLocation = _playerPawn->GetActorLocation() + (_playerPawn->GetActorForwardVector() * 50.0f);
-		// FRotator _spawnRotation = _playerPawn->GetActorRotation();
-		//
-		// FActorSpawnParameters _spawnParameters;
-		// _spawnParameters.Instigator = GetInstigator();
-		// _spawnParameters.Owner = this;
-		//
-		// ABulletBase* _spawnedBullet = GetWorld()->SpawnActor<ABulletBase>(_spawnLocation, _spawnRotation, _spawnParameters);
-		//
-		// 	if(_spawnedBullet)
-		// 	{
-		// 		_spawnedBullet->_instigatorController =	Cast<ACharacterController>(this);
-		// 	}
-	}
-}
-
-
-void ACharacterController::ServerReload_Implementation()
-{
-	APawn* const _playerPawn = GetPawn();
-
-	if (_playerPawn != nullptr)
-	{
-		APlayerBase* _player = Cast<APlayerBase>(_playerPawn);
-		if (_player)
-		{
-			TSubclassOf<AWeaponBase> _weapon = _player->_equippedWeapon;
-			if (_weapon)
-
+			APlayerBase* _player = Cast<APlayerBase>(_playerPawn);
+			if (_player)
 			{
-				_weapon->GetDefaultObject<AWeaponBase>()->Reload();
+ 			
+				TSubclassOf<AWeaponBase> _weapon = _player->_equippedWeapon;
+				if(_weapon != nullptr)
+				{
+					if(HasAuthority())
+					{
+						_weapon->GetDefaultObject<AWeaponBase>()->ServerFire(_player, GetWorld(),_timeSinceLastShot);
+					
+					}
+					else
+					{
+						if(GetNetMode()==NM_Client)
+						{
+							_weapon->GetDefaultObject<AWeaponBase>()->ServerFire_Implementation(_player, GetWorld(),_timeSinceLastShot);
+					
+						}
+					}
+					
+				}
 			}
 		}
 	}
 }
+
+
+
+
+
+
+
 
 void ACharacterController::ServerSpawnBox_Implementation()
 {
@@ -213,7 +254,7 @@ void ACharacterController::ServerSpawnBox_Implementation()
 	if (_playerPawn)
 	{
 		FVector _spawnLocation = _playerPawn->GetActorLocation() + _playerPawn->GetActorForwardVector() *
-			_spawnDistance;
+			_spawnBoxDistance;
 		FRotator _spawnRotation = FRotator(1, 1, 1);
 
 		FActorSpawnParameters _spawnParams;
@@ -222,6 +263,11 @@ void ACharacterController::ServerSpawnBox_Implementation()
 
 		GetWorld()->SpawnActor<ABoxBase>(BoxClass, _spawnLocation, _spawnRotation, _spawnParams);
 	}
+}
+
+bool ACharacterController::ServerStartReload_Validate()
+{
+	return true;
 }
 
 void ACharacterController::PreviousWeapon()
@@ -273,6 +319,8 @@ void ACharacterController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(ACharacterController, _timeSinceLastShot);
+	DOREPLIFETIME(ACharacterController, bIsReloading);
+	DOREPLIFETIME(ACharacterController, _reloadTimer);
 }
 
 

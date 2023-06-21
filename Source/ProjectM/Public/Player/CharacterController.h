@@ -29,10 +29,11 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+
+#pragma region Inputs
 	// Called to bind functionality to input
 	virtual void SetupInputComponent() override;
-
-
+	
 	void MoveForward(float AxisValue);
 
 	void MoveRight(float AxisValue);
@@ -40,13 +41,47 @@ public:
 	void DisableControls();
 
 	void EnableControls();
+	
+#pragma endregion
 
+	
 	bool GetIsAlive();
 
 	bool bIsAlive;
 
 	UPROPERTY(Replicated)
 	float _timeSinceLastShot;
+
+	
+#pragma region reload
+	
+
+	UPROPERTY(ReplicatedUsing = OnRep_IsReloading)
+	bool bIsReloading;
+
+	UPROPERTY(ReplicatedUsing = OnRep_ReloadTimer)
+	float _reloadTimer;
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerStartReload();
+
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	void StartReload();
+
+	FTimerHandle TimerHandle_Reload;
+	UFUNCTION()
+	void OnRep_IsReloading();
+
+	UFUNCTION()
+	void OnRep_ReloadTimer();
+
+	UFUNCTION()
+	void ReloadComplete();
+
+	
+#pragma endregion 
+
+	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category="Gameplay|Projectile")
 	TSubclassOf<class ABulletBase> _projectileClass;
@@ -58,28 +93,14 @@ protected:
 	// If true, you are in the process of firing projectiles.
 	bool bIsFiringWeapon;
 
-	// Function for beginning weapon fire.
-	UFUNCTION(Category="Gameplay")
-	void StartShoot();
-
-	// Function for ending weapon fire. Once this is called, the player can use StartFire again.
-	UFUNCTION(BlueprintCallable, Category = "Gameplay")
-	void StopShoot();
 
 	// Server function for spawning projectiles.
-	UFUNCTION(Server, Reliable)
+	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerShoot();
-
-	UFUNCTION(Server, Reliable)
-	void ServerReload();
-
-	// A timer handle used for providing the fire rate delay in-between spawns.
-	FTimerHandle _firingTimer;
 
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerSpawnBox();
-	bool ServerSpawnBox_Validate();
-	void ServerSpawnBox_Implementation();
+
 
 	void PreviousWeapon();
 
@@ -87,7 +108,7 @@ protected:
 
 
 	UPROPERTY(EditAnywhere)
-	float _spawnDistance;
+	float _spawnBoxDistance;
 
 
 

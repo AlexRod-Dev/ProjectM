@@ -18,14 +18,17 @@ public:
 	AWeaponBase(const FObjectInitializer& ObjectInitializer);
 
 	//virtual void Tick(float DeltaTime) override;
-
-protected:
 	virtual void BeginPlay() override;
+protected:
+	
 
 	
 
 
 public:
+
+#pragma region Proprieties
+	
 	//Weapon Proprieties
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 	float _damage;
@@ -34,11 +37,22 @@ public:
 	float _fireRate;
 
 	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "Weapon")
-	int32 _ammoCapacity;
+	int32 _totalAmmo;
 
 	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 	int32 _currentAmmo;
-	//
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+	int32 _magSize;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+	float _reloadTime;
+
+	
+#pragma endregion
+	
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	void AddAmmo(int32 _ammoToAdd);
 	
 	UFUNCTION(BlueprintPure, Category = "Weapon")
 	// ReSharper disable once UnrealHeaderToolError
@@ -47,26 +61,20 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Weapon")
 	int32 GetMaxAmmo();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
-	float _reloadTime;
-
-	bool bIsReloading;
+	UFUNCTION(NetMulticast, Reliable, BlueprintCallable,Category="Weapon")
+	virtual void Reload();
 	
-	//UPROPERTY(Replicated)
-	//float _timeSinceLastShot;
 	
 	UPROPERTY(EditAnywhere, Category = "Health")
 	UClass* BulletClass;
-
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 	USkeletalMeshComponent* WeaponMesh;
 
-	UFUNCTION(NetMulticast, Reliable, BlueprintCallable, Category = "Weapon")
-	virtual void Fire(APlayerBase* _player, UWorld* _world,float _timeSinceLastShot);
+	UFUNCTION(Server,WithValidation, Reliable, BlueprintCallable, Category = "Weapon")
+	virtual void ServerFire(APlayerBase* _player, UWorld* _world,float _timeSinceLastShot);
 
-	UFUNCTION(NetMulticast, Reliable, BlueprintCallable, Category = "Weapon")
-	virtual void Reload();
+#pragma region Sounds
 
 	//Sounds
 	UPROPERTY(EditAnywhere, Category = "Audio")
@@ -84,6 +92,7 @@ public:
 	UFUNCTION(NetMulticast, Reliable)
 	void Multicast_PlaySound(USoundCue* _sound, FVector _location, UWorld* _world);
 
+#pragma endregion 
 	
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 };

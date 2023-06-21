@@ -16,11 +16,11 @@ class PROJECTM_API APistol : public AWeaponBase
 
 public:
 	APistol();
+	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
-	virtual void Fire(APlayerBase* _player, UWorld* _world,float _timeSinceLastShot) override;
+	virtual void ServerFire(APlayerBase* _player, UWorld* _world, float _timeSinceLastShot) override;
 
 	virtual void Reload() override;
-
 
 };

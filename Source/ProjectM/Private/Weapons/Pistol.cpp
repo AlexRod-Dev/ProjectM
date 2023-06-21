@@ -19,10 +19,11 @@ APistol::APistol() : AWeaponBase(
 	
 	_damage = 25.0f;
 	_fireRate = 0.4f;
-	_ammoCapacity = 12;
-	_currentAmmo = _ammoCapacity;
+	_magSize = 12;
+	_currentAmmo = _magSize;
+	_totalAmmo = 12;
 	_reloadTime = 1.0f;
-	bIsReloading = false;
+	
 	
 
 	bReplicates = true;
@@ -52,6 +53,14 @@ APistol::APistol() : AWeaponBase(
 	}
 }
 
+void APistol::BeginPlay()
+{
+	Super::BeginPlay();
+
+
+	
+}
+
 void APistol::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -59,17 +68,19 @@ void APistol::Tick(float DeltaTime)
 }
 
 
-void APistol::Fire(APlayerBase* _player, UWorld* _world, float _timeSinceLastShot)
+void APistol::ServerFire(APlayerBase* _player, UWorld* _world, float _timeSinceLastShot)
 {
-	Super::Fire(_player, _world, _timeSinceLastShot);
+	Super::ServerFire(_player, _world, _timeSinceLastShot);
+	
 
 	if(_currentAmmo > 0)
 	{
-		if (_timeSinceLastShot > _fireRate && !bIsReloading)
+		if (_timeSinceLastShot > _fireRate)
 		{
 			if (_world)
 			{
-				FVector _spawnLocation = _player->GetActorLocation() + (_player->GetActorForwardVector() * 53.0f);
+				// * 54.0f is the offset in order for the bullet not to collide with player
+				FVector _spawnLocation = _player->GetActorLocation() + (_player->GetActorForwardVector() * 54.0f);
 				FRotator _spawnRotation = _player->GetActorRotation();
 			
 				FActorSpawnParameters _spawnParameters;
@@ -91,17 +102,14 @@ void APistol::Fire(APlayerBase* _player, UWorld* _world, float _timeSinceLastSho
 
 					//reset timer
 					Cast<ACharacterController>(_player->GetController())->_timeSinceLastShot = 0;
-
-				
+					
 					if(FireSound)
 					{
 						if(HasAuthority())
 							Server_PlaySound(FireSound,_spawnLocation,_world);
 					}
 				}
-	
 			}
-		
 		}
 	}
 	
@@ -110,15 +118,15 @@ void APistol::Fire(APlayerBase* _player, UWorld* _world, float _timeSinceLastSho
 		Reload();
 		//Play empty magazine sound
 	}
-
-
+	
 }
+
 
 void APistol::Reload()
 {
 	Super::Reload();
-
-	_currentAmmo = _ammoCapacity;
+	
+	_currentAmmo = _magSize;
 
 	if(ReloadSound != nullptr)
 	{

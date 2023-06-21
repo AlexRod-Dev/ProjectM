@@ -43,16 +43,23 @@ int32 AWeaponBase::GetCurrentAmmo()
 
 int32 AWeaponBase::GetMaxAmmo()
 {
-	return _ammoCapacity;
-}
-
-void AWeaponBase::Fire_Implementation(APlayerBase* _player, UWorld* _world, float _timeSinceLastShot)
-{
+	return _totalAmmo;
 }
 
 void AWeaponBase::Reload_Implementation()
 {
 }
+
+bool AWeaponBase::ServerFire_Validate(APlayerBase* _player, UWorld* _world, float _timeSinceLastShot)
+{
+	return true;
+}
+
+void AWeaponBase::ServerFire_Implementation(APlayerBase* _player, UWorld* _world, float _timeSinceLastShot)
+{
+}
+
+
 
 void AWeaponBase::Server_PlaySound_Implementation(USoundCue* _sound, FVector _location, UWorld* _world)
 {
@@ -63,7 +70,6 @@ void AWeaponBase::Server_PlaySound_Implementation(USoundCue* _sound, FVector _lo
 	Multicast_PlaySound( _sound, _location,_world);
 
 }
-
 
 void AWeaponBase::Multicast_PlaySound_Implementation(USoundCue* _sound, FVector _location, UWorld* _world)
 {
@@ -77,14 +83,21 @@ bool AWeaponBase::Server_PlaySound_Validate(USoundCue* _sound, FVector _location
 	return true;
 }
 
+
+void AWeaponBase::AddAmmo(int32 _ammoToAdd)
+{
+}
+
+
 void AWeaponBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 
 	DOREPLIFETIME(AWeaponBase, _currentAmmo);
-	DOREPLIFETIME(AWeaponBase, _ammoCapacity);
+	DOREPLIFETIME(AWeaponBase, _totalAmmo);
 	DOREPLIFETIME(AWeaponBase, AudioComponent);
+	
 
 	
 }

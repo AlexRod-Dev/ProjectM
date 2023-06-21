@@ -11,8 +11,9 @@ AShotgun::AShotgun() : AWeaponBase(
 {
 	_damage = 40.0f;
 	_fireRate = 1.f;
-	_ammoCapacity = 30;
-	_currentAmmo = _ammoCapacity;
+	_totalAmmo = 40;
+	_magSize = 32;
+	_currentAmmo = _magSize;
 	_reloadTime = 2.0f;
 
 	static ConstructorHelpers::FClassFinder<ABulletBase> AmmoClassFinder(
@@ -23,15 +24,20 @@ AShotgun::AShotgun() : AWeaponBase(
 	}
 }
 
-void AShotgun::Fire(APlayerBase* _player, UWorld* _world, float _timeSinceLastShot)
+void AShotgun::BeginPlay()
 {
-	Super::Fire(_player, _world, _timeSinceLastShot);
+	Super::BeginPlay();
+}
+
+void AShotgun::ServerFire(APlayerBase* _player, UWorld* _world, float _timeSinceLastShot)
+{
+	Super::ServerFire(_player, _world, _timeSinceLastShot);
 
 	UE_LOG(LogTemp, Warning, TEXT("Shoot Shotgun"));
 
 	if (_currentAmmo > 0)
 	{
-		if(_timeSinceLastShot > _fireRate && !bIsReloading)
+		if(_timeSinceLastShot > _fireRate)
 		{
 			
 			if (_world)
@@ -41,7 +47,7 @@ void AShotgun::Fire(APlayerBase* _player, UWorld* _world, float _timeSinceLastSh
 
 				const FVector _shootDirection = _player->GetActorForwardVector(); // Get the direction to shoot
 
-				FVector _spawnLocation = _player->GetActorLocation() + (_player->GetActorForwardVector() * 53.0f);
+				FVector _spawnLocation = _player->GetActorLocation() + (_player->GetActorForwardVector() * 54.0f);
 				FRotator _spawnRotation = _player->GetActorRotation();
 
 				// Loop over the number of shotgun pellets
@@ -89,5 +95,20 @@ void AShotgun::Reload()
 {
 	Super::Reload();
 
-	_currentAmmo = _ammoCapacity;
+	if(_totalAmmo == 0)
+	{
+		return;
+	}
+	
+	if(_totalAmmo < _magSize)
+	{
+		_currentAmmo = _totalAmmo;
+		_totalAmmo = 0;
+	}
+	else
+	{
+		int32 _remainingBullets = _magSize - _currentAmmo;
+		_currentAmmo += _remainingBullets;
+		_totalAmmo -= _remainingBullets;
+	}
 }

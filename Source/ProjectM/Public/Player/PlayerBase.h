@@ -52,6 +52,7 @@ protected:
 	UPROPERTY(EditAnywhere)
 	float _moveSpeed;
 
+#pragma region  Health
 	//Max starting Health
 	UPROPERTY(EditDefaultsOnly, Category = "Health")
 	float _maxHealth;
@@ -71,8 +72,12 @@ protected:
 	void OnHealthUpdate();
 
 	FTimerHandle RespawnTimerHandle;
+#pragma endregion
 
+	
 public:
+	
+#pragma region  Health
 	//Getter for Max Health
 	UFUNCTION(BlueprintPure, Category="Health")
 	FORCEINLINE float GetMaxHealth() const { return _maxHealth; }
@@ -105,6 +110,9 @@ public:
 
 	void HandleRespawnTimer();
 
+#pragma endregion 
+	
+#pragma region  Inventory
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Replicated, Category ="Weapon")
 	TArray<TSubclassOf<AWeaponBase>> _weaponInventory;
 
@@ -136,4 +144,7 @@ public:
 
 
 	TArray<TSubclassOf<AWeaponBase>> GetWeaponInventory();
+
+#pragma endregion
+
 };

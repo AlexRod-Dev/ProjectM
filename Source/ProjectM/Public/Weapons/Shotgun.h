@@ -14,9 +14,10 @@ class PROJECTM_API AShotgun : public AWeaponBase
 {
 	GENERATED_BODY()
 
+public:
 	AShotgun();
-
-	virtual void Fire(APlayerBase* _player, UWorld* _world, float _timeSinceLastShot) override;
+	virtual void BeginPlay() override;
+	virtual void ServerFire(APlayerBase* _player, UWorld* _world, float _timeSinceLastShot) override;
 
 	virtual void Reload() override;
 };

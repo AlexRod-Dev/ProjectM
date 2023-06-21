@@ -14,9 +14,10 @@ class PROJECTM_API ARifle : public AWeaponBase
 {
 	GENERATED_BODY()
 
+public:
 	ARifle();
-
-	virtual void Fire(APlayerBase* _player, UWorld* _world, float _) override;
+	virtual void BeginPlay() override;
+	virtual void ServerFire(APlayerBase* _player, UWorld* _world, float _timeSinceLastShot) override;
 
 	virtual void Reload() override;
 };

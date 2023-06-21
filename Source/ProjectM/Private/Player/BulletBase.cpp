@@ -102,13 +102,13 @@ void ABulletBase::OnProjectileImpact(UPrimitiveComponent* HitComponent, AActor* 
 		//for Teammates take half hp
 		if (APlayerBase* _player = Cast<APlayerBase>(OtherActor))
 		{
-			if(_player == Cast<APlayerBase>(_instigatorController->GetPawn()))
-			{
-				Destroy();
-				return;
-			}
-				
-			
+			// if(_player == Cast<APlayerBase>(_instigatorController->GetPawn()))
+			// {
+			// 	Destroy();
+			// 	return;
+			// }
+			// 	
+			//
 			if (HasAuthority())
 			{
 				_player->TakeDamage((_damage / 2), FDamageEvent(), nullptr, this);

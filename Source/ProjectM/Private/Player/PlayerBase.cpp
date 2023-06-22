@@ -222,7 +222,6 @@ void APlayerBase::AddWeapon_Implementation(TSubclassOf<AWeaponBase> _weapon)
 }
 
 
-
 TArray<TSubclassOf<AWeaponBase>> APlayerBase::GetWeaponInventory()
 {
 	return _weaponInventory;
@@ -230,7 +229,7 @@ TArray<TSubclassOf<AWeaponBase>> APlayerBase::GetWeaponInventory()
 
 void APlayerBase::PickupWeapon(TSubclassOf<AWeaponBase> _weaponPickup)
 {
-	if(HasAuthority())
+	if (HasAuthority())
 	{
 		if (_weaponPickup)
 		{
@@ -240,9 +239,9 @@ void APlayerBase::PickupWeapon(TSubclassOf<AWeaponBase> _weaponPickup)
 			}
 			else
 			{
-				for(TSubclassOf<AWeaponBase> _pickedWeapon : _weaponInventory)
+				for (TSubclassOf<AWeaponBase> _pickedWeapon : _weaponInventory)
 				{
-					if(_pickedWeapon == _weaponPickup)
+					if (_pickedWeapon == _weaponPickup)
 					{
 						_pickedWeapon->GetDefaultObject<AWeaponBase>()->ServerAddAmmo();
 						return;
@@ -255,7 +254,6 @@ void APlayerBase::PickupWeapon(TSubclassOf<AWeaponBase> _weaponPickup)
 	{
 		ServerPickupWeapon(_weaponPickup);
 	}
-	
 }
 
 void APlayerBase::ServerPickupWeapon_Implementation(TSubclassOf<AWeaponBase> _weaponPickup)

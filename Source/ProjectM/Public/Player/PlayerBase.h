@@ -74,9 +74,7 @@ protected:
 	FTimerHandle RespawnTimerHandle;
 #pragma endregion
 
-	
 public:
-	
 #pragma region  Health
 	//Getter for Max Health
 	UFUNCTION(BlueprintPure, Category="Health")
@@ -110,8 +108,8 @@ public:
 
 	void HandleRespawnTimer();
 
-#pragma endregion 
-	
+#pragma endregion
+
 #pragma region  Inventory
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Replicated, Category ="Weapon")
 	TArray<TSubclassOf<AWeaponBase>> _weaponInventory;
@@ -141,7 +139,7 @@ public:
 
 	UFUNCTION()
 	void PickupWeapon(TSubclassOf<AWeaponBase> _weaponPickup);
-	
+
 	UFUNCTION(Server, Reliable, WithValidation)
 	void AddWeapon(TSubclassOf<AWeaponBase> _weapon);
 
@@ -149,5 +147,4 @@ public:
 	TArray<TSubclassOf<AWeaponBase>> GetWeaponInventory();
 
 #pragma endregion
-
 };

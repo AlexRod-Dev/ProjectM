@@ -33,7 +33,7 @@ public:
 #pragma region Inputs
 	// Called to bind functionality to input
 	virtual void SetupInputComponent() override;
-	
+
 	void MoveForward(float AxisValue);
 
 	void MoveRight(float AxisValue);
@@ -41,10 +41,10 @@ public:
 	void DisableControls();
 
 	void EnableControls();
-	
+
 #pragma endregion
 
-	
+
 	bool GetIsAlive();
 
 	bool bIsAlive;
@@ -52,9 +52,9 @@ public:
 	UPROPERTY(Replicated)
 	float _timeSinceLastShot;
 
-	
+
 #pragma region reload
-	
+
 
 	UPROPERTY(ReplicatedUsing = OnRep_IsReloading)
 	bool bIsReloading;
@@ -78,10 +78,9 @@ public:
 	UFUNCTION()
 	void ReloadComplete();
 
-	
-#pragma endregion 
 
-	
+#pragma endregion
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category="Gameplay|Projectile")
 	TSubclassOf<class ABulletBase> _projectileClass;
@@ -111,8 +110,6 @@ protected:
 	float _spawnBoxDistance;
 
 
-
 	/** Property replication */
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-
 };

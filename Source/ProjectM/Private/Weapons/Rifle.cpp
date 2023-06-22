@@ -27,16 +27,16 @@ ARifle::ARifle() : AWeaponBase(LoadObject<USkeletalMesh>(nullptr, TEXT("/Game/As
 void ARifle::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
+
 void ARifle::ServerFire(APlayerBase* _player, UWorld* _world, float _timeSinceLastShot)
 {
 	Super::ServerFire(_player, _world, _timeSinceLastShot);
-	
-	
+
+
 	if (_currentAmmo > 0)
 	{
-		if(_timeSinceLastShot > _fireRate)
+		if (_timeSinceLastShot > _fireRate)
 		{
 			if (_world)
 			{
@@ -62,7 +62,6 @@ void ARifle::ServerFire(APlayerBase* _player, UWorld* _world, float _timeSinceLa
 					_spawnedBullet->SetInitialVelocity(_player->GetActorForwardVector() * 2000.f);
 					//reset timer
 					Cast<ACharacterController>(_player->GetController())->_timeSinceLastShot = 0;
-
 				}
 			}
 		}
@@ -72,37 +71,35 @@ void ARifle::ServerFire(APlayerBase* _player, UWorld* _world, float _timeSinceLa
 		Reload();
 		//Play empty magazine sound
 	}
-	
 }
 
 void ARifle::Reload()
 {
 	Super::Reload();
 
-	if(_totalAmmo == 0)
+	if (_totalAmmo == 0)
 	{
 		return;
 	}
-	
-	if(_totalAmmo < _magSize)
+
+	if (_totalAmmo < _magSize)
 	{
 		_currentAmmo = _totalAmmo;
 		_totalAmmo = 0;
 	}
 	else
 	{
-	int32 _remainingBullets = _magSize - _currentAmmo;
+		int32 _remainingBullets = _magSize - _currentAmmo;
 		_currentAmmo += _remainingBullets;
 		_totalAmmo -= _remainingBullets;
 	}
-	
 }
 
 void ARifle::AddAmmo()
 {
 	Super::AddAmmo();
 
-	if(HasAuthority())
+	if (HasAuthority())
 	{
 		_totalAmmo += _magSize;
 	}

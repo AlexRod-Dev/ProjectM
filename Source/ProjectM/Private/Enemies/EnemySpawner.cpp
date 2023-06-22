@@ -50,7 +50,7 @@ void AEnemySpawner::SpawnWave_Implementation()
 
 	//Change increment factor or wave number to the number of online players
 	int32 _enemiesToSpawn = _baseEnemies + (_waveNumber - 1) * _incrementFactor;
-UE_LOG(LogTemp, Warning, TEXT("enemies to spawn : %d"), _enemiesToSpawn);
+	UE_LOG(LogTemp, Warning, TEXT("enemies to spawn : %d"), _enemiesToSpawn);
 	for (int32 i = 0; i < _enemiesToSpawn; i++)
 	{
 		UWorld* _world = GetWorld();
@@ -58,7 +58,8 @@ UE_LOG(LogTemp, Warning, TEXT("enemies to spawn : %d"), _enemiesToSpawn);
 		if (_world)
 		{
 			FActorSpawnParameters _spawnParams;
-			_spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+			_spawnParams.SpawnCollisionHandlingOverride =
+				ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 			AEnemyBase* _spawnedEnemy = _world->SpawnActor<AEnemyBase>(BasicEnemyBlueprint, _enemySpawnLocation,
 			                                                           FRotator::ZeroRotator, _spawnParams);
 			_activeEnemies.Add(_spawnedEnemy);

@@ -20,16 +20,13 @@ public:
 
 	//virtual void Tick(float DeltaTime) override;
 	virtual void BeginPlay() override;
-protected:
-	
 
-	
+protected:
 
 
 public:
-
 #pragma region Proprieties
-	
+
 	//Weapon Proprieties
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 	float _damage;
@@ -49,15 +46,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 	float _reloadTime;
 
-	
+
 #pragma endregion
-	
+
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	virtual void AddAmmo();
 
 	UFUNCTION(Server, Reliable, WithValidation)
 	virtual void ServerAddAmmo();
-		
+
 	UFUNCTION(BlueprintPure, Category = "Weapon")
 	// ReSharper disable once UnrealHeaderToolError
 	int32 GetCurrentAmmo();
@@ -65,18 +62,18 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Weapon")
 	int32 GetMaxAmmo();
 
-	UFUNCTION(NetMulticast, Reliable, BlueprintCallable,Category="Weapon")
+	UFUNCTION(NetMulticast, Reliable, BlueprintCallable, Category="Weapon")
 	virtual void Reload();
-	
-	
+
+
 	UPROPERTY(EditAnywhere, Category = "Health")
 	UClass* BulletClass;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 	USkeletalMeshComponent* WeaponMesh;
 
-	UFUNCTION(Server,WithValidation, Reliable, BlueprintCallable, Category = "Weapon")
-	virtual void ServerFire(APlayerBase* _player, UWorld* _world,float _timeSinceLastShot);
+	UFUNCTION(Server, WithValidation, Reliable, BlueprintCallable, Category = "Weapon")
+	virtual void ServerFire(APlayerBase* _player, UWorld* _world, float _timeSinceLastShot);
 
 #pragma region Sounds
 
@@ -96,7 +93,7 @@ public:
 	UFUNCTION(NetMulticast, Reliable)
 	void Multicast_PlaySound(USoundCue* _sound, FVector _location, UWorld* _world);
 
-#pragma endregion 
-	
+#pragma endregion
+
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 };

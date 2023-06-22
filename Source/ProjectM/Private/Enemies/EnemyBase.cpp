@@ -31,7 +31,7 @@ AEnemyBase::AEnemyBase()
 	bIsAlive = true;
 	_damagedFrom = nullptr;
 
-	
+
 	// Set the health pickup class
 	static ConstructorHelpers::FClassFinder<AHealthPickup> HealthPickupClassFinder(
 		TEXT("/Game/Blueprints/Objects/Pickups/BP_HealthPickup"));
@@ -60,10 +60,6 @@ AEnemyBase::AEnemyBase()
 	{
 		ShotgunPickupClass = ShotgunPickupClassFinder.Class;
 	}
-
-
-
-	
 }
 
 // Called when the game starts or when spawned
@@ -182,31 +178,26 @@ void AEnemyBase::MultiDie_Implementation()
 		int32 _randomNumber = _randomStream.RandRange(0, 5);
 		switch (_randomNumber)
 		{
-			default:
-				break;
+		default:
+			break;
 
 		case 0:
-			
+
 			GetWorld()->SpawnActor<AHealthPickup>(
-			HealthPickupClass, SpawnLocation, SpawnRotation, SpawnParams);
+				HealthPickupClass, SpawnLocation, SpawnRotation, SpawnParams);
 			break;
-		
+
 		case 1:
 			GetWorld()->SpawnActor<AWeaponPickup>(
-			RiflePickupClass, SpawnLocation, SpawnRotation, SpawnParams);
+				RiflePickupClass, SpawnLocation, SpawnRotation, SpawnParams);
 			break;
-			
+
 		case 2:
 			GetWorld()->SpawnActor<AWeaponPickup>(
-			ShotgunPickupClass, SpawnLocation, SpawnRotation, SpawnParams);
+				ShotgunPickupClass, SpawnLocation, SpawnRotation, SpawnParams);
 			break;
-
 		}
-
-	
 	}
-
-	
 }
 
 
@@ -284,7 +275,7 @@ void AEnemyBase::OnSphereTraceComplete(const TArray<FHitResult>& HitResults, flo
 
 void AEnemyBase::ApplyKnockback(float _knockbackStrength, FVector _knockbackDirection)
 {
-	if(HasAuthority())
+	if (HasAuthority())
 	{
 		AController* _controller = GetController();
 		if (_controller)
@@ -294,7 +285,6 @@ void AEnemyBase::ApplyKnockback(float _knockbackStrength, FVector _knockbackDire
 			if (_aiController)
 			{
 				_aiController->ApplyKnockback(_knockbackStrength, _knockbackDirection);
-				
 			}
 		}
 	}

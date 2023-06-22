@@ -37,9 +37,8 @@ void AShotgun::ServerFire(APlayerBase* _player, UWorld* _world, float _timeSince
 
 	if (_currentAmmo > 0)
 	{
-		if(_timeSinceLastShot > _fireRate )
+		if (_timeSinceLastShot > _fireRate)
 		{
-			
 			if (_world)
 			{
 				const int32 _numPellets = 8; // Number of shotgun pellets
@@ -66,19 +65,18 @@ void AShotgun::ServerFire(APlayerBase* _player, UWorld* _world, float _timeSince
 						BulletClass, _spawnLocation, _spawnRotation, _spawnParams);
 
 					_currentAmmo--;
-					
+
 					if (_currentAmmo < 0)
 					{
 						_currentAmmo = 0;
 					}
-					
+
 					if (ShotgunBullet)
 					{
 						// Set the bullet spread
 						ShotgunBullet->SetInitialVelocity(_spreadDirection * 1000.f);
 						//reset timer
 						Cast<ACharacterController>(_player->GetController())->_timeSinceLastShot = 0;
-
 					}
 				}
 			}
@@ -95,12 +93,12 @@ void AShotgun::Reload()
 {
 	Super::Reload();
 
-	if(_totalAmmo == 0)
+	if (_totalAmmo == 0)
 	{
 		return;
 	}
-	
-	if(_totalAmmo < _magSize)
+
+	if (_totalAmmo < _magSize)
 	{
 		_currentAmmo = _totalAmmo;
 		_totalAmmo = 0;
@@ -117,11 +115,10 @@ void AShotgun::AddAmmo()
 {
 	Super::AddAmmo();
 
-	if(HasAuthority())
+	if (HasAuthority())
 	{
 		_totalAmmo += _magSize;
 	}
-
 }
 
 void AShotgun::ServerAddAmmo()
@@ -130,4 +127,3 @@ void AShotgun::ServerAddAmmo()
 
 	AddAmmo();
 }
-

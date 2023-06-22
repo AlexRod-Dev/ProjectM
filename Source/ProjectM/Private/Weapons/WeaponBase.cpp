@@ -11,7 +11,7 @@
 AWeaponBase::AWeaponBase(USkeletalMesh* InBaseMesh)
 {
 	PrimaryActorTick.bCanEverTick = true;
-	
+
 	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponMesh"));
 	RootComponent = WeaponMesh;
 
@@ -61,22 +61,19 @@ void AWeaponBase::ServerFire_Implementation(APlayerBase* _player, UWorld* _world
 }
 
 
-
 void AWeaponBase::Server_PlaySound_Implementation(USoundCue* _sound, FVector _location, UWorld* _world)
 {
 	// Call PlaySoundAtLocation on the server
 	UGameplayStatics::PlaySoundAtLocation(_world, _sound, _location);
 
 	// Replicate the sound to all clients
-	Multicast_PlaySound( _sound, _location,_world);
-
+	Multicast_PlaySound(_sound, _location, _world);
 }
 
 void AWeaponBase::Multicast_PlaySound_Implementation(USoundCue* _sound, FVector _location, UWorld* _world)
 {
 	// Call PlaySoundAtLocation on the server
 	UGameplayStatics::PlaySoundAtLocation(_world, _sound, _location);
-
 }
 
 bool AWeaponBase::Server_PlaySound_Validate(USoundCue* _sound, FVector _location, UWorld* _world)
@@ -107,7 +104,4 @@ void AWeaponBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifet
 	DOREPLIFETIME(AWeaponBase, _currentAmmo);
 	DOREPLIFETIME(AWeaponBase, _totalAmmo);
 	DOREPLIFETIME(AWeaponBase, AudioComponent);
-	
-
-	
 }

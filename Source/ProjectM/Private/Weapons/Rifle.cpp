@@ -97,3 +97,20 @@ void ARifle::Reload()
 	}
 	
 }
+
+void ARifle::AddAmmo()
+{
+	Super::AddAmmo();
+
+	if(HasAuthority())
+	{
+		_totalAmmo += _magSize;
+	}
+}
+
+void ARifle::ServerAddAmmo()
+{
+	Super::ServerAddAmmo();
+
+	AddAmmo();
+}

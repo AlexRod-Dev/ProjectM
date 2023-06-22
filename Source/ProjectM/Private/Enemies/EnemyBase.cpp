@@ -8,7 +8,6 @@
 #include "Components/CapsuleComponent.h"
 #include "World/ProjectMGameStateBase.h"
 #include "Player/ProjectMPlayerState.h"
-#include "GameFramework/CharacterMovementComponent.h"
 #include "Pickups/WeaponPickup.h"
 #include "Player/BoxBase.h"
 
@@ -166,8 +165,9 @@ void AEnemyBase::MultiDie_Implementation()
 	GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
 	GetMesh()->SetSimulatePhysics(true);
 
+	//Change this to a function \/
 	// Spawn health pickup actor
-	if (HealthPickupClass)
+	if (HealthPickupClass && PistolPickupClass && RiflePickupClass && ShotgunPickupClass)
 	{
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.Owner = this;
@@ -176,9 +176,34 @@ void AEnemyBase::MultiDie_Implementation()
 		SpawnLocation.Z -= ZOffset;
 		FRotator SpawnRotation = GetActorRotation();
 
+		FRandomStream _randomStream;
+		_randomStream.GenerateNewSeed();
 
-		AHealthPickup* HealthPickup = GetWorld()->SpawnActor<AHealthPickup>(
+		int32 _randomNumber = _randomStream.RandRange(0, 5);
+		switch (_randomNumber)
+		{
+			default:
+				break;
+
+		case 0:
+			
+			GetWorld()->SpawnActor<AHealthPickup>(
 			HealthPickupClass, SpawnLocation, SpawnRotation, SpawnParams);
+			break;
+		
+		case 1:
+			GetWorld()->SpawnActor<AWeaponPickup>(
+			RiflePickupClass, SpawnLocation, SpawnRotation, SpawnParams);
+			break;
+			
+		case 2:
+			GetWorld()->SpawnActor<AWeaponPickup>(
+			ShotgunPickupClass, SpawnLocation, SpawnRotation, SpawnParams);
+			break;
+
+		}
+
+	
 	}
 
 	
@@ -259,20 +284,23 @@ void AEnemyBase::OnSphereTraceComplete(const TArray<FHitResult>& HitResults, flo
 
 void AEnemyBase::ApplyKnockback(float _knockbackStrength, FVector _knockbackDirection)
 {
-	AController* _controller = GetController();
-	if (_controller)
+	if(HasAuthority())
 	{
-		AEnemyAIController* _aiController = Cast<AEnemyAIController>(_controller);
-
-		if (_aiController)
+		AController* _controller = GetController();
+		if (_controller)
 		{
-			_aiController->ApplyKnockback(_knockbackStrength, _knockbackDirection);
+			AEnemyAIController* _aiController = Cast<AEnemyAIController>(_controller);
 
-			if (GetNetMode() == NM_Client)
+			if (_aiController)
 			{
-				ServerApplyKnockback(_knockbackStrength, _knockbackDirection);
+				_aiController->ApplyKnockback(_knockbackStrength, _knockbackDirection);
+				
 			}
 		}
+	}
+	else
+	{
+		ServerApplyKnockback(_knockbackStrength, _knockbackDirection);
 	}
 }
 

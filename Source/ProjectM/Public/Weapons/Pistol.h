@@ -23,4 +23,5 @@ public:
 
 	virtual void Reload() override;
 
+	virtual void AddAmmo() override;
 };

@@ -22,7 +22,7 @@ APistol::APistol() : AWeaponBase(
 	_magSize = 12;
 	_currentAmmo = _magSize;
 	_totalAmmo = 12;
-	_reloadTime = 1.0f;
+	_reloadTime = 0.5f;
 	
 	
 
@@ -137,3 +137,11 @@ void APistol::Reload()
 
 	}
 }
+
+void APistol::AddAmmo()
+{
+	Super::AddAmmo();
+
+	//pistol has unlimited ammo
+}
+

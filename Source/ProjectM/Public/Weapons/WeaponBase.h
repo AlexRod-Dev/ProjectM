@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/AudioComponent.h"
 #include "Net/UnrealNetwork.h"
+
 #include "WeaponBase.generated.h"
 
 
@@ -52,8 +53,11 @@ public:
 #pragma endregion
 	
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
-	void AddAmmo(int32 _ammoToAdd);
-	
+	virtual void AddAmmo();
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	virtual void ServerAddAmmo();
+		
 	UFUNCTION(BlueprintPure, Category = "Weapon")
 	// ReSharper disable once UnrealHeaderToolError
 	int32 GetCurrentAmmo();

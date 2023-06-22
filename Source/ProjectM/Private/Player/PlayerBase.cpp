@@ -111,17 +111,6 @@ void APlayerBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifet
 
 void APlayerBase::OnHealthUpdate()
 {
-	////Client Specific functionality
-	//if (IsLocallyControlled())
-	//{
-	//}
-
-	////Server specific functionality
-	//if (HasAuthority())
-	//{
-	//}
-
-
 	//All machines
 	if (_currentHealth <= 0)
 	{
@@ -232,20 +221,46 @@ void APlayerBase::AddWeapon_Implementation(TSubclassOf<AWeaponBase> _weapon)
 	}
 }
 
+
+
 TArray<TSubclassOf<AWeaponBase>> APlayerBase::GetWeaponInventory()
 {
 	return _weaponInventory;
 }
 
-void APlayerBase::PickupWeapon_Implementation(TSubclassOf<AWeaponBase> _weaponPickup)
+void APlayerBase::PickupWeapon(TSubclassOf<AWeaponBase> _weaponPickup)
 {
-	if (_weaponPickup)
+	if(HasAuthority())
 	{
-		if (!_weaponInventory.Contains(_weaponPickup))
+		if (_weaponPickup)
 		{
-			AddWeapon(_weaponPickup);
+			if (!_weaponInventory.Contains(_weaponPickup))
+			{
+				AddWeapon(_weaponPickup);
+			}
+			else
+			{
+				for(TSubclassOf<AWeaponBase> _pickedWeapon : _weaponInventory)
+				{
+					if(_pickedWeapon == _weaponPickup)
+					{
+						_pickedWeapon->GetDefaultObject<AWeaponBase>()->ServerAddAmmo();
+						return;
+					}
+				}
+			}
 		}
 	}
+	else
+	{
+		ServerPickupWeapon(_weaponPickup);
+	}
+	
+}
+
+void APlayerBase::ServerPickupWeapon_Implementation(TSubclassOf<AWeaponBase> _weaponPickup)
+{
+	PickupWeapon(_weaponPickup);
 }
 
 void APlayerBase::OnRep_CurrentHealth()
@@ -271,9 +286,6 @@ void APlayerBase::OnRep_EquippedWeapon()
 
 void APlayerBase::EquipWeapon(int32 _index)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Client:: %d"), _index);
-
-
 	//Server_EquipWeapon(_index);
 
 
@@ -302,7 +314,6 @@ void APlayerBase::EquipWeapon(int32 _index)
 
 void APlayerBase::Server_EquipWeapon_Implementation(int32 _index)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Server:: %d"), _index);
 	if (_weaponInventory.IsValidIndex(_index))
 	{
 		if (HasAuthority())
@@ -337,11 +348,10 @@ bool APlayerBase::AddWeapon_Validate(TSubclassOf<AWeaponBase> _weapon)
 	return true;
 }
 
-bool APlayerBase::PickupWeapon_Validate(TSubclassOf<AWeaponBase> _weaponPickup)
+bool APlayerBase::ServerPickupWeapon_Validate(TSubclassOf<AWeaponBase> _weaponPickup)
 {
 	return true;
 }
-
 
 bool APlayerBase::Server_EquipWeapon_Validate(int32 _index)
 {

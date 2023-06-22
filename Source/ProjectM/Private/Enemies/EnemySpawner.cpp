@@ -2,11 +2,9 @@
 
 
 #include "Enemies/EnemySpawner.h"
-#include "World/ProjectMGameModeBase.h"
 #include "Net/UnrealNetwork.h"
 #include "World/ProjectMGameStateBase.h"
 #include "Enemies/EnemyBase.h"
-#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AEnemySpawner::AEnemySpawner()
@@ -18,7 +16,7 @@ AEnemySpawner::AEnemySpawner()
 	bReplicates = true;
 
 	_baseEnemies = 3;
-	_incrementFactor = 2;
+	_incrementFactor = 3;
 	_waveNumber = 1;
 }
 
@@ -52,15 +50,17 @@ void AEnemySpawner::SpawnWave_Implementation()
 
 	//Change increment factor or wave number to the number of online players
 	int32 _enemiesToSpawn = _baseEnemies + (_waveNumber - 1) * _incrementFactor;
-
+UE_LOG(LogTemp, Warning, TEXT("enemies to spawn : %d"), _enemiesToSpawn);
 	for (int32 i = 0; i < _enemiesToSpawn; i++)
 	{
 		UWorld* _world = GetWorld();
 
 		if (_world)
 		{
+			FActorSpawnParameters _spawnParams;
+			_spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 			AEnemyBase* _spawnedEnemy = _world->SpawnActor<AEnemyBase>(BasicEnemyBlueprint, _enemySpawnLocation,
-			                                                           FRotator::ZeroRotator);
+			                                                           FRotator::ZeroRotator, _spawnParams);
 			_activeEnemies.Add(_spawnedEnemy);
 		}
 	}

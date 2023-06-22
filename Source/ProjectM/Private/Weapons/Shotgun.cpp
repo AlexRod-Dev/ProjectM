@@ -37,7 +37,7 @@ void AShotgun::ServerFire(APlayerBase* _player, UWorld* _world, float _timeSince
 
 	if (_currentAmmo > 0)
 	{
-		if(_timeSinceLastShot > _fireRate)
+		if(_timeSinceLastShot > _fireRate )
 		{
 			
 			if (_world)
@@ -112,3 +112,22 @@ void AShotgun::Reload()
 		_totalAmmo -= _remainingBullets;
 	}
 }
+
+void AShotgun::AddAmmo()
+{
+	Super::AddAmmo();
+
+	if(HasAuthority())
+	{
+		_totalAmmo += _magSize;
+	}
+
+}
+
+void AShotgun::ServerAddAmmo()
+{
+	Super::ServerAddAmmo();
+
+	AddAmmo();
+}
+

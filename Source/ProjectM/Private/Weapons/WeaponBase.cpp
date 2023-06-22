@@ -4,6 +4,7 @@
 #include "Weapons/WeaponBase.h"
 
 #include "Kismet/GameplayStatics.h"
+#include "Player/PlayerBase.h"
 #include "Sound/SoundCue.h"
 
 
@@ -84,8 +85,17 @@ bool AWeaponBase::Server_PlaySound_Validate(USoundCue* _sound, FVector _location
 }
 
 
-void AWeaponBase::AddAmmo(int32 _ammoToAdd)
+void AWeaponBase::AddAmmo()
 {
+}
+
+void AWeaponBase::ServerAddAmmo_Implementation()
+{
+}
+
+bool AWeaponBase::ServerAddAmmo_Validate()
+{
+	return true;
 }
 
 

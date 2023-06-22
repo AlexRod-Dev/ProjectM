@@ -137,8 +137,11 @@ public:
 	void Server_EquipWeapon(int32 _index);
 
 	UFUNCTION(Server, Reliable, WithValidation, Category = "Weapon")
-	void PickupWeapon(TSubclassOf<AWeaponBase> _weaponPickup);
+	void ServerPickupWeapon(TSubclassOf<AWeaponBase> _weaponPickup);
 
+	UFUNCTION()
+	void PickupWeapon(TSubclassOf<AWeaponBase> _weaponPickup);
+	
 	UFUNCTION(Server, Reliable, WithValidation)
 	void AddWeapon(TSubclassOf<AWeaponBase> _weapon);
 

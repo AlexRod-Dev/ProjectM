@@ -19,7 +19,7 @@ public:
 	virtual void BeginPlay() override;
 	virtual void ServerFire(APlayerBase* _player, UWorld* _world, float _timeSinceLastShot) override;
 
-	virtual void Reload() override;
+	virtual void MultiReload() override;
 
 	virtual void AddAmmo() override;
 	virtual void ServerAddAmmo() override;

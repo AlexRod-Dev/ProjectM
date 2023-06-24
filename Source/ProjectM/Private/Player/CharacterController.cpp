@@ -170,10 +170,12 @@ void ACharacterController::ServerStartReload_Implementation()
 
 void ACharacterController::OnRep_IsReloading()
 {
+	
 }
 
 void ACharacterController::OnRep_ReloadTimer()
 {
+
 }
 
 void ACharacterController::ReloadComplete()
@@ -192,7 +194,7 @@ void ACharacterController::ReloadComplete()
 				if (_weapon)
 
 				{
-					_weapon->GetDefaultObject<AWeaponBase>()->Reload();
+					_weapon->GetDefaultObject<AWeaponBase>()->MultiReload();
 				}
 			}
 		}

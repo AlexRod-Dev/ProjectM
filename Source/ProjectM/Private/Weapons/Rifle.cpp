@@ -68,14 +68,15 @@ void ARifle::ServerFire(APlayerBase* _player, UWorld* _world, float _timeSinceLa
 	}
 	else
 	{
-		Reload();
+		Cast<ACharacterController>(_player->GetController())->StartReload();
+		//Reload();
 		//Play empty magazine sound
 	}
 }
 
-void ARifle::Reload()
+void ARifle::MultiReload()
 {
-	Super::Reload();
+	Super::MultiReload();
 
 	if (_totalAmmo == 0)
 	{

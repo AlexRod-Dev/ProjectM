@@ -36,6 +36,7 @@ APistol::APistol() : AWeaponBase(
 	}
 
 	//Set the sounds
+	
 	static ConstructorHelpers::FObjectFinder<USoundCue> FireSoundAsset(
 		TEXT("/Game/Sounds/SFX/Weapons/Pistol/Cues/Pistol_Fire_Cue"));
 	if (FireSoundAsset.Succeeded())
@@ -112,15 +113,15 @@ void APistol::ServerFire(APlayerBase* _player, UWorld* _world, float _timeSinceL
 
 	else
 	{
-		Reload();
+		Cast<ACharacterController>(_player->GetController())->StartReload();
 		//Play empty magazine sound
 	}
 }
 
 
-void APistol::Reload()
+void APistol::MultiReload()
 {
-	Super::Reload();
+	Super::MultiReload();
 
 	_currentAmmo = _magSize;
 
@@ -131,6 +132,13 @@ void APistol::Reload()
 
 		UGameplayStatics::PlaySoundAtLocation(this, ReloadSound, GetActorLocation());
 	}
+}
+
+void APistol::Multicast_PlaySound(USoundCue* _sound, FVector _location, UWorld* _world)
+{
+	Super::Multicast_PlaySound(_sound, _location, _world);
+
+	
 }
 
 void APistol::AddAmmo()

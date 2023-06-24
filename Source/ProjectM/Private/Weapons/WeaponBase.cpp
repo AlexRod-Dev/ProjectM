@@ -47,7 +47,7 @@ int32 AWeaponBase::GetMaxAmmo()
 	return _totalAmmo;
 }
 
-void AWeaponBase::Reload_Implementation()
+void AWeaponBase::MultiReload_Implementation()
 {
 }
 

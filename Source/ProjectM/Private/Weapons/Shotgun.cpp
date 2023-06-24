@@ -84,14 +84,15 @@ void AShotgun::ServerFire(APlayerBase* _player, UWorld* _world, float _timeSince
 	}
 	else
 	{
-		Reload();
+		Cast<ACharacterController>(_player->GetController())->StartReload();
+	//	Reload();
 		//Play sound
 	}
 }
 
-void AShotgun::Reload()
+void AShotgun::MultiReload()
 {
-	Super::Reload();
+	Super::MultiReload();
 
 	if (_totalAmmo == 0)
 	{

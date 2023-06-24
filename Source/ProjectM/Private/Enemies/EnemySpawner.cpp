@@ -16,7 +16,7 @@ AEnemySpawner::AEnemySpawner()
 	bReplicates = true;
 
 	_baseEnemies = 3;
-	_incrementFactor = 3;
+	_incrementFactor = 2;
 	_waveNumber = 1;
 }
 

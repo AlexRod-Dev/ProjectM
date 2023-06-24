@@ -19,9 +19,12 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
+	
 	virtual void ServerFire(APlayerBase* _player, UWorld* _world, float _timeSinceLastShot) override;
 
-	virtual void Reload() override;
+	virtual void MultiReload() override;
+	// Set the bullet class
+	virtual void Multicast_PlaySound(USoundCue* _sound, FVector _location, UWorld* _world) override;
 
 	virtual void AddAmmo() override;
 };

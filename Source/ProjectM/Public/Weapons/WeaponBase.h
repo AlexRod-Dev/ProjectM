@@ -63,7 +63,7 @@ public:
 	int32 GetMaxAmmo();
 
 	UFUNCTION(NetMulticast, Reliable, BlueprintCallable, Category="Weapon")
-	virtual void Reload();
+	virtual void MultiReload();
 
 
 	UPROPERTY(EditAnywhere, Category = "Health")
@@ -91,7 +91,7 @@ public:
 	void Server_PlaySound(USoundCue* _sound, FVector _location, UWorld* _world);
 
 	UFUNCTION(NetMulticast, Reliable)
-	void Multicast_PlaySound(USoundCue* _sound, FVector _location, UWorld* _world);
+	virtual void Multicast_PlaySound(USoundCue* _sound, FVector _location, UWorld* _world);
 
 #pragma endregion
 

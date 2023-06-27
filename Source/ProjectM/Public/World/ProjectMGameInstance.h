@@ -9,9 +9,34 @@
 #include "Interfaces/OnlineSessionInterface.h"
 #include "ProjectMGameInstance.generated.h"
 
-/**
- * 
- */
+USTRUCT(BlueprintType)
+struct FServerInfo
+{
+	GENERATED_BODY()
+	public:
+	UPROPERTY(BlueprintReadOnly)
+	FString ServerName;
+	UPROPERTY(BlueprintReadOnly)
+	FString PlayerCountStr;
+
+	UPROPERTY(BlueprintReadOnly)
+	int32 CurrentPlayers;
+	UPROPERTY(BlueprintReadOnly)
+	int32 MaxPlayers;
+	UPROPERTY(BlueprintReadOnly)
+	int32 ServerArrayIndex;
+
+	void SetPlayerCount()
+	{
+	PlayerCountStr = FString(FString::FromInt(CurrentPlayers) + "/" + FString::FromInt(MaxPlayers)); return;
+	}
+};
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FServerDel, FServerInfo, ServerListDel);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FServerSearchingDel, bool, SearchinfForServer);
+
+
+
 UCLASS()
 class PROJECTM_API UProjectMGameInstance : public UGameInstance
 {
@@ -22,6 +47,14 @@ public:
 
 	
 protected:
+	FName MySessionName;
+	
+	UPROPERTY(BlueprintAssignable)
+	FServerDel ServerListDel;
+
+	UPROPERTY(BlueprintAssignable)
+	FServerSearchingDel SearchingForServer;
+	
 	TSharedPtr<FOnlineSessionSearch> SessionSearch;
 
 	IOnlineSessionPtr SessionInterface;
@@ -35,8 +68,11 @@ protected:
 	virtual void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
 
 	UFUNCTION(BlueprintCallable)
-	void CreateServer();
+	void CreateServer(FString ServerName, FString HostName);
 	
 	UFUNCTION(BlueprintCallable)
-	void JoinServer();
+	void FindServers();
+
+	UFUNCTION(BlueprintCallable)
+	void JoinServer(int32 ArrayIndex);
 };

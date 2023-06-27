@@ -9,6 +9,7 @@
 
 UProjectMGameInstance::UProjectMGameInstance()
 {
+	MySessionName = FName("My Session");
 }
 
 void UProjectMGameInstance::Init()
@@ -38,18 +39,44 @@ void UProjectMGameInstance::OnCreateSessionComplete(FName SessionName, bool bSuc
 
 void UProjectMGameInstance::OnFindSessionComplete(bool bSucceeded)
 {
-			
+
+	SearchingForServer.Broadcast(false);
+	
 	if(bSucceeded)
 	{
-		TArray<FOnlineSessionSearchResult> SearchResults = SessionSearch->SearchResults;
+		int32 ArrayIndex = -1;
 		
-		UE_LOG(LogTemp,Warning, TEXT("Search Results, Server Count: %d"), SearchResults.Num());
-			
-		if(SearchResults.Num())
+	
+		for(FOnlineSessionSearchResult Result : SessionSearch->SearchResults)
 		{
-			UE_LOG(LogTemp,Warning, TEXT("Search Results, Server Count: %d"), SearchResults.Num());
+			++ArrayIndex;
+			if(!Result.IsValid())
+				continue;
+
+			FServerInfo Info;
+			FString ServerName = "Empty Server Name";
+			FString HostName = "Empty Host Name";
+
+			Result.Session.SessionSettings.Get(FName("SERVER_NAME_KEY"), ServerName);
+			Result.Session.SessionSettings.Get(FName("SERVER_HOSTNAME_KEY"), HostName);
+			
+			Info.ServerName = ServerName;
+			Info.MaxPlayers = Result.Session.SessionSettings.NumPublicConnections;
+			Info.CurrentPlayers = Info.MaxPlayers - Result.Session.NumOpenPublicConnections;
+			Info.ServerArrayIndex = ArrayIndex;
+			Info.SetPlayerCount();
+			ServerListDel.Broadcast(Info);
+			
+	
+		}
+		
+		 UE_LOG(LogTemp,Warning, TEXT("Search Results, Server Count: %d"), SessionSearch->SearchResults.Num());
+		
+		if(SessionSearch->SearchResults.Num())
+		{
+		//	UE_LOG(LogTemp,Warning, TEXT("Search Results, Server Count: %d"), SearchResults.Num());
 			//SearchResults[0] just to test the connection
-			SessionInterface->JoinSession(0, FName("ProjectM Session"), SearchResults[0]);
+		//	SessionInterface->JoinSession(0, FName("ProjectM Session"), SearchResults[0]);
 		}
 	}
 }
@@ -68,7 +95,7 @@ void UProjectMGameInstance::OnJoinSessionComplete(FName SessionName, EOnJoinSess
 	}
 }
 
-void UProjectMGameInstance::CreateServer()
+void UProjectMGameInstance::CreateServer(FString ServerName, FString HostName)
 {
 	if(SessionInterface.IsValid())
 	{
@@ -82,12 +109,18 @@ void UProjectMGameInstance::CreateServer()
 		SessionSettings.bUsesPresence = true;
 		SessionSettings.NumPublicConnections = 5;
 
-		SessionInterface->CreateSession(0, FName("ProjectM Session"), SessionSettings);
+		SessionSettings.Set(FName("SERVER_NAME_KEY"), ServerName, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
+		SessionSettings.Set(FName("SERVER_HOSTNAME_KEY"), HostName, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
+		
+		SessionInterface->CreateSession(0, MySessionName, SessionSettings);
 	}
 }
 
-void UProjectMGameInstance::JoinServer()
+void UProjectMGameInstance::FindServers()
 {
+
+	SearchingForServer.Broadcast(true);
+	
 	SessionSearch = MakeShareable(new FOnlineSessionSearch());
 	SessionSearch->bIsLanQuery = (IOnlineSubsystem::Get()->GetSubsystemName() == "NULL");
 	SessionSearch->MaxSearchResults = 10000;
@@ -95,4 +128,23 @@ void UProjectMGameInstance::JoinServer()
 
 	SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
 	
+}
+
+void UProjectMGameInstance::JoinServer(int32 ArrayIndex)
+{
+	UE_LOG(LogTemp,Warning, TEXT("trying to join server at index: %d "), ArrayIndex);
+	if(ArrayIndex >= 0 && ArrayIndex < SessionSearch->SearchResults.Num())
+	{
+		FOnlineSessionSearchResult Result = SessionSearch->SearchResults[ArrayIndex];
+		if(Result.IsValid())
+		{
+			SessionInterface->JoinSession(0,MySessionName, Result);	
+		}
+		else
+		{
+			UE_LOG(LogTemp,Warning, TEXT("Failed to join server at index: %d "), ArrayIndex);
+		}
+		
+	}
+
 }

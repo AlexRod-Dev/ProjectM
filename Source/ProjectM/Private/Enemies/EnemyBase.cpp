@@ -175,7 +175,7 @@ void AEnemyBase::MultiDie_Implementation()
 		FRandomStream _randomStream;
 		_randomStream.GenerateNewSeed();
 
-		int32 _randomNumber = _randomStream.RandRange(0, 5);
+		int32 _randomNumber = _randomStream.RandRange(0, 3);
 		switch (_randomNumber)
 		{
 		default:
@@ -254,7 +254,7 @@ void AEnemyBase::OnSphereTraceComplete(const TArray<FHitResult>& HitResults, flo
 			}
 			else
 			{
-				UE_LOG(LogTemp, Warning, TEXT("nao bati num player i guess"));
+				//
 			}
 		}
 		if (HitActor && HitActor->IsA(ABoxBase::StaticClass()))

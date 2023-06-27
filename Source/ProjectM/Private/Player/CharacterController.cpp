@@ -91,9 +91,23 @@ void ACharacterController::MoveForward(float AxisValue)
 {
 	if (AxisValue != 0.0f)
 	{
+	 
+	
 		APawn* const _playerPawn = GetPawn();
 		if (_playerPawn != nullptr)
 		{
+			// const FRotator Rotation = _playerPawn->GetControlRotation();
+			// // find out which way is forward
+			//
+			// const FRotator YawRotation(0, Rotation.Yaw, 0);
+			//
+			// // get forward vector
+			// const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+			// _playerPawn->AddMovementInput(Direction, AxisValue);
+			//
+			// // set the rotation instantly
+			// _playerPawn->SetActorRotation(YawRotation);
+   //     
 			_playerPawn->AddMovementInput(FVector(1.0f, 0.0f, 0.0f), AxisValue);
 		}
 	}
@@ -106,6 +120,20 @@ void ACharacterController::MoveRight(float AxisValue)
 		APawn* const _playerPawn = GetPawn();
 		if (_playerPawn != nullptr)
 		{
+
+			// const FRotator Rotation = _playerPawn->GetControlRotation();
+			// // find out which way is forward
+			//
+			// const FRotator YawRotation(0, Rotation.Yaw, 0);
+			//
+			// // get forward vector
+			// const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+			// _playerPawn->AddMovementInput(Direction, AxisValue);
+			//
+			//
+			// // set the rotation instantly
+			// _playerPawn->SetActorRotation(YawRotation);
+   //     
 			_playerPawn->AddMovementInput(FVector(0.0f, 1.0f, 0.0f), AxisValue);
 		}
 	}

@@ -18,7 +18,7 @@ void AEnemyAIController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UE_LOG(LogTemp, Warning, TEXT("Encontrei BT"));
+	
 	if (IsValid(_behaviorTree.Get()))
 	{
 		RunBehaviorTree(_behaviorTree.Get());
@@ -40,6 +40,9 @@ void AEnemyAIController::OnPossess(APawn* InPawn)
 
 void AEnemyAIController::ApplyKnockback(float _knockbackStrength, FVector _knockbackDirection)
 {
+	if(HasAuthority())
+	{
+		
 	APawn* _controlledPawn = GetPawn();
 	if (_controlledPawn)
 	{
@@ -55,6 +58,7 @@ void AEnemyAIController::ApplyKnockback(float _knockbackStrength, FVector _knock
 			}
 		}
 	}
+}
 }
 
 void AEnemyAIController::ServerApplyKnockback_Implementation(float _knockbackStrength, FVector _knockbackDirection)

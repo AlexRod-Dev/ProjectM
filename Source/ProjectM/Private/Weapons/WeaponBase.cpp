@@ -82,6 +82,12 @@ bool AWeaponBase::Server_PlaySound_Validate(USoundCue* _sound, FVector _location
 }
 
 
+FString AWeaponBase::GetCurrentWeapName()
+{
+	return this->GetName();
+	
+}
+
 void AWeaponBase::AddAmmo()
 {
 }

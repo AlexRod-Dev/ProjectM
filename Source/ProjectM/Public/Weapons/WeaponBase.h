@@ -49,6 +49,9 @@ public:
 
 #pragma endregion
 
+	UFUNCTION(BlueprintPure)
+	FString GetCurrentWeapName();
+	
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	virtual void AddAmmo();
 

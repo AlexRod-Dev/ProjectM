@@ -7,14 +7,14 @@
 #include "Player/PlayerBase.h"
 
 AShotgun::AShotgun() : AWeaponBase(
-	LoadObject<USkeletalMesh>(nullptr, TEXT("/Game/Assets/Weapons/Mesh_Shotgun.Mesh_Shotgun")))
+	LoadObject<USkeletalMesh>(nullptr, TEXT("/Game/Assets/Weapons/Mesh_Shotgun")))
 {
 	_damage = 40.0f;
 	_fireRate = 1.f;
 	_totalAmmo = 40;
 	_magSize = 32;
 	_currentAmmo = _magSize;
-	_reloadTime = 2.0f;
+	_reloadTime = 1.5f;
 
 	static ConstructorHelpers::FClassFinder<ABulletBase> AmmoClassFinder(
 		TEXT("/Game/Blueprints/Objects/Weapons/BP_Bullet_Shotgun"));
@@ -32,8 +32,7 @@ void AShotgun::BeginPlay()
 void AShotgun::ServerFire(APlayerBase* _player, UWorld* _world, float _timeSinceLastShot)
 {
 	Super::ServerFire(_player, _world, _timeSinceLastShot);
-
-	UE_LOG(LogTemp, Warning, TEXT("Shoot Shotgun"));
+	
 
 	if (_currentAmmo > 0)
 	{
@@ -85,7 +84,7 @@ void AShotgun::ServerFire(APlayerBase* _player, UWorld* _world, float _timeSince
 	else
 	{
 		Cast<ACharacterController>(_player->GetController())->StartReload();
-	//	Reload();
+		
 		//Play sound
 	}
 }
@@ -99,7 +98,7 @@ void AShotgun::MultiReload()
 		return;
 	}
 
-	if (_totalAmmo < _magSize)
+	if (_totalAmmo <= _magSize)
 	{
 		_currentAmmo = _totalAmmo;
 		_totalAmmo = 0;
@@ -119,6 +118,10 @@ void AShotgun::AddAmmo()
 	if (HasAuthority())
 	{
 		_totalAmmo += _magSize;
+		if(_currentAmmo == 0)
+		{
+			
+		}
 	}
 }
 

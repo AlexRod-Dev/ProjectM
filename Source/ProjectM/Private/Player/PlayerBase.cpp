@@ -41,7 +41,7 @@ APlayerBase::APlayerBase()
 
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Rotate character to moving direction
-	GetCharacterMovement()->RotationRate = FRotator(0.f, 640.f, 0.f);
+	GetCharacterMovement()->RotationRate = FRotator(0.f, 1024.f, 0.f);
 	GetCharacterMovement()->bConstrainToPlane = true;
 	GetCharacterMovement()->bSnapToPlaneAtStart = true;
 	GetCharacterMovement()->MaxWalkSpeed = _moveSpeed;
@@ -233,12 +233,14 @@ void APlayerBase::PickupWeapon(TSubclassOf<AWeaponBase> _weaponPickup)
 	{
 		if (_weaponPickup)
 		{
+			//If weapon is already on inventory
 			if (!_weaponInventory.Contains(_weaponPickup))
 			{
 				AddWeapon(_weaponPickup);
 			}
 			else
 			{
+				//Add ammo to current weapon
 				for (TSubclassOf<AWeaponBase> _pickedWeapon : _weaponInventory)
 				{
 					if (_pickedWeapon == _weaponPickup)

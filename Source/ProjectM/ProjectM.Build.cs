@@ -13,6 +13,8 @@ public class ProjectM : ModuleRules
 		PrivateDependencyModuleNames.AddRange(new[] { "AIModule", "NavigationSystem" });
 
 		PrivateDependencyModuleNames.AddRange(new[] { "GameplayTasks" });
+		
+		PrivateDependencyModuleNames.AddRange(new string[] { "OnlineSubsystem", "OnlineSubsystemNull", "OnlineSubsystemSteam"});
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });

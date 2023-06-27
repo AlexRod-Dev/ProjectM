@@ -83,7 +83,7 @@ void ARifle::MultiReload()
 		return;
 	}
 
-	if (_totalAmmo < _magSize)
+	if (_totalAmmo <= _magSize)
 	{
 		_currentAmmo = _totalAmmo;
 		_totalAmmo = 0;

@@ -100,7 +100,7 @@ void AShotgun::MultiReload()
 
 	if (_totalAmmo <= _magSize)
 	{
-		_currentAmmo = _totalAmmo;
+		_currentAmmo += _totalAmmo;
 		_totalAmmo = 0;
 	}
 	else

@@ -53,7 +53,7 @@ void ARifle::ServerFire(APlayerBase* _player, UWorld* _world, float _timeSinceLa
 				_currentAmmo--;
 				if (_currentAmmo < 0)
 				{
-					_currentAmmo = 0;
+					_currentAmmo += 0;
 				}
 
 				if (_spawnedBullet)

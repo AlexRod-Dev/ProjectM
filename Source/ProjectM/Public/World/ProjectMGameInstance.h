@@ -13,7 +13,8 @@ USTRUCT(BlueprintType)
 struct FServerInfo
 {
 	GENERATED_BODY()
-	public:
+	
+public:
 	UPROPERTY(BlueprintReadOnly)
 	FString ServerName;
 	UPROPERTY(BlueprintReadOnly)
@@ -34,6 +35,7 @@ struct FServerInfo
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FServerDel, FServerInfo, ServerListDel);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FServerSearchingDel, bool, SearchinfForServer);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCSOnDestroySessionComplete, bool, Successful);
 
 
 
@@ -48,17 +50,24 @@ public:
 	
 protected:
 	FName MySessionName;
+
+	int PlayerID;
+	int MaxSessionPlayers;
 	
 	UPROPERTY(BlueprintAssignable)
 	FServerDel ServerListDel;
 
 	UPROPERTY(BlueprintAssignable)
 	FServerSearchingDel SearchingForServer;
+
+	FOnDestroySessionCompleteDelegate DestroySessionCompleteDelegate;
+	FDelegateHandle DestroySessionCompleteDelegateHandle;
 	
 	TSharedPtr<FOnlineSessionSearch> SessionSearch;
 
 	IOnlineSessionPtr SessionInterface;
 
+	
 	virtual void Init() override;
 
 	virtual void OnCreateSessionComplete(FName SessionName, bool Succeeded);
@@ -67,6 +76,8 @@ protected:
 
 	virtual void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
 
+	virtual void OnDestroySessionCompleted(FName SessionName, bool Succeeded);
+	
 	UFUNCTION(BlueprintCallable)
 	void CreateServer(FString ServerName, FString HostName);
 	
@@ -75,4 +86,11 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void JoinServer(int32 ArrayIndex);
+
+public:
+	UFUNCTION(BlueprintCallable)
+	void DestroySession();
+	FCSOnDestroySessionComplete OnDestroySessionCompleteEvent;
+	void HandleNetworkFailure(UWorld * World, UNetDriver * NetDriver, ENetworkFailure::Type FailureType, const FString & ErrorString);
+	
 };

@@ -23,7 +23,6 @@ void AEnemyAIController::BeginPlay()
 	{
 		RunBehaviorTree(_behaviorTree.Get());
 		_behaviorTreeComponent->StartTree(*_behaviorTree.Get());
-
 		UE_LOG(LogTemp, Warning, TEXT("Encontrei BT"));
 	}
 }
@@ -40,6 +39,10 @@ void AEnemyAIController::OnPossess(APawn* InPawn)
 
 void AEnemyAIController::ApplyKnockback(float _knockbackStrength, FVector _knockbackDirection)
 {
+	if(_behaviorTreeComponent != nullptr)
+	{
+		_behaviorTreeComponent->StopTree(EBTStopMode::Forced);
+	}
 	if(HasAuthority())
 	{
 		
@@ -58,7 +61,11 @@ void AEnemyAIController::ApplyKnockback(float _knockbackStrength, FVector _knock
 			}
 		}
 	}
-}
+	}
+	// if(_behaviorTreeComponent != nullptr)
+	// {
+	// 	_behaviorTreeComponent->StartTree(*_behaviorTree.Get());
+	// }
 }
 
 void AEnemyAIController::ServerApplyKnockback_Implementation(float _knockbackStrength, FVector _knockbackDirection)

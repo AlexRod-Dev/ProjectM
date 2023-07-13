@@ -13,18 +13,10 @@
     <list default="true" id="534929b2-979d-4c39-bc4a-9a8db12e89fc" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectM/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectM/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Objects/Weapons/BP_Bullet_Pistol.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Objects/Weapons/BP_Bullet_Pistol.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Objects/Weapons/BP_Bullet_Rifle.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Objects/Weapons/BP_Bullet_Rifle.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Objects/Weapons/BP_Bullet_Shotgun.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Objects/Weapons/BP_Bullet_Shotgun.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Player/BP_PlayerBase.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Player/BP_PlayerBase.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/MainMenu.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/MainMenu.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/ServerSlot.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/ServerSlot.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ProjectM.Target.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM.Target.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/Weapons/Rifle.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Private/Weapons/Rifle.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/Weapons/Shotgun.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Private/Weapons/Shotgun.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/World/ProjectMGameInstance.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Private/World/ProjectMGameInstance.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ProjectM/ProjectM.Build.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/ProjectM.Build.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Public/World/ProjectMGameInstance.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Public/World/ProjectMGameInstance.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Enemy/BP_EnemySpawner.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Enemy/BP_EnemySpawner.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/TestMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Maps/TestMap.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/AI/Tasks/EnemyBTTask_FindClosestPlayer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Private/AI/Tasks/EnemyBTTask_FindClosestPlayer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/Enemies/EnemyAIController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Private/Enemies/EnemyAIController.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -247,6 +239,8 @@
       <workItem from="1687878285264" duration="16717000" />
       <workItem from="1687969453088" duration="13096000" />
       <workItem from="1688566565939" duration="5625000" />
+      <workItem from="1689083031773" duration="6563000" />
+      <workItem from="1689250766732" duration="3387000" />
     </task>
     <servers />
   </component>

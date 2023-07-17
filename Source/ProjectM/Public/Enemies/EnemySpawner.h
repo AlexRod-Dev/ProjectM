@@ -27,9 +27,15 @@ public:
 	UPROPERTY(Replicated)
 	int32 _waveNumber;
 
+	int32 _enemiesToSpawn;
+
+	FVector _enemySpawnLocation;
+	
 	UPROPERTY(Replicated)
 	TArray<AEnemyBase*> _activeEnemies;;
 
+	FTimerHandle SpawnTimerHandle;
+	float _spawnDelay;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -40,31 +46,29 @@ public:
 
 
 	UFUNCTION(Server, Reliable, WithValidation)
-	void SpawnWave();
+	void Server_SpawnWave();
+	void Server_SpawnWave_Implementation();
+	bool Server_SpawnWave_Validate();
 
+	
 	UFUNCTION(Server, Reliable, WithValidation)
-	void IncrementWaveNumber();
+	void Server_IncrementWaveNumber();
+	void Server_IncrementWaveNumber_Implementation();
+	bool Server_IncrementWaveNumber_Validate();
 
+	
 	UFUNCTION(Server, Reliable, WithValidation)
-	void CheckEnemiesAlive();
+	void Server_CheckEnemiesAlive();
+	void Server_CheckEnemiesAlive_Implementation();
+	bool Server_CheckEnemiesAlive_Validate();
 
+	
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 private:
-	void SpawnWave_Implementation();
 
-
-	bool SpawnWave_Validate();
-
-
-	void IncrementWaveNumber_Implementation();
-
-
-	bool IncrementWaveNumber_Validate();
-
-
-	void CheckEnemiesAlive_Implementation();
-
-
-	bool CheckEnemiesAlive_Validate();
+	UFUNCTION()
+	void SpawnEnemyWithDelay();
+	
+	
 };

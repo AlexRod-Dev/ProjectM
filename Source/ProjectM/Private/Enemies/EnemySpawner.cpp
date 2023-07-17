@@ -15,9 +15,13 @@ AEnemySpawner::AEnemySpawner()
 	//Enables Replication
 	bReplicates = true;
 
-	_baseEnemies = 3;
+	//Base enemies to spawn
+	_baseEnemies = 2;
 	_incrementFactor = 2;
 	_waveNumber = 1;
+
+	//enemy spawner delay
+	_spawnDelay = 1.0f;
 }
 
 // Called when the game starts or when spawned
@@ -27,7 +31,7 @@ void AEnemySpawner::BeginPlay()
 
 	if (HasAuthority())
 	{
-		SpawnWave();
+		Server_SpawnWave();
 	}
 }
 
@@ -38,53 +42,70 @@ void AEnemySpawner::Tick(float DeltaTime)
 
 	if (HasAuthority())
 	{
-		CheckEnemiesAlive();
+		Server_CheckEnemiesAlive();
 	}
 }
 
 
-void AEnemySpawner::SpawnWave_Implementation()
+void AEnemySpawner::Server_SpawnWave_Implementation()
 {
-	//Spawn Location is this actor Location
-	FVector _enemySpawnLocation = GetActorLocation();
+	//the Spawn Location is this actor Location
+	_enemySpawnLocation = GetActorLocation();
 
 	//Change increment factor or wave number to the number of online players
-	int32 _enemiesToSpawn = _baseEnemies + (_waveNumber - 1) * _incrementFactor;
-	UE_LOG(LogTemp, Warning, TEXT("enemies to spawn : %d"), _enemiesToSpawn);
-	for (int32 i = 0; i < _enemiesToSpawn; i++)
-	{
-		UWorld* _world = GetWorld();
+	_enemiesToSpawn = _baseEnemies + (_waveNumber - 1) * _incrementFactor;
 
-		if (_world)
-		{
-			FActorSpawnParameters _spawnParams;
-			_spawnParams.SpawnCollisionHandlingOverride =
-				ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-			AEnemyBase* _spawnedEnemy = _world->SpawnActor<AEnemyBase>(BasicEnemyBlueprint, _enemySpawnLocation,
-			                                                           FRotator::ZeroRotator, _spawnParams);
-			_activeEnemies.Add(_spawnedEnemy);
-		}
-	}
+	SpawnEnemyWithDelay();
 }
 
-bool AEnemySpawner::SpawnWave_Validate()
+void AEnemySpawner::SpawnEnemyWithDelay()
+{
+	UWorld* _world = GetWorld();
+
+	if (_world)
+	{
+		FActorSpawnParameters _spawnParams;
+		_spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+		AEnemyBase* _spawnedEnemy = _world->SpawnActor<AEnemyBase>(BasicEnemyBlueprint, _enemySpawnLocation,
+																   FRotator::ZeroRotator, _spawnParams);
+		_activeEnemies.Add(_spawnedEnemy);
+	}
+
+	// Check if there are more enemies to spawn
+	if (_activeEnemies.Num() < _enemiesToSpawn)
+	{
+		// Introduce a delay before spawning the next enemy
+		_spawnDelay = 1.0f; // Adjust this value to control the delay between spawns
+	
+		GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &AEnemySpawner::SpawnEnemyWithDelay, _spawnDelay, false);
+	}
+	else
+	{
+		// Clear the timer handle when all enemies have been spawned
+		FTimerManager& TimerManager = GetWorld()->GetTimerManager();
+		TimerManager.ClearTimer(SpawnTimerHandle);
+	}
+
+ }
+
+bool AEnemySpawner::Server_SpawnWave_Validate()
 {
 	return true;
 }
 
-void AEnemySpawner::IncrementWaveNumber_Implementation()
+void AEnemySpawner::Server_IncrementWaveNumber_Implementation()
 {
 	_waveNumber++;
 
 	GetWorld()->GetGameState<AProjectMGameStateBase>()->_currentWave = _waveNumber;
 }
 
-bool AEnemySpawner::IncrementWaveNumber_Validate()
+bool AEnemySpawner::Server_IncrementWaveNumber_Validate()
 {
 	return true;
 }
 
-void AEnemySpawner::CheckEnemiesAlive_Implementation()
+void AEnemySpawner::Server_CheckEnemiesAlive_Implementation()
 {
 	for (AEnemyBase* _enemy : _activeEnemies)
 	{
@@ -94,11 +115,11 @@ void AEnemySpawner::CheckEnemiesAlive_Implementation()
 		}
 	}
 	_activeEnemies.Empty();
-	IncrementWaveNumber();
-	SpawnWave();
+	Server_IncrementWaveNumber();
+	Server_SpawnWave();
 }
 
-bool AEnemySpawner::CheckEnemiesAlive_Validate()
+bool AEnemySpawner::Server_CheckEnemiesAlive_Validate()
 {
 	return true;
 }
@@ -112,3 +133,5 @@ void AEnemySpawner::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLif
 	DOREPLIFETIME(AEnemySpawner, _incrementFactor);
 	DOREPLIFETIME(AEnemySpawner, _activeEnemies);
 }
+
+

@@ -87,6 +87,7 @@ void APlayerBase::BeginPlay()
 			// Attach the pistol to the player's hand socket
 			SpawnedWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale,
 			                                 "WeaponSocket");
+			
 		}
 	}
 }

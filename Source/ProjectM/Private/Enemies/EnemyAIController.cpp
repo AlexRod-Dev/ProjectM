@@ -23,7 +23,7 @@ void AEnemyAIController::BeginPlay()
 	{
 		RunBehaviorTree(_behaviorTree.Get());
 		_behaviorTreeComponent->StartTree(*_behaviorTree.Get());
-		UE_LOG(LogTemp, Warning, TEXT("Encontrei BT"));
+	
 	}
 }
 
@@ -67,6 +67,8 @@ void AEnemyAIController::ApplyKnockback(float _knockbackStrength, FVector _knock
 	// 	_behaviorTreeComponent->StartTree(*_behaviorTree.Get());
 	// }
 }
+
+
 
 void AEnemyAIController::ServerApplyKnockback_Implementation(float _knockbackStrength, FVector _knockbackDirection)
 {

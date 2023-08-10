@@ -11,7 +11,7 @@
 #include "Sound/SoundCue.h"
 
 APistol::APistol() : AWeaponBase(
-	LoadObject<USkeletalMesh>(nullptr, TEXT("/Game/Assets/Weapons/Mesh_Pistol.Mesh_Pistol")))
+	LoadObject<USkeletalMesh>(nullptr, TEXT("/Game/Assets/Weapons/Mesh_Pistol")))
 {
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -76,7 +76,18 @@ void APistol::ServerFire(APlayerBase* _player, UWorld* _world, float _timeSinceL
 			if (_world)
 			{
 				// * 54.0f is the offset in order for the bullet not to collide with player
-				FVector _spawnLocation = _player->GetActorLocation() + (_player->GetActorForwardVector() * 54.0f);
+				// USkeletalMeshComponent* SkeletalMeshComponent = _player->GetMesh();
+				// int32 MuzzleBoneIndex = SkeletalMeshComponent->GetBoneIndex(TEXT("MuzzleFlash"));
+				// FTransform MuzzleTransform = SkeletalMeshComponent->GetBoneTransform(MuzzleBoneIndex);
+				// FVector MuzzleLocation = MuzzleTransform.GetLocation();
+
+
+				// USkeletalMeshComponent* WeaponMeshComponent = this->GetMesh();
+				// int32 MuzzleBoneIndex = WeaponMeshComponent->GetBoneIndex(TEXT("Muzzle"));
+				// FTransform MuzzleTransform = WeaponMeshComponent->GetBoneTransform(MuzzleBoneIndex);
+				// FVector MuzzleLocation = MuzzleTransform.GetLocation();
+				//
+				FVector _spawnLocation = _player->GetActorLocation() + (_player->GetActorForwardVector() * 56.0f);
 				FRotator _spawnRotation = _player->GetActorRotation();
 
 				FActorSpawnParameters _spawnParameters;

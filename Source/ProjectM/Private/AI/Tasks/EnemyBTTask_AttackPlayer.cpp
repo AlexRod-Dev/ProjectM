@@ -23,8 +23,12 @@ EBTNodeResult::Type UEnemyBTTask_AttackPlayer::ExecuteTask(UBehaviorTreeComponen
 	AEnemyBase* EnemyPawn = Cast<AEnemyBase>(_aiPawn);
 	if (EnemyPawn)
 	{
+	
+		EnemyPawn->ServerPlayAttackAnim();
 		EnemyPawn->PerformSphereTrace();
 	}
+
+	
 
 
 	//Signal the behavior tree component that the task finish with success

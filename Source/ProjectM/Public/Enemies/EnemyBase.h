@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Player/CharacterController.h"
+#include "Animation/AnimMontage.h"
 #include "EnemyBase.generated.h"
 
 UCLASS()
@@ -29,6 +30,12 @@ private:
 	UClass* RiflePickupClass;
 	UPROPERTY(EditAnywhere, Category = "Pickups")
 	UClass* ShotgunPickupClass;
+
+	 UPROPERTY(EditDefaultsOnly, Replicated)
+	 UAnimMontage* _attackMontage;
+
+
+
 
 public:
 	// Called every frame
@@ -55,12 +62,12 @@ public:
 
 	//Function for the attack
 	UFUNCTION(BlueprintCallable, Category = "Combat")
-	void AttackPlayer();
+	void StopAttackAnim();
 
 	// Perform a Sphere Trace
 	void PerformSphereTrace();
 
-	void StartAttackTimer();
+	void StopAttackAnimTimer();
 
 	UFUNCTION(BlueprintCallable, Category = "Knockback")
 	void ApplyKnockback(float _knockbackStrength, FVector _knockbackDirection);
@@ -68,14 +75,30 @@ public:
 
 	bool IsAlive() { return bIsAlive; }
 
+	UFUNCTION(Server, Reliable)
+	void ServerPlayAttackAnim();
+
+	UPROPERTY(BlueprintReadWrite, Replicated)
+	bool bIsAttackAnim;
+	
+	bool bIsAttacking;
+
+	UFUNCTION(BlueprintPure, Category="Animation")
+	FORCEINLINE bool GetIsAttackAnimation() const { return bIsAttackAnim; }
+
+	
 protected:
 	float _maxHealth;
 	float _currentHealth;
 	float _damage;
-
+	
+	UPROPERTY(EditDefaultsOnly)
+	float _attackRadius = 75.f;
+	
 	float _attackSpeed;
 	FTimerHandle AttackTimerHandle;
-	bool bIsAttacking;
+
+	
 
 	bool bIsAlive;
 

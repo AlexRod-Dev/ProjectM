@@ -40,7 +40,7 @@ void ARifle::ServerFire(APlayerBase* _player, UWorld* _world, float _timeSinceLa
 		{
 			if (_world)
 			{
-				FVector _spawnLocation = _player->GetActorLocation() + (_player->GetActorForwardVector() * 54.0f);
+				FVector _spawnLocation = _player->GetActorLocation() + (_player->GetActorForwardVector() * 56.0f);
 				FRotator _spawnRotation = _player->GetActorRotation();
 
 				FActorSpawnParameters _spawnParameters;

@@ -17,6 +17,7 @@ AEnemySpawner::AEnemySpawner()
 
 	//Base enemies to spawn
 	_baseEnemies = 2;
+	
 	_incrementFactor = 2;
 	_waveNumber = 1;
 
@@ -74,8 +75,6 @@ void AEnemySpawner::SpawnEnemyWithDelay()
 	// Check if there are more enemies to spawn
 	if (_activeEnemies.Num() < _enemiesToSpawn)
 	{
-		// Introduce a delay before spawning the next enemy
-		_spawnDelay = 1.0f; // Adjust this value to control the delay between spawns
 	
 		GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &AEnemySpawner::SpawnEnemyWithDelay, _spawnDelay, false);
 	}

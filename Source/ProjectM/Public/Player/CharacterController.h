@@ -40,7 +40,7 @@ public:
 
 	void DisableControls();
 
-	void EnableControls();
+	void EnableControls(ACharacterController* _playerController);
 
 #pragma endregion
 
@@ -59,6 +59,10 @@ public:
 	UPROPERTY(ReplicatedUsing = OnRep_IsReloading)
 	bool bIsReloading;
 
+	UFUNCTION(BlueprintPure, Category="Animation")
+	FORCEINLINE bool GetIsReloading() const { return bIsReloading; }
+
+	
 	UPROPERTY(ReplicatedUsing = OnRep_ReloadTimer)
 	float _reloadTimer;
 

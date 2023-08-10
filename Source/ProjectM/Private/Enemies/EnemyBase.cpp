@@ -26,6 +26,8 @@ AEnemyBase::AEnemyBase()
 
 	_attackSpeed = 1.0f;
 
+	_attackRadius = 75.f;
+
 	bIsAttacking = false;
 
 	bIsAlive = true;
@@ -60,6 +62,7 @@ AEnemyBase::AEnemyBase()
 	{
 		ShotgunPickupClass = ShotgunPickupClassFinder.Class;
 	}
+
 }
 
 // Called when the game starts or when spawned
@@ -72,10 +75,32 @@ void AEnemyBase::BeginPlay()
 	GetWorld()->GetGameState<AProjectMGameStateBase>()->UpdateEnemiesAlive(1);
 }
 
+void AEnemyBase::ServerPlayAttackAnim_Implementation()
+{
+	bIsAttackAnim = true;
+
+	StopAttackAnimTimer();
+	
+	//UE_LOG(LogTemp, Warning, TEXT("Attacking? : %s"), ( bIsAttacking ? TEXT("true") : TEXT("false") ));
+
+	// // if(HasAuthority())
+	// // {
+	// 	if(_attackMontage != nullptr)
+	// 	{
+	// 		GetMesh()->PlayAnimation(_attackMontage,false);
+	// 	}
+	// // }
+}
+
+
+
 // Called every frame
 void AEnemyBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	
+	//UE_LOG(LogTemp, Warning, TEXT("Attacking? : %s"), ( bIsAttacking ? TEXT("true") : TEXT("false") ));
+
 }
 
 float AEnemyBase::TakeDamage(float _damageTaken, const FDamageEvent& DamageEvent, AController* _instigatorController,
@@ -98,13 +123,15 @@ float AEnemyBase::TakeDamage(float _damageTaken, const FDamageEvent& DamageEvent
 	return _damageApplied;
 }
 
-void AEnemyBase::AttackPlayer()
+void AEnemyBase::StopAttackAnim()
 {
-	if (bIsAttacking != true)
-	{
-		PerformSphereTrace();
-		bIsAttacking = false;
-	}
+	//
+	 bIsAttackAnim = false;
+	// // if (bIsAttacking != true)
+	// // {
+	// // 	PerformSphereTrace();
+	// // 	bIsAttacking = false;
+	// // }
 }
 
 
@@ -161,6 +188,7 @@ void AEnemyBase::MultiDie_Implementation()
 	GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
 	GetMesh()->SetSimulatePhysics(true);
 
+
 	//Change this to a function \/
 	// Spawn health pickup actor
 	if (HealthPickupClass && PistolPickupClass && RiflePickupClass && ShotgunPickupClass)
@@ -205,7 +233,7 @@ void AEnemyBase::PerformSphereTrace()
 {
 	FVector StartLocation = GetActorLocation();
 	FVector EndLocation = GetActorLocation();
-	float Radius = 75.f;
+	
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(this); // Ignore the current character
 	TArray<FHitResult> HitResults;
@@ -215,12 +243,12 @@ void AEnemyBase::PerformSphereTrace()
 
 	// Perform the Sphere Trace
 	bool bHit = GetWorld()->SweepMultiByChannel(HitResults, StartLocation, EndLocation, FQuat::Identity, ECC_Pawn,
-	                                            FCollisionShape::MakeSphere(Radius), Params);
+	                                            FCollisionShape::MakeSphere(_attackRadius), Params);
 
 	if (bHit)
 	{
 		// Handle the hit result
-		OnSphereTraceComplete(HitResults, Radius);
+		OnSphereTraceComplete(HitResults, _attackRadius);
 	}
 
 
@@ -228,14 +256,14 @@ void AEnemyBase::PerformSphereTrace()
 	bIsAttacking = false;
 }
 
-void AEnemyBase::StartAttackTimer()
+void AEnemyBase::StopAttackAnimTimer()
 {
 	GetWorld()->GetTimerManager().ClearTimer(AttackTimerHandle);
 
 	float _attackInterval = 1.0f / _attackSpeed;
 
 
-	GetWorld()->GetTimerManager().SetTimer(AttackTimerHandle, this, &AEnemyBase::AttackPlayer, _attackInterval, true);
+	GetWorld()->GetTimerManager().SetTimer(AttackTimerHandle, this, &AEnemyBase::StopAttackAnim, _attackInterval, true);
 }
 
 void AEnemyBase::OnSphereTraceComplete(const TArray<FHitResult>& HitResults, float radius)
@@ -294,6 +322,7 @@ void AEnemyBase::ApplyKnockback(float _knockbackStrength, FVector _knockbackDire
 	}
 }
 
+
 void AEnemyBase::ServerApplyKnockback_Implementation(float _knockbackStrength, FVector _knockbackDirection)
 {
 	ApplyKnockback(_knockbackStrength, _knockbackDirection);
@@ -302,4 +331,15 @@ void AEnemyBase::ServerApplyKnockback_Implementation(float _knockbackStrength, F
 bool AEnemyBase::ServerApplyKnockback_Validate(float KnockbackStrength, FVector KnockbackDirection)
 {
 	return true;
+}
+
+// Replicated Properties
+void AEnemyBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	//Replicate current health.
+	DOREPLIFETIME(AEnemyBase, _attackMontage);
+	DOREPLIFETIME(AEnemyBase, bIsAttackAnim);
+	
 }

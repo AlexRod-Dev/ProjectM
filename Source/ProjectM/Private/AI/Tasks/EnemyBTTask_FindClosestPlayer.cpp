@@ -90,8 +90,8 @@ void UEnemyBTTask_FindClosestPlayer::FindClosestPlayer(AEnemyAIController* _aiEn
 		{
 			_aiEnemyController->GetBlackboardComponent()->SetValueAsVector(
 				"TargetLocation", _closestPlayer->GetActorLocation());
+
 			
-			UE_LOG(LogTemp, Warning, TEXT("Player location : %s"), *_closestPlayer->GetActorLocation().ToString());
 		}
 	}
 }

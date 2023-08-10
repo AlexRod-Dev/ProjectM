@@ -10,9 +10,9 @@ AShotgun::AShotgun() : AWeaponBase(
 	LoadObject<USkeletalMesh>(nullptr, TEXT("/Game/Assets/Weapons/Mesh_Shotgun")))
 {
 	_damage = 40.0f;
-	_fireRate = 1.f;
-	_totalAmmo = 40;
-	_magSize = 32;
+	_fireRate = 0.7f;
+	_totalAmmo = 18;
+	_magSize = 6; 
 	_currentAmmo = _magSize;
 	_reloadTime = 1.5f;
 
@@ -45,7 +45,7 @@ void AShotgun::ServerFire(APlayerBase* _player, UWorld* _world, float _timeSince
 
 				const FVector _shootDirection = _player->GetActorForwardVector(); // Get the direction to shoot
 
-				FVector _spawnLocation = _player->GetActorLocation() + (_player->GetActorForwardVector() * 54.0f);
+				FVector _spawnLocation = _player->GetActorLocation() + (_player->GetActorForwardVector() * 56.0f);
 				FRotator _spawnRotation = _player->GetActorRotation();
 
 				// Loop over the number of shotgun pellets
@@ -63,13 +63,7 @@ void AShotgun::ServerFire(APlayerBase* _player, UWorld* _world, float _timeSince
 					ABulletBase* ShotgunBullet = _world->SpawnActor<ABulletBase>(
 						BulletClass, _spawnLocation, _spawnRotation, _spawnParams);
 
-					_currentAmmo--;
-
-					if (_currentAmmo < 0)
-					{
-						_currentAmmo = 0;
-					}
-
+				
 					if (ShotgunBullet)
 					{
 						// Set the bullet spread
@@ -77,6 +71,12 @@ void AShotgun::ServerFire(APlayerBase* _player, UWorld* _world, float _timeSince
 						//reset timer
 						Cast<ACharacterController>(_player->GetController())->_timeSinceLastShot = 0;
 					}
+				}
+				_currentAmmo--;
+
+				if (_currentAmmo < 0)
+				{
+					_currentAmmo = 0;
 				}
 			}
 		}

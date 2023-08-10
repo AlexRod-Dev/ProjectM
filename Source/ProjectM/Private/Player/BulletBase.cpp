@@ -42,7 +42,7 @@ ABulletBase::ABulletBase()
 
 	//Definition for the Mesh that will serve as your visual representation.
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> DefaultMesh(
-		TEXT("/Game/Assets/Weapons/StaticMeshes/Pistol_Ammo_Static.Pistol_Ammo_Static"));
+		TEXT("/Game/Assets/Weapons/StaticMeshes/Pistol_Ammo_Static"));
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	StaticMesh->SetupAttachment(RootComponent);
 
@@ -55,7 +55,7 @@ ABulletBase::ABulletBase()
 	}
 
 	static ConstructorHelpers::FObjectFinder<UParticleSystem> DefaultBloodEffect(
-		TEXT("/Game/Assets/Particles/P_Blood_Splat_Cone.P_Blood_Splat_Cone"));
+		TEXT("/Game/Assets/Particles/P_Blood_Splat_Cone"));
 	if (DefaultBloodEffect.Succeeded())
 	{
 		_bloodEffect = DefaultBloodEffect.Object;

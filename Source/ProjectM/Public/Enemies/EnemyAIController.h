@@ -23,6 +23,7 @@ protected:
 
 	virtual void OnPossess(APawn* InPawn) override;
 
+	FTimerHandle BTStatusTimer;
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AI", meta = (AllowPrivateAccess = true))
 	TObjectPtr<UBehaviorTree> _behaviorTree;
@@ -41,6 +42,13 @@ protected:
 	UFUNCTION(Server, Reliable)
 	void ServerApplyKnockback(float KnockbackStrength, FVector KnockbackDirection);
 
+	UFUNCTION()
+	void StartBT();
+
+	UFUNCTION()
+	void StopBT();
+
+	float _stunTime;
 	
 
 };

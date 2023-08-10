@@ -46,6 +46,8 @@ void ACharacterController::BeginPlay()
 	Super::BeginPlay();
 
 	bIsAlive = true;
+
+	
 }
 
 // Called every frame
@@ -64,6 +66,7 @@ void ACharacterController::Tick(float DeltaTime)
 		// Access the custom player state's properties or functions
 		int32 Score = _playerState->GetScore();
 	}
+	
 }
 
 // Called to bind functionality to input
@@ -116,9 +119,9 @@ void ACharacterController::DisableControls()
 	DisableInput(this);
 }
 
-void ACharacterController::EnableControls()
+void ACharacterController::EnableControls(ACharacterController* _playerController)
 {
-	EnableInput(this);
+	EnableInput(_playerController);
 }
 
 bool ACharacterController::GetIsAlive()

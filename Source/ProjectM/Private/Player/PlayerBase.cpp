@@ -41,7 +41,7 @@ APlayerBase::APlayerBase()
 
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Rotate character to moving direction
-	GetCharacterMovement()->RotationRate = FRotator(0.f, 1024.f, 0.f);
+	GetCharacterMovement()->RotationRate = FRotator(0.f, 2500.f, 0.f);
 	GetCharacterMovement()->bConstrainToPlane = true;
 	GetCharacterMovement()->bSnapToPlaneAtStart = true;
 	GetCharacterMovement()->MaxWalkSpeed = _moveSpeed;
@@ -140,7 +140,7 @@ float APlayerBase::RecoverHealth(float _amount)
 
 void APlayerBase::SetCurrentHealth(float _hpValue)
 {
-	if (GetLocalRole() == ROLE_Authority)
+	if (HasAuthority())
 	{
 		_currentHealth = FMath::Clamp(_hpValue, 0.f, _maxHealth);
 		OnHealthUpdate();
@@ -166,6 +166,9 @@ void APlayerBase::Die()
 	if (HasAuthority())
 	{
 		MultiDie();
+		
+		//Destroy equipped weapon
+		SpawnedWeapon->Destroy();
 
 		//start timer to respawn
 		GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &APlayerBase::HandleRespawnTimer, 5.f, false);
@@ -190,17 +193,21 @@ void APlayerBase::Respawn()
 
 	ACharacterController* _playerController = Cast<ACharacterController>(_controller);
 
-	//Enable Inputs (not working somehow)
-	/*if(IsLocallyControlled())
-	{
-		_playerController->EnableControls();
-
-	}*/
+	
 
 	if (AProjectMGameModeBase* _gameMode = Cast<AProjectMGameModeBase>(GM))
 	{
-		_gameMode->Respawn(_playerController);
 		Destroy();
+
+		_gameMode->Respawn(_playerController);
+		
+		// //Enable Inputs (not working somehow)
+		// if(IsLocallyControlled())
+		// {
+		// 	_playerController->EnableControls(_playerController);
+		//
+		// }
+		
 	}
 }
 
@@ -221,6 +228,7 @@ void APlayerBase::AddWeapon_Implementation(TSubclassOf<AWeaponBase> _weapon)
 		}
 	}
 }
+
 
 
 TArray<TSubclassOf<AWeaponBase>> APlayerBase::GetWeaponInventory()

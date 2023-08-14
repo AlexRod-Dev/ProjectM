@@ -98,10 +98,13 @@ protected:
 	float _attackSpeed;
 	FTimerHandle AttackTimerHandle;
 
-	
+	FTimerHandle DeleteBodyTimerHandle;
+
+	void DeleteBody();
 
 	bool bIsAlive;
 
+	
 
 	/** RepNotify for changes made to current health.*/
 	UFUNCTION()
@@ -115,7 +118,6 @@ protected:
 
 	UFUNCTION(NetMulticast, Reliable)
 	void MultiDie();
-	void MultiDie_Implementation();
 
 	UFUNCTION(Server, Reliable, WithValidation, BlueprintCallable, Category = "Knockback")
 	void ServerApplyKnockback(float _knockbackStrength, FVector _knockbackDirection);

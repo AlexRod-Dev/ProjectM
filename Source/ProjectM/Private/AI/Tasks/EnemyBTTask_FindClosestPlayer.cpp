@@ -27,8 +27,8 @@ EBTNodeResult::Type UEnemyBTTask_FindClosestPlayer::ExecuteTask(UBehaviorTreeCom
 	{
 		return EBTNodeResult::Failed;
 	}
-
-	//OwnerComp.GetAIOwner()->SetFocus(_aiEnemyController->GetPawn());
+	
+	OwnerComp.GetAIOwner()->SetFocus(_aiEnemyController->GetPawn());
 
 	Delegate.BindUFunction(this, "FindClosestPlayer", _aiEnemyController);
 	// Start the timer to periodically find the closest player
@@ -72,25 +72,29 @@ void UEnemyBTTask_FindClosestPlayer::FindClosestPlayer(AEnemyAIController* _aiEn
 	{
 		for (FConstPlayerControllerIterator it = _world->GetPlayerControllerIterator(); it; ++it)
 		{
-			ACharacterController* _players = Cast<ACharacterController>(it->Get());
-			if (_players->GetIsAlive())
+			ACharacterController* _player = Cast<ACharacterController>(it->Get());
+			
+			//If player is alive check his distance
+			if (_player->GetIsAlive())
 			{
-				APawn* _playerPawn = _players->GetPawn();
-				float _distance = FVector::Distance(_aiPawn->GetActorLocation(), _playerPawn->GetActorLocation());
-
-				//If this pawn is closer update the location variable
-				if (_distance < _closestDistance)
+				APawn* _playerPawn = _player->GetPawn();
+				if(_aiPawn != nullptr && _playerPawn != nullptr)
 				{
-					_closestPlayer = _playerPawn;
-					_closestDistance = _distance;
+					float _distance = FVector::Distance(_aiPawn->GetActorLocation(), _playerPawn->GetActorLocation());
+					
+					//If this pawn is closer update the location variable
+					if (_distance < _closestDistance)
+					{
+						_closestPlayer = _playerPawn;
+						_closestDistance = _distance;
+					}
 				}
 			}
 		}
-		if (_closestPlayer != nullptr)
+		if (_closestPlayer != nullptr && _aiEnemyController != nullptr)
 		{
-			_aiEnemyController->GetBlackboardComponent()->SetValueAsVector(
-				"TargetLocation", _closestPlayer->GetActorLocation());
-
+			//Set the value of the target location on the blackboard
+			_aiEnemyController->GetBlackboardComponent()->SetValueAsVector("TargetLocation", _closestPlayer->GetActorLocation());
 			
 		}
 	}

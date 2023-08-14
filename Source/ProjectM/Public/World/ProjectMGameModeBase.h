@@ -6,6 +6,8 @@
 #include "Net/UnrealNetwork.h"
 #include "Enemies/EnemyBase.h"
 #include "Player/PlayerBase.h"
+#include "Blueprint/UserWidget.h"
+#include "UObject/ConstructorHelpers.h"
 #include "ProjectMGameModeBase.generated.h"
 
 //DECLARE_DYNAMIC_MULTICAST_DELEGATE(FSpawnEnemy);
@@ -22,15 +24,16 @@ public:
 
 	virtual void BeginPlay() override;
 
-
-	// UPROPERTY(BlueprintAssignable, Category = "MyEvent")
-	// FSpawnEnemy fSpawnEnemy;
-
 protected:
 	virtual void HandleStartingNewPlayer_Implementation(APlayerController* _newPlayer) override;
 
+	
+	
 public:
 	void Respawn(ACharacterController* _playerController);
 
 	float _enemyTimer;
+
+private:
+
 };

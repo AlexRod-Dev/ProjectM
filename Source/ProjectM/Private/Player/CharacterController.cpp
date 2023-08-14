@@ -5,11 +5,14 @@
 
 #include "Player/BoxBase.h"
 #include "GameFramework/Pawn.h"
+#include "Kismet/GameplayStatics.h"
 #include "Weapons/WeaponBase.h"
 #include "Player/BulletBase.h"
 #include "Player/PlayerBase.h"
 #include "Player/ProjectMPlayerState.h"
 #include "Weapons/Pistol.h"
+#include "World/ProjectMGameModeBase.h"
+#include "World/ProjectMGameStateBase.h"
 
 // Sets default values
 ACharacterController::ACharacterController()
@@ -47,7 +50,6 @@ void ACharacterController::BeginPlay()
 
 	bIsAlive = true;
 
-	
 }
 
 // Called every frame
@@ -141,6 +143,7 @@ void ACharacterController::StartReload()
 			TSubclassOf<AWeaponBase> _weapon = _player->_equippedWeapon;
 			if (_weapon != nullptr)
 			{
+				
 				if (HasAuthority())
 				{
 					bIsReloading = true;
@@ -195,7 +198,7 @@ void ACharacterController::ReloadComplete()
 			{
 				TSubclassOf<AWeaponBase> _weapon = _player->_equippedWeapon;
 				if (_weapon)
-
+				
 				{
 					_weapon->GetDefaultObject<AWeaponBase>()->MultiReload();
 				}
@@ -203,6 +206,7 @@ void ACharacterController::ReloadComplete()
 		}
 	}
 }
+
 
 bool ACharacterController::ServerShoot_Validate()
 {

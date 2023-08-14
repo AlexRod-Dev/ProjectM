@@ -79,7 +79,7 @@ protected:
 	virtual void OnDestroySessionCompleted(FName SessionName, bool Succeeded);
 	
 	UFUNCTION(BlueprintCallable)
-	void CreateServer(FString ServerName, FString HostName);
+	void CreateServer(FString ServerName);
 	
 	UFUNCTION(BlueprintCallable)
 	void FindServers();

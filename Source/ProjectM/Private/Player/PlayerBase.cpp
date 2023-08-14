@@ -12,7 +12,9 @@
 #include "UObject/SoftObjectPtr.h"
 #include "World/ProjectMGameModeBase.h"
 #include "Engine/World.h"
+#include "Kismet/GameplayStatics.h"
 #include "Pickups/WeaponPickup.h"
+#include "World/ProjectMGameStateBase.h"
 
 
 APlayerBase::APlayerBase()
@@ -157,11 +159,25 @@ void APlayerBase::Die()
 	if (_playerController != nullptr)
 	{
 		_playerController->bIsAlive = false;
+		
+		UWorld* _world = GetWorld();
+
+		if(_world != nullptr)
+		{
+
+			AProjectMGameStateBase* _gameState = Cast<AProjectMGameStateBase>(_world->GetGameState());
+
+			if(_gameState != nullptr)
+			{
+				_gameState->UpdatePlayersAlive(-1);
+			}
+		}
 	}
-	// if (IsLocallyControlled())
-	// {
-	// 	_playerController->DisableControls();
-	// }
+	if (IsLocallyControlled())
+	{
+		_playerController->DisableControls();
+		
+	}
 
 	if (HasAuthority())
 	{
@@ -182,6 +198,8 @@ void APlayerBase::MultiDie_Implementation()
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 	GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
 	GetMesh()->SetSimulatePhysics(true);
+	//Destroy equipped weapon
+	SpawnedWeapon->Destroy();
 }
 
 void APlayerBase::Respawn()

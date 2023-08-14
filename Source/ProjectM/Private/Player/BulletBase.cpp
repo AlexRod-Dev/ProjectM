@@ -102,13 +102,6 @@ void ABulletBase::OnProjectileImpact(UPrimitiveComponent* HitComponent, AActor* 
 		//for Teammates take half hp
 		if (APlayerBase* _player = Cast<APlayerBase>(OtherActor))
 		{
-			// if(_player == Cast<APlayerBase>(_instigatorController->GetPawn()))
-			// {
-			// 	Destroy();
-			// 	return;
-			// }
-			// 	
-			//
 			if (HasAuthority())
 			{
 				_player->TakeDamage((_damage / 2), FDamageEvent(), nullptr, this);
@@ -125,8 +118,9 @@ void ABulletBase::OnProjectileImpact(UPrimitiveComponent* HitComponent, AActor* 
 			{
 				_enemy->TakeDamage(_damage, FDamageEvent(), _instigatorController, this);
 			}
-
+			
 			FVector _knockbackDirection = -Hit.Normal;
+	
 			float _knockbackStrenght = 1000.f;
 			_enemy->ApplyKnockback(_knockbackStrenght, _knockbackDirection);
 			// Call the MultiApplyKnockback function to apply the knockback effect

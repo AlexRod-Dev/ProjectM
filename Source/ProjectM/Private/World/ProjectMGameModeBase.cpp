@@ -10,6 +10,7 @@
 #include "Engine/Engine.h"
 #include "Containers/Array.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "World/ProjectMGameStateBase.h"
 
 
 AProjectMGameModeBase::AProjectMGameModeBase()
@@ -19,8 +20,7 @@ AProjectMGameModeBase::AProjectMGameModeBase()
 
 	//Use custom playerState
 	PlayerStateClass = AProjectMPlayerState::StaticClass();
-
-
+	
 	// set default pawn class to our Blueprinted character
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBP(TEXT("/Game/Blueprints/Player/BP_PlayerBase"));
 
@@ -48,8 +48,9 @@ void AProjectMGameModeBase::BeginPlay()
 void AProjectMGameModeBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-}
 
+	
+}
 
 void AProjectMGameModeBase::HandleStartingNewPlayer_Implementation(APlayerController* _newPlayer)
 {
@@ -105,6 +106,20 @@ void AProjectMGameModeBase::HandleStartingNewPlayer_Implementation(APlayerContro
 		GetWorld()->SpawnActor(DefaultPawnClass, &_tempLoc, &_tempRot, _spawnInfo));
 
 	_newPlayer->Possess(_tempPlayer);
+
+
+	//Initial player count
+	UWorld* _world = GetWorld();
+
+	if(_world != nullptr)
+	{
+		AProjectMGameStateBase* _gameState = Cast<AProjectMGameStateBase>(_world->GetGameState());
+
+		if(_gameState != nullptr)
+		{
+			_gameState->UpdatePlayersAlive(1);
+		}
+	}
 }
 
 void AProjectMGameModeBase::Respawn(ACharacterController* _playerController)
@@ -114,26 +129,38 @@ void AProjectMGameModeBase::Respawn(ACharacterController* _playerController)
 	UWorld* _world = GetWorld();
 	if (_world != nullptr)
 	{
+		
 		for (FConstPlayerControllerIterator it = _world->GetPlayerControllerIterator(); it; ++it)
 		{
-			ACharacterController* _players = Cast<ACharacterController>(it->Get());
-			if (_players->GetIsAlive())
+			ACharacterController* _player = Cast<ACharacterController>(it->Get());
+			if (_player->GetIsAlive())
 			{
-				tSpawnTransform = _players->GetPawn()->GetActorTransform();
+				tSpawnTransform = _player->GetPawn()->GetActorTransform();
 				FVector Location = tSpawnTransform.GetLocation();
 
 				if (APawn* Pawn = GetWorld()->SpawnActor<APawn>(DefaultPawnClass, Location, FRotator::ZeroRotator))
 				{
 					_playerController->Possess(Pawn);
 					_playerController->bIsAlive = true;
+					_playerController->EnableControls(_playerController);
+					
+						AProjectMGameStateBase* _gameState = Cast<AProjectMGameStateBase>(_world->GetGameState());
+
+						if(_gameState != nullptr)
+						{
+							_gameState->UpdatePlayersAlive(1);
+						}
+					
 					break;
 				}
 			}
 			else
 			{
 				//means everyone is dead so end the game
-				UE_LOG(LogTemp, Warning, TEXT("You all ded"));
+				//ShowEndGameWidget(_playerController);
 			}
 		}
 	}
 }
+
+

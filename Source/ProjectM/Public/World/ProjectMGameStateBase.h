@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameStateBase.h"
 #include "Net/UnrealNetwork.h"
+#include "Blueprint/UserWidget.h"
 #include "ProjectMGameStateBase.generated.h"
 
 
@@ -31,6 +32,21 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Game State")
 	void UpdateEnemiesAlive(int32 _enemies);
 
+	void UpdatePlayersAlive(int32 _players);
+
+	UFUNCTION(Server,Reliable)
+	void CheckForPlayersAlive();
+
+	UFUNCTION(BlueprintCallable)
+	void ShowEndGameWidget();
+	
+	UPROPERTY(BlueprintReadOnly, Replicated)
+	int32 _playersAlive;
+	
+	UFUNCTION(BlueprintCallable)
+	int32 GetPlayersAlive() {return _playersAlive;}
+	
+	TSubclassOf<class UUserWidget> EndGameWidgetClass;
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 };

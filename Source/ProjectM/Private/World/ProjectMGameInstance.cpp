@@ -40,7 +40,7 @@ void UProjectMGameInstance::Init()
 	}
 }
 
-void UProjectMGameInstance::CreateServer(FString ServerName, FString HostName)
+void UProjectMGameInstance::CreateServer(FString ServerName)
 {
 	if(SessionInterface.IsValid())
 	{
@@ -80,8 +80,7 @@ void UProjectMGameInstance::CreateServer(FString ServerName, FString HostName)
 
 		//Set keys for the sever and host name
 		SessionSettings.Set(FName("SERVER_NAME_KEY"), ServerName, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
-		SessionSettings.Set(FName("SERVER_HOSTNAME_KEY"), HostName, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
-
+	
 		//CreateSession and fires the delegate
 		SessionInterface->CreateSession(PlayerID, MySessionName, SessionSettings);
 		UE_LOG(LogTemp, Warning, TEXT("Session created by %s"), *MySessionName.ToString());

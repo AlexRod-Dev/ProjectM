@@ -153,6 +153,11 @@ void AEnemyBase::OnHealthUpdate()
 	}
 }
 
+void AEnemyBase::DeleteBody()
+{
+	Destroy();
+}
+
 void AEnemyBase::OnRep_CurrentHealth()
 {
 	OnHealthUpdate();
@@ -226,6 +231,11 @@ void AEnemyBase::MultiDie_Implementation()
 			break;
 		}
 	}
+
+	
+	GetWorld()->GetTimerManager().SetTimer(DeleteBodyTimerHandle, this, &AEnemyBase::DeleteBody, 5.f, true);
+
+	
 }
 
 

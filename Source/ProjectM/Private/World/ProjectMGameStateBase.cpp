@@ -47,17 +47,13 @@ void AProjectMGameStateBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty
 
 }
 
-
-void AProjectMGameStateBase::ShowEndGameWidget()
+void AProjectMGameStateBase::ShowEndGameWidget(ACharacterController* _playerController)
 {
-	// Iterate through all player controllers
-	for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
-	{
-		APlayerController* PlayerController = It->Get();
-		if (PlayerController)
+		if (_playerController != nullptr)
 		{
-			ACharacterController* _playerController = Cast<ACharacterController>(PlayerController);
-
+			// Only create and show the widget on the owning client
+			if (_playerController->IsLocalPlayerController())
+			{
 			UGameViewportClient* ViewportClient = _playerController->GetWorld()->GetGameViewport();
 
 			if(ViewportClient)
@@ -66,28 +62,67 @@ void AProjectMGameStateBase::ShowEndGameWidget()
 
 				//Create Widget and add it to viewport
 				UUserWidget* EndGameMenu  = CreateWidget<UUserWidget>(_playerController, EndGameWidgetClass);
-
-				if(EndGameMenu)
-				{
-					EndGameMenu->AddToViewport();
-
-					//Set Inputs
-					FInputModeUIOnly InputModeData;
-	
-					InputModeData.SetWidgetToFocus(EndGameMenu->TakeWidget());
-					InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-	
-					_playerController->SetInputMode(InputModeData);
-	
-					_playerController->bShowMouseCursor = true;
 				
+					if(EndGameMenu)
+					{
+						EndGameMenu->AddToViewport();
+
+						//Set Inputs
+						FInputModeUIOnly InputModeData;
+		
+						InputModeData.SetWidgetToFocus(EndGameMenu->TakeWidget());
+						InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+						
+		
+						_playerController->SetInputMode(InputModeData);
+		
+						_playerController->bShowMouseCursor = true;
+					}
 				}
-			
 			}
-			
 		}
-	}
 }
+
+// void AProjectMGameStateBase::ShowEndGameWidget(ACharacterController* _playerController)
+// {
+// 	// Iterate through all player controllers
+// 	for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
+// 	{
+// 		APlayerController* PlayerController = It->Get();
+// 		if (PlayerController)
+// 		{
+// 			ACharacterController* _playerController = Cast<ACharacterController>(PlayerController);
+//
+// 			UGameViewportClient* ViewportClient = _playerController->GetWorld()->GetGameViewport();
+//
+// 			if(ViewportClient)
+// 			{
+// 				ViewportClient->RemoveAllViewportWidgets();
+//
+// 				//Create Widget and add it to viewport
+// 				UUserWidget* EndGameMenu  = CreateWidget<UUserWidget>(_playerController, EndGameWidgetClass);
+//
+// 				if(EndGameMenu)
+// 				{
+// 					EndGameMenu->AddToViewport();
+//
+// 					//Set Inputs
+// 					FInputModeUIOnly InputModeData;
+// 	
+// 					InputModeData.SetWidgetToFocus(EndGameMenu->TakeWidget());
+// 					InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+// 	
+// 					_playerController->SetInputMode(InputModeData);
+// 	
+// 					_playerController->bShowMouseCursor = true;
+// 				
+// 				}
+// 			
+// 			}
+// 			
+// 		}
+// 	}
+// }
 
 
 void AProjectMGameStateBase::CheckForPlayersAlive_Implementation()

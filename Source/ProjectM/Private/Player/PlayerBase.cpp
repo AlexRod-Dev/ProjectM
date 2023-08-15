@@ -158,24 +158,26 @@ void APlayerBase::Die()
 
 	if (_playerController != nullptr)
 	{
-		_playerController->bIsAlive = false;
-		
-		UWorld* _world = GetWorld();
-
-		if(_world != nullptr)
+		//In order for the update to only count 1 time
+		if(_playerController->bIsAlive == true)
 		{
-
-			AProjectMGameStateBase* _gameState = Cast<AProjectMGameStateBase>(_world->GetGameState());
-
-			if(_gameState != nullptr)
+			UWorld* _world = GetWorld();
+			if(_world != nullptr)
 			{
-				_gameState->UpdatePlayersAlive(-1);
+
+				AProjectMGameStateBase* _gameState = Cast<AProjectMGameStateBase>(_world->GetGameState());
+
+				if(_gameState != nullptr)
+				{
+					_gameState->UpdatePlayersAlive(-1);
+				}
 			}
 		}
+		_playerController->bIsAlive = false;
 	}
 	if (IsLocallyControlled())
 	{
-		_playerController->DisableControls();
+	//	_playerController->DisableControls();
 		
 	}
 

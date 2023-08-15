@@ -5,6 +5,7 @@
 
 #include "kismet/GameplayStatics.h"
 #include "Engine/World.h"
+#include "Interfaces/ITargetDevice.h"
 #include "Player/CharacterController.h"
 
 
@@ -94,7 +95,7 @@ void UProjectMGameInstance::OnCreateSessionComplete(FName SessionName, bool bSuc
 	//Check if the session creation is succeeded
 	if(bSucceeded)
 	{
-		GetWorld()->ServerTravel("/Game/Maps/TestMap?listen");
+		GetWorld()->ServerTravel("/Game/Maps/Lobby?listen");
 	}
 }
 
@@ -258,6 +259,25 @@ void UProjectMGameInstance::HandleNetworkFailure(UWorld* World, UNetDriver* NetD
 {
 	UGameplayStatics::OpenLevel(GetWorld(), "Lobby", true);
 
+}
+
+void UProjectMGameInstance::StartGame()
+{
+		GetWorld()->ServerTravel("/Game/Maps/TestMap?listen");
+}
+
+void UProjectMGameInstance::BackToLobby()
+{
+	GetWorld()->ServerTravel("/Game/Maps/Lobby?listen");
+}
+
+void UProjectMGameInstance::BackToStart(ACharacterController* _playerController)
+{
+	if(_playerController != nullptr)
+	{
+		_playerController->ClientTravel("/Game/Maps/StartMap", TRAVEL_Absolute);
+	}
+	
 }
 
 

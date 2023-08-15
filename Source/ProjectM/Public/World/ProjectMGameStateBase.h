@@ -38,7 +38,7 @@ public:
 	void CheckForPlayersAlive();
 
 	UFUNCTION(BlueprintCallable)
-	void ShowEndGameWidget();
+	void ShowEndGameWidget(ACharacterController* _playerController);
 	
 	UPROPERTY(BlueprintReadOnly, Replicated)
 	int32 _playersAlive;

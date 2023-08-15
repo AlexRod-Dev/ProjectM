@@ -7,6 +7,7 @@
 #include "OnlineSessionSettings.h"
 #include "OnlineSubsystem.h"
 #include "Interfaces/OnlineSessionInterface.h"
+#include "Player/CharacterController.h"
 #include "ProjectMGameInstance.generated.h"
 
 USTRUCT(BlueprintType)
@@ -92,5 +93,14 @@ public:
 	void DestroySession();
 	FCSOnDestroySessionComplete OnDestroySessionCompleteEvent;
 	void HandleNetworkFailure(UWorld * World, UNetDriver * NetDriver, ENetworkFailure::Type FailureType, const FString & ErrorString);
+
+	UFUNCTION(BlueprintCallable)
+	void StartGame();
+	
+	UFUNCTION(BlueprintCallable)
+	void BackToLobby();
+
+	UFUNCTION(BlueprintCallable)
+	void BackToStart(ACharacterController* _playerController);
 	
 };

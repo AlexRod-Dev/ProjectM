@@ -170,15 +170,18 @@ void APlayerBase::Die()
 				if(_gameState != nullptr)
 				{
 					_gameState->UpdatePlayersAlive(-1);
+
+					if(IsLocallyControlled())
+					{
+						if(_gameState->_playersAlive <= 0)
+						{
+							_gameState->ShowEndGameWidget(_playerController);
+						}
+					}
 				}
 			}
 		}
 		_playerController->bIsAlive = false;
-	}
-	if (IsLocallyControlled())
-	{
-	//	_playerController->DisableControls();
-		
 	}
 
 	if (HasAuthority())
@@ -220,14 +223,6 @@ void APlayerBase::Respawn()
 		Destroy();
 
 		_gameMode->Respawn(_playerController);
-		
-		// //Enable Inputs (not working somehow)
-		// if(IsLocallyControlled())
-		// {
-		// 	_playerController->EnableControls(_playerController);
-		//
-		// }
-		
 	}
 }
 
@@ -327,9 +322,7 @@ void APlayerBase::EquipWeapon(int32 _index)
 		{
 			SpawnedWeapon->Destroy();
 		}
-
-		// if(_equippedWeapon != nullptr)
-		// {
+		
 		// Spawn the pistol at the player's hand socket
 		SpawnedWeapon = GetWorld()->SpawnActor<AWeaponBase>(_equippedWeapon,
 		                                                    GetMesh()->GetSocketLocation("WeaponSocket"),

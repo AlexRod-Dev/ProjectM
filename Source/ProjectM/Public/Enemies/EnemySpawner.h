@@ -47,21 +47,12 @@ public:
 
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_SpawnWave();
-	void Server_SpawnWave_Implementation();
-	bool Server_SpawnWave_Validate();
-
 	
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_IncrementWaveNumber();
-	void Server_IncrementWaveNumber_Implementation();
-	bool Server_IncrementWaveNumber_Validate();
-
 	
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_CheckEnemiesAlive();
-	void Server_CheckEnemiesAlive_Implementation();
-	bool Server_CheckEnemiesAlive_Validate();
-
 	
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 

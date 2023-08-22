@@ -33,6 +33,7 @@ EBTNodeResult::Type UEnemyBTTask_FindClosestPlayer::ExecuteTask(UBehaviorTreeCom
 	{
 		OwnerComp.GetAIOwner()->SetFocus(_aiEnemyController->GetPawn());
 
+		UFUNCTION()
 		Delegate.BindUFunction(this, "FindClosestPlayer", _aiEnemyController);
 		// Start the timer to periodically find the closest player
 		_aiEnemyController->GetWorld()->GetTimerManager().SetTimer(_aiEnemyController->FindPlayerTimerHandle, Delegate, 0.2f,true);

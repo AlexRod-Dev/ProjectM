@@ -94,24 +94,31 @@ void ACharacterController::SetupInputComponent()
 
 void ACharacterController::MoveForward(float AxisValue)
 {
-	if (AxisValue != 0.0f)
+	if(bIsAlive)
 	{
-		APawn* const _playerPawn = GetPawn();
-		if (_playerPawn != nullptr)
+		if (AxisValue != 0.0f)
 		{
-			_playerPawn->AddMovementInput(FVector(1.0f, 0.0f, 0.0f), AxisValue);
+			APawn* const _playerPawn = GetPawn();
+			if (_playerPawn != nullptr)
+			{
+				_playerPawn->AddMovementInput(FVector(1.0f, 0.0f, 0.0f), AxisValue);
+			}
 		}
 	}
+	
 }
 
 void ACharacterController::MoveRight(float AxisValue)
 {
-	if (AxisValue != 0.0f)
+	if(bIsAlive)
 	{
-		APawn* const _playerPawn = GetPawn();
-		if (_playerPawn != nullptr)
+		if (AxisValue != 0.0f)
 		{
-			_playerPawn->AddMovementInput(FVector(0.0f, 1.0f, 0.0f), AxisValue);
+			APawn* const _playerPawn = GetPawn();
+			if (_playerPawn != nullptr)
+			{
+				_playerPawn->AddMovementInput(FVector(0.0f, 1.0f, 0.0f), AxisValue);
+			}
 		}
 	}
 }
@@ -133,35 +140,37 @@ bool ACharacterController::GetIsAlive()
 
 void ACharacterController::StartReload()
 {
-	APawn* const _playerPawn = GetPawn();
-
-	if (_playerPawn != nullptr)
+	if(bIsAlive)
 	{
-		APlayerBase* _player = Cast<APlayerBase>(_playerPawn);
-		if (_player)
+		APawn* const _playerPawn = GetPawn();
+
+		if (_playerPawn != nullptr)
 		{
-			TSubclassOf<AWeaponBase> _weapon = _player->_equippedWeapon;
-			if (_weapon != nullptr)
+			APlayerBase* _player = Cast<APlayerBase>(_playerPawn);
+			if (_player)
 			{
-				
-				if (HasAuthority())
+				TSubclassOf<AWeaponBase> _weapon = _player->_equippedWeapon;
+				if (_weapon != nullptr)
 				{
-					bIsReloading = true;
+					if (HasAuthority())
+					{
+						bIsReloading = true;
+						//get reload time of current weapon
+						_reloadTimer = _weapon->GetDefaultObject<AWeaponBase>()->_reloadTime;
 
-					//get reload time of current weapon
-					_reloadTimer = _weapon->GetDefaultObject<AWeaponBase>()->_reloadTime;
-
-					//Set timer to callreload complete
-					GetWorld()->GetTimerManager().SetTimer(TimerHandle_Reload, this,
-					                                       &ACharacterController::ReloadComplete, _reloadTimer, false);
-				}
-				else
-				{
-					ServerStartReload();
+						//Set timer to callreload complete
+						GetWorld()->GetTimerManager().SetTimer(TimerHandle_Reload, this,
+															   &ACharacterController::ReloadComplete, _reloadTimer, false);
+					}
+					else
+					{
+						ServerStartReload();
+					}
 				}
 			}
 		}
 	}
+	
 }
 
 
@@ -216,28 +225,31 @@ bool ACharacterController::ServerShoot_Validate()
 
 void ACharacterController::ServerShoot_Implementation()
 {
-	if (!bIsReloading)
+	if(bIsAlive)
 	{
-		APawn* const _playerPawn = GetPawn();
-
-		if (_playerPawn != nullptr)
+		if (!bIsReloading)
 		{
-			APlayerBase* _player = Cast<APlayerBase>(_playerPawn);
-			if (_player)
+			APawn* const _playerPawn = GetPawn();
+
+			if (_playerPawn != nullptr)
 			{
-				TSubclassOf<AWeaponBase> _weapon = _player->_equippedWeapon;
-				if (_weapon != nullptr)
+				APlayerBase* _player = Cast<APlayerBase>(_playerPawn);
+				if (_player)
 				{
-					if (HasAuthority())
+					TSubclassOf<AWeaponBase> _weapon = _player->_equippedWeapon;
+					if (_weapon != nullptr)
 					{
-						_weapon->GetDefaultObject<AWeaponBase>()->ServerFire(_player, GetWorld(), _timeSinceLastShot);
-					}
-					else
-					{
-						if (GetNetMode() == NM_Client)
+						if (HasAuthority())
 						{
-							_weapon->GetDefaultObject<AWeaponBase>()->ServerFire_Implementation(
-								_player, GetWorld(), _timeSinceLastShot);
+							_weapon->GetDefaultObject<AWeaponBase>()->ServerFire(_player, GetWorld(), _timeSinceLastShot);
+						}
+						else
+						{
+							if (GetNetMode() == NM_Client)
+							{
+								_weapon->GetDefaultObject<AWeaponBase>()->ServerFire_Implementation(
+									_player, GetWorld(), _timeSinceLastShot);
+							}
 						}
 					}
 				}
@@ -249,19 +261,23 @@ void ACharacterController::ServerShoot_Implementation()
 
 void ACharacterController::ServerSpawnBox_Implementation()
 {
-	APawn* _playerPawn = GetPawn();
-	if (_playerPawn)
+	if(bIsAlive)
 	{
-		FVector _spawnLocation = _playerPawn->GetActorLocation() + _playerPawn->GetActorForwardVector() *
-			_spawnBoxDistance;
-		FRotator _spawnRotation = FRotator(1, 1, 1);
+		APawn* _playerPawn = GetPawn();
+		if (_playerPawn)
+		{
+			FVector _spawnLocation = _playerPawn->GetActorLocation() + _playerPawn->GetActorForwardVector() *
+				_spawnBoxDistance;
+			FRotator _spawnRotation = FRotator(1, 1, 1);
 
-		FActorSpawnParameters _spawnParams;
-		_spawnParams.SpawnCollisionHandlingOverride =
-			ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+			FActorSpawnParameters _spawnParams;
+			_spawnParams.SpawnCollisionHandlingOverride =
+				ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-		GetWorld()->SpawnActor<ABoxBase>(BoxClass, _spawnLocation, _spawnRotation, _spawnParams);
+			GetWorld()->SpawnActor<ABoxBase>(BoxClass, _spawnLocation, _spawnRotation, _spawnParams);
+		}
 	}
+
 }
 
 bool ACharacterController::ServerStartReload_Validate()
@@ -271,21 +287,24 @@ bool ACharacterController::ServerStartReload_Validate()
 
 void ACharacterController::PreviousWeapon()
 {
-	APawn* _playerPawn = GetPawn();
-
-	if (_playerPawn)
+	if(bIsAlive)
 	{
-		APlayerBase* _player = Cast<APlayerBase>(_playerPawn);
+		APawn* _playerPawn = GetPawn();
 
-		if (_player)
+		if (_playerPawn)
 		{
-			if (_player->GetCurrentWeapIndex() == 0)
+			APlayerBase* _player = Cast<APlayerBase>(_playerPawn);
+
+			if (_player)
 			{
-				_player->Server_EquipWeapon(_player->_weaponInventory.Num() - 1);
-			}
-			else
-			{
-				_player->Server_EquipWeapon(_player->GetCurrentWeapIndex() - 1);
+				if (_player->GetCurrentWeapIndex() == 0)
+				{
+					_player->Server_EquipWeapon(_player->_weaponInventory.Num() - 1);
+				}
+				else
+				{
+					_player->Server_EquipWeapon(_player->GetCurrentWeapIndex() - 1);
+				}
 			}
 		}
 	}
@@ -293,21 +312,24 @@ void ACharacterController::PreviousWeapon()
 
 void ACharacterController::NextWeapon()
 {
-	APawn* _playerPawn = GetPawn();
-
-	if (_playerPawn)
+	if(bIsAlive)
 	{
-		APlayerBase* _player = Cast<APlayerBase>(_playerPawn);
+		APawn* _playerPawn = GetPawn();
 
-		if (_player)
+		if (_playerPawn)
 		{
-			if (_player->GetCurrentWeapIndex() >= _player->_weaponInventory.Num() - 1)
+			APlayerBase* _player = Cast<APlayerBase>(_playerPawn);
+
+			if (_player)
 			{
-				_player->Server_EquipWeapon(0);
-			}
-			else
-			{
-				_player->Server_EquipWeapon(_player->GetCurrentWeapIndex() + 1);
+				if (_player->GetCurrentWeapIndex() >= _player->_weaponInventory.Num() - 1)
+				{
+					_player->Server_EquipWeapon(0);
+				}
+				else
+				{
+					_player->Server_EquipWeapon(_player->GetCurrentWeapIndex() + 1);
+				}
 			}
 		}
 	}

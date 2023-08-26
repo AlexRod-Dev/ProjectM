@@ -32,6 +32,9 @@ ACharacterController::ACharacterController()
 	bIsReloading = false;
 
 	_spawnBoxDistance = 100.f;
+
+	CountdownWidget = nullptr;
+	
 	// Set the health pickup class
 	static ConstructorHelpers::FClassFinder<ABoxBase> BoxClassFinder(TEXT("/Game/Blueprints/Objects/BP_BoxBase"));
 	if (BoxClassFinder.Succeeded())
@@ -219,10 +222,13 @@ void ACharacterController::ToggleRespawnCountdown()
 {
 	if(bIsAlive)
 	{
+
 		//delete widget
+		//CountdownWidget->RemoveFromParent
 	}
 	else
 	{
+		
 			//showWidget
 				
 	}

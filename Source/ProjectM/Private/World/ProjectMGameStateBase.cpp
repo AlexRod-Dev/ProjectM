@@ -37,6 +37,51 @@ void AProjectMGameStateBase::UpdatePlayersAlive(int32 _players)
 	}
 }
 
+void AProjectMGameStateBase::MultiShowEndGameWidget_Implementation()
+{
+	// Iterate through all player controllers
+		for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
+		{
+			
+			APlayerController* PlayerController = It->Get();
+			if (PlayerController)
+			{
+				ACharacterController* _playerController = Cast<ACharacterController>(PlayerController);
+
+				if(_playerController->IsLocalController())
+				{
+					UGameViewportClient* ViewportClient = _playerController->GetWorld()->GetGameViewport();
+	
+				if(ViewportClient)
+				{
+					ViewportClient->RemoveAllViewportWidgets();
+	
+					//Create Widget and add it to viewport
+					UUserWidget* EndGameMenu  = CreateWidget<UUserWidget>(_playerController, EndGameWidgetClass);
+	
+					if(EndGameMenu)
+					{
+						EndGameMenu->AddToViewport();
+	
+						//Set Inputs
+						FInputModeUIOnly InputModeData;
+		
+						InputModeData.SetWidgetToFocus(EndGameMenu->TakeWidget());
+						InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+		
+						_playerController->SetInputMode(InputModeData);
+		
+						_playerController->bShowMouseCursor = true;
+					
+					}
+				
+				}
+			}
+			}
+		}
+	
+}
+
 
 void AProjectMGameStateBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
@@ -47,41 +92,13 @@ void AProjectMGameStateBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty
 
 }
 
-void AProjectMGameStateBase::ShowEndGameWidget(ACharacterController* _playerController)
+void AProjectMGameStateBase::ShowEndGameWidget_Implementation()
 {
-		if (_playerController != nullptr)
-		{
-			// Only create and show the widget on the owning client
-			if (_playerController->IsLocalPlayerController())
-			{
-			UGameViewportClient* ViewportClient = _playerController->GetWorld()->GetGameViewport();
-
-			if(ViewportClient)
-			{
-				ViewportClient->RemoveAllViewportWidgets();
-
-				//Create Widget and add it to viewport
-				UUserWidget* EndGameMenu  = CreateWidget<UUserWidget>(_playerController, EndGameWidgetClass);
-				
-					if(EndGameMenu)
-					{
-						EndGameMenu->AddToViewport();
-
-						//Set Inputs
-						FInputModeUIOnly InputModeData;
-		
-						InputModeData.SetWidgetToFocus(EndGameMenu->TakeWidget());
-						InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-						
-		
-						_playerController->SetInputMode(InputModeData);
-		
-						_playerController->bShowMouseCursor = true;
-					}
-				}
-			}
-		}
+	MultiShowEndGameWidget();
 }
+
+
+
 
 // void AProjectMGameStateBase::ShowEndGameWidget(ACharacterController* _playerController)
 // {

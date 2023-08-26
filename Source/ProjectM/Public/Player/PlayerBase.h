@@ -119,6 +119,7 @@ public:
 	UFUNCTION()
 	void UpdateRespawnCountdown();
 
+	//delete this after passing to controller
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	TSubclassOf<UUserWidget> CountdownWidget;
 	

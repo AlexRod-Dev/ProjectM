@@ -6,6 +6,7 @@
 #include "GameFramework/GameStateBase.h"
 #include "Net/UnrealNetwork.h"
 #include "Blueprint/UserWidget.h"
+#include "Player/CharacterController.h"
 #include "ProjectMGameStateBase.generated.h"
 
 
@@ -37,8 +38,11 @@ public:
 	UFUNCTION(Server,Reliable)
 	void CheckForPlayersAlive();
 
-	UFUNCTION(BlueprintCallable)
-	void ShowEndGameWidget(ACharacterController* _playerController);
+	UFUNCTION(Server, Reliable, BlueprintCallable)
+	void ShowEndGameWidget();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void MultiShowEndGameWidget();
 	
 	UPROPERTY(BlueprintReadOnly, Replicated)
 	int32 _playersAlive;

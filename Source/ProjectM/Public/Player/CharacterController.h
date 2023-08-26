@@ -86,6 +86,13 @@ public:
 	UFUNCTION()
 	void ToggleRespawnCountdown();
 
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	TSubclassOf<UUserWidget> CountdownWidget;
+	
+	UUserWidget* WidgetInstance;
+	
+
 #pragma endregion
 
 protected:

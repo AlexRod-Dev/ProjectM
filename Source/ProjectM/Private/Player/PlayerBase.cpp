@@ -34,7 +34,7 @@ APlayerBase::APlayerBase()
 
 	_respawnTime = 5.f;
 
-	CountdownWidget = nullptr;
+	//CountdownWidget = nullptr;
 
 	//Set size for player capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
@@ -96,19 +96,19 @@ void APlayerBase::BeginPlay()
 		}
 	}
 	
-	//Create instance of the widget
-	if(CountdownWidget)
-	{
-		WidgetInstance = CreateWidget<UUserWidget>(GetWorld(),CountdownWidget);
-	
-		if(WidgetInstance)
-		{
-			//Add widget to viewport
-			WidgetInstance->AddToViewport();
-			//Hide the widget since player is not dead
-			WidgetInstance->SetVisibility(ESlateVisibility::Hidden);
-		}
-	}
+	// //Create instance of the widget
+	// if(CountdownWidget)
+	// {
+	// 	WidgetInstance = CreateWidget<UUserWidget>(GetWorld(),CountdownWidget);
+	//
+	// 	if(WidgetInstance)
+	// 	{
+	// 		//Add widget to viewport
+	// 		WidgetInstance->AddToViewport();
+	// 		//Hide the widget since player is not dead
+	// 		WidgetInstance->SetVisibility(ESlateVisibility::Hidden);
+	// 	}
+	// }
 }
 
 void APlayerBase::Tick(float DeltaTime)
@@ -172,7 +172,7 @@ void APlayerBase::Die()
 	//Disable Inputs
 	AController* _controller = GetInstigatorController();
 	ACharacterController* _playerController = Cast<ACharacterController>(_controller);
-
+	
 	if (_playerController != nullptr)
 	{
 		//In order for the update to only count 1 time
@@ -188,13 +188,11 @@ void APlayerBase::Die()
 				{
 					_gameState->UpdatePlayersAlive(-1);
 
-					if(IsLocallyControlled())
-					{
 						if(_gameState->_playersAlive <= 0)
 						{
-							_gameState->ShowEndGameWidget(_playerController);
+							//_gameState->ShowEndGameWidget(_playerController);
+							_gameState->ShowEndGameWidget();
 						}
-					}
 				}
 			}
 		}

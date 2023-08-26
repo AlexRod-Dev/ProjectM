@@ -33,11 +33,21 @@ EBTNodeResult::Type UEnemyBTTask_FindClosestPlayer::ExecuteTask(UBehaviorTreeCom
 	{
 		OwnerComp.GetAIOwner()->SetFocus(_aiEnemyController->GetPawn());
 
-		UFUNCTION()
-		Delegate.BindUFunction(this, "FindClosestPlayer", _aiEnemyController);
-		// Start the timer to periodically find the closest player
-		_aiEnemyController->GetWorld()->GetTimerManager().SetTimer(_aiEnemyController->FindPlayerTimerHandle, Delegate, 0.2f,true);
+		if(IsValid(_aiEnemyController))
+		{
+			
+		
+			Delegate.BindUFunction(this, "FindClosestPlayer", _aiEnemyController);
 
+			if(Delegate.IsBound())
+			{
+				_aiEnemyController->GetWorld()->GetTimerManager().SetTimer(_aiEnemyController->FindPlayerTimerHandle, Delegate, 0.2f,true);
+	
+			}
+			// Start the timer to periodically find the closest player
+			
+			//_aiEnemyController->GetWorld()->GetTimerManager().SetTimer(_aiEnemyController->FindPlayerTimerHandle, Delegate, 0.2f,true);
+		}
 	}
 
 	return EBTNodeResult::Succeeded;
@@ -51,7 +61,10 @@ void UEnemyBTTask_FindClosestPlayer::OnTaskFinished(UBehaviorTreeComponent& Owne
 	AEnemyAIController* _aiEnemyController{(Cast<AEnemyAIController>(OwnerComp.GetAIOwner()))};
 	if(_aiEnemyController != nullptr)
 	{
-		_aiEnemyController->GetWorld()->GetTimerManager().ClearTimer(_aiEnemyController->FindPlayerTimerHandle);
+		if(IsValid(_aiEnemyController))
+		{	
+			_aiEnemyController->GetWorld()->GetTimerManager().ClearTimer(_aiEnemyController->FindPlayerTimerHandle);
+		}
 	}
 }
 
@@ -84,15 +97,20 @@ void UEnemyBTTask_FindClosestPlayer::FindClosestPlayer(AEnemyAIController* _aiEn
 			if (_player->GetIsAlive())
 			{
 				APawn* _playerPawn = _player->GetPawn();
+				
 				if(_aiPawn != nullptr && _playerPawn != nullptr)
 				{
-					float _distance = FVector::Distance(_aiPawn->GetActorLocation(), _playerPawn->GetActorLocation());
-					
-					//If this pawn is closer update the location variable
-					if (_distance < _closestDistance)
+					if(IsValid(_playerPawn) && IsValid(_aiPawn))
 					{
-						_closestPlayer = _playerPawn;
-						_closestDistance = _distance;
+					
+						float _distance = FVector::Distance(_aiPawn->GetActorLocation(), _playerPawn->GetActorLocation());
+						
+						//If this pawn is closer update the location variable
+						if (_distance < _closestDistance)
+						{
+							_closestPlayer = _playerPawn;
+							_closestDistance = _distance;
+						}
 					}
 				}
 			}

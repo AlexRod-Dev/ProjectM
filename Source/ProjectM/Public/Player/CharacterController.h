@@ -46,7 +46,8 @@ public:
 
 
 	bool GetIsAlive();
-
+	
+	UPROPERTY(BlueprintReadOnly, Replicated)
 	bool bIsAlive;
 
 	UPROPERTY(Replicated)
@@ -82,6 +83,8 @@ public:
 	UFUNCTION()
 	void ReloadComplete();
 
+	UFUNCTION()
+	void ToggleRespawnCountdown();
 
 #pragma endregion
 

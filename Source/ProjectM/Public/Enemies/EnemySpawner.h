@@ -18,15 +18,15 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Spawn")
 	TSubclassOf<class AEnemyBase> BasicEnemyBlueprint;
 
-	UPROPERTY(EditDefaultsOnly, Replicated)
+	UPROPERTY(EditAnywhere, Replicated, Category = "Spawn")
 	int32 _baseEnemies;
 
-	UPROPERTY(EditDefaultsOnly, Replicated)
+	UPROPERTY(EditAnywhere, Replicated, Category = "Spawn")
 	int32 _incrementFactor;
 
-	UPROPERTY(Replicated)
+	UPROPERTY(EditAnywhere, Replicated, Category = "Spawn")
 	int32 _waveNumber;
-
+	
 	int32 _enemiesToSpawn;
 
 	FVector _enemySpawnLocation;
@@ -35,6 +35,8 @@ public:
 	TArray<AEnemyBase*> _activeEnemies;;
 
 	FTimerHandle SpawnTimerHandle;
+
+	UPROPERTY(EditAnywhere, Category = "Spawn")
 	float _spawnDelay;
 protected:
 	// Called when the game starts or when spawned

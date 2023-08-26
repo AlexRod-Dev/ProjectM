@@ -80,16 +80,7 @@ void AEnemyBase::ServerPlayAttackAnim_Implementation()
 	bIsAttackAnim = true;
 
 	StopAttackAnimTimer();
-	
-	//UE_LOG(LogTemp, Warning, TEXT("Attacking? : %s"), ( bIsAttacking ? TEXT("true") : TEXT("false") ));
 
-	// // if(HasAuthority())
-	// // {
-	// 	if(_attackMontage != nullptr)
-	// 	{
-	// 		GetMesh()->PlayAnimation(_attackMontage,false);
-	// 	}
-	// // }
 }
 
 
@@ -166,6 +157,21 @@ void AEnemyBase::OnRep_CurrentHealth()
 void AEnemyBase::Die()
 {
 	bIsAlive = false;
+
+	//Testing crash fix
+	AEnemyAIController* _aiController = Cast<AEnemyAIController>(GetController());
+
+	if(_aiController != nullptr)
+	{
+		if(_aiController->GetWorld()->GetTimerManager().IsTimerActive(_aiController->FindPlayerTimerHandle))
+		{
+			_aiController->GetWorld()->GetTimerManager().ClearTimer(_aiController->FindPlayerTimerHandle);
+
+		}
+	}
+
+
+	
 	UWorld* _world = GetWorld();
 	if (_world)
 	{
@@ -176,8 +182,7 @@ void AEnemyBase::Die()
 			_damagedFrom->GetPlayerState<AProjectMPlayerState>()->AddScore(1 + _waveNumber);
 		}
 	}
-
-
+	
 	if (HasAuthority())
 	{
 		_world->GetGameState<AProjectMGameStateBase>()->UpdateEnemiesAlive(-1);

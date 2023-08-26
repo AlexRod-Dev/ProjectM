@@ -72,6 +72,7 @@ protected:
 	void OnHealthUpdate();
 
 	FTimerHandle RespawnTimerHandle;
+
 #pragma endregion
 
 public:
@@ -107,6 +108,22 @@ public:
 	void Respawn();
 
 	void HandleRespawnTimer();
+
+	UPROPERTY(BlueprintReadOnly)
+	float _respawnCountdown;
+
+	UPROPERTY(EditDefaultsOnly)
+	float _respawnTime;
+	
+
+	UFUNCTION()
+	void UpdateRespawnCountdown();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	TSubclassOf<UUserWidget> CountdownWidget;
+	
+	UUserWidget* WidgetInstance;
+	
 
 #pragma endregion
 

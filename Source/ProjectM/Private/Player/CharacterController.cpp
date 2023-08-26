@@ -23,9 +23,6 @@ ACharacterController::ACharacterController()
 	//Initialize projectile class
 	_projectileClass = ABulletBase::StaticClass();
 
-	//Initialize fire rate
-	_fireRate = 0.15f;
-
 	bIsFiringWeapon = false;
 
 	_timeSinceLastShot = 0;
@@ -41,6 +38,8 @@ ACharacterController::ACharacterController()
 	{
 		BoxClass = BoxClassFinder.Class;
 	}
+
+	
 }
 
 // Called when the game starts or when spawned
@@ -125,7 +124,7 @@ void ACharacterController::MoveRight(float AxisValue)
 
 void ACharacterController::DisableControls()
 {
-	DisableInput(this);
+	//DisableInput(this);
 }
 
 void ACharacterController::EnableControls(ACharacterController* _playerController)
@@ -213,6 +212,19 @@ void ACharacterController::ReloadComplete()
 				}
 			}
 		}
+	}
+}
+
+void ACharacterController::ToggleRespawnCountdown()
+{
+	if(bIsAlive)
+	{
+		//delete widget
+	}
+	else
+	{
+			//showWidget
+				
 	}
 }
 
@@ -342,6 +354,7 @@ void ACharacterController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 	DOREPLIFETIME(ACharacterController, _timeSinceLastShot);
 	DOREPLIFETIME(ACharacterController, bIsReloading);
 	DOREPLIFETIME(ACharacterController, _reloadTimer);
+	DOREPLIFETIME(ACharacterController, bIsAlive);
 }
 
 

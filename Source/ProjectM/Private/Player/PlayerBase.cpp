@@ -32,6 +32,9 @@ APlayerBase::APlayerBase()
 
 	bIsDead = false;
 
+	_respawnTime = 5.f;
+
+	CountdownWidget = nullptr;
 
 	//Set size for player capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
@@ -90,6 +93,20 @@ void APlayerBase::BeginPlay()
 			SpawnedWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale,
 			                                 "WeaponSocket");
 			
+		}
+	}
+	
+	//Create instance of the widget
+	if(CountdownWidget)
+	{
+		WidgetInstance = CreateWidget<UUserWidget>(GetWorld(),CountdownWidget);
+	
+		if(WidgetInstance)
+		{
+			//Add widget to viewport
+			WidgetInstance->AddToViewport();
+			//Hide the widget since player is not dead
+			WidgetInstance->SetVisibility(ESlateVisibility::Hidden);
 		}
 	}
 }
@@ -191,8 +208,13 @@ void APlayerBase::Die()
 		//Destroy equipped weapon
 		SpawnedWeapon->Destroy();
 
+		_respawnCountdown = _respawnTime;
+		
 		//start timer to respawn
-		GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &APlayerBase::HandleRespawnTimer, 5.f, false);
+		//GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &APlayerBase::HandleRespawnTimer, 5.f, false);
+
+		//Start Timer for countdown
+		GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle,this, &APlayerBase::UpdateRespawnCountdown, 1.f, true);
 	}
 }
 
@@ -220,9 +242,9 @@ void APlayerBase::Respawn()
 
 	if (AProjectMGameModeBase* _gameMode = Cast<AProjectMGameModeBase>(GM))
 	{
-		Destroy();
-
 		_gameMode->Respawn(_playerController);
+		
+		Destroy();
 	}
 }
 
@@ -230,6 +252,23 @@ void APlayerBase::Respawn()
 void APlayerBase::HandleRespawnTimer()
 {
 	Respawn();
+}
+
+void APlayerBase::UpdateRespawnCountdown()
+{
+	//Decrement the respawn countdown
+	_respawnCountdown -= 1.0f;
+
+	if(_respawnCountdown <= 0.0f)
+	{
+		GetWorldTimerManager().ClearTimer(RespawnTimerHandle);
+		if(WidgetInstance)
+		{
+			WidgetInstance->SetVisibility(ESlateVisibility::Hidden);
+		}
+		Respawn();
+	}
+	
 }
 
 
@@ -243,7 +282,6 @@ void APlayerBase::AddWeapon_Implementation(TSubclassOf<AWeaponBase> _weapon)
 		}
 	}
 }
-
 
 
 TArray<TSubclassOf<AWeaponBase>> APlayerBase::GetWeaponInventory()

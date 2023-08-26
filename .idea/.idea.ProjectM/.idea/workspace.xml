@@ -12,14 +12,40 @@
   <component name="ChangeListManager">
     <list default="true" id="534929b2-979d-4c39-bc4a-9a8db12e89fc" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectM/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectM/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Assets/Weapons/MilitaryWeapSilver/Weapons/GrenadeLauncherA_Ammo.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Assets/Weapons/MilitaryWeapSilver/Weapons/Grenade_Launcher_A.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Assets/Weapons/MilitaryWeapSilver/Weapons/Grenade_Launcher_A_PhysicsAsset.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Assets/Weapons/MilitaryWeapSilver/Weapons/Grenade_Launcher_A_Skeleton.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Assets/Weapons/MilitaryWeapSilver/Weapons/Knife_A.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Assets/Weapons/MilitaryWeapSilver/Weapons/Knife_A_PhysicsAsset.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Assets/Weapons/MilitaryWeapSilver/Weapons/Knife_A_Skeleton.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Assets/Weapons/MilitaryWeapSilver/Weapons/Materials/M_GrenadeLauncher_01.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Assets/Weapons/MilitaryWeapSilver/Weapons/Materials/M_Knife_01.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Assets/Weapons/MilitaryWeapSilver/Weapons/Materials/M_SniperRifle_01.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Assets/Weapons/MilitaryWeapSilver/Weapons/SniperRifleA_Ammo.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Assets/Weapons/MilitaryWeapSilver/Weapons/Sniper_Rifle_A.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Assets/Weapons/MilitaryWeapSilver/Weapons/Sniper_Rifle_A_PhysicsAsset.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Assets/Weapons/MilitaryWeapSilver/Weapons/Sniper_Rifle_A_Skeleton.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Assets/Weapons/MilitaryWeapSilver/Weapons/Textures/Grenade_Launcher_A_Diff.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Assets/Weapons/MilitaryWeapSilver/Weapons/Textures/Grenade_Launcher_A_Masks.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Assets/Weapons/MilitaryWeapSilver/Weapons/Textures/Grenade_Launcher_A_Norm.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Assets/Weapons/MilitaryWeapSilver/Weapons/Textures/Knife_A_Diff.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Assets/Weapons/MilitaryWeapSilver/Weapons/Textures/Knife_A_Masks.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Assets/Weapons/MilitaryWeapSilver/Weapons/Textures/Knife_A_Norm.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Assets/Weapons/MilitaryWeapSilver/Weapons/Textures/Sniper_Rifle_A_Diff.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Assets/Weapons/MilitaryWeapSilver/Weapons/Textures/Sniper_Rifle_A_Masks.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Assets/Weapons/MilitaryWeapSilver/Weapons/Textures/Sniper_Rifle_A_Norm.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Enemy/BP_EnemyBase.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Enemy/BP_EnemyBase.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Blueprints/Player/BP_CharacterController.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Player/BP_CharacterController.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Player/BP_PlayerBase.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Player/BP_PlayerBase.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Maps/Lobby.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Maps/Lobby.umap" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/AI/Tasks/EnemyBTTask_FindClosestPlayer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Private/AI/Tasks/EnemyBTTask_FindClosestPlayer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/Enemies/EnemyBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Private/Enemies/EnemyBase.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/Player/CharacterController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Private/Player/CharacterController.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/Player/PlayerBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Private/Player/PlayerBase.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/Weapons/Pistol.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Private/Weapons/Pistol.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Public/AI/Tasks/EnemyBTTask_FindClosestPlayer.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Public/AI/Tasks/EnemyBTTask_FindClosestPlayer.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/ProjectM/Public/Enemies/EnemySpawner.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Public/Enemies/EnemySpawner.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Public/Player/CharacterController.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Public/Player/CharacterController.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Public/Player/PlayerBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Public/Player/PlayerBase.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,137 +56,22 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/ProjectM/Private/AI/Tasks/EnemyBTTask_ChasePlayer.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ProjectM/Private/AI/Tasks/EnemyBTTask_FindClosestPlayer.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ProjectM/Private/Enemies/EnemyAIController.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ProjectM/Private/Enemies/EnemyBase.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/ProjectM/Private/Enemies/EnemySpawner.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ProjectM/Private/Pickups/WeaponPickup.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ProjectM/Private/Player/BulletBase.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/ProjectM/Private/Player/CharacterController.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/ProjectM/Private/Player/PlayerBase.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ProjectM/Private/Player/ProjectMPlayerState.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ProjectM/Private/Weapons/Pistol.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ProjectM/Private/Weapons/WeaponBase.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ProjectM/Private/World/ProjectMGameModeBase.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ProjectM/Private/World/ProjectMGameStateBase.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ProjectM/ProjectM.Build.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/ProjectM/Public/AI/Tasks/EnemyBTTask_FindClosestPlayer.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ProjectM/Public/Enemies/EnemyBase.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ProjectM/Public/Pickups/WeaponPickup.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ProjectM/Public/Player/BulletBase.h" root0="FORCE_HIGHLIGHTING" />
@@ -169,6 +80,7 @@
     <setting file="file://$PROJECT_DIR$/Source/ProjectM/Public/Weapons/Pistol.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ProjectM/Public/Weapons/Rifle.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ProjectM/Public/Weapons/WeaponBase.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/ProjectM/Public/World/ProjectMGameInstance.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ProjectM/Public/World/ProjectMGameModeBase.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ProjectM/Public/World/ProjectMGameStateBase.h" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -176,7 +88,7 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="Toolset" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
@@ -359,7 +271,17 @@
       <workItem from="1692106534834" duration="10522000" />
       <workItem from="1692297862628" duration="6312000" />
       <workItem from="1692385410131" duration="1869000" />
-      <workItem from="1692739359151" duration="1150000" />
+      <workItem from="1692739359151" duration="1658000" />
+      <workItem from="1692815193772" duration="7526000" />
+      <workItem from="1692827196160" duration="2988000" />
+      <workItem from="1692904659090" duration="4240000" />
+      <workItem from="1693042050744" duration="6511000" />
+      <workItem from="1693062973975" duration="2413000" />
+      <workItem from="1693068780339" duration="62000" />
+      <workItem from="1693068866890" duration="83000" />
+      <workItem from="1693068974956" duration="196000" />
+      <workItem from="1693069238974" duration="166000" />
+      <workItem from="1693069426992" duration="2202000" />
     </task>
     <servers />
   </component>

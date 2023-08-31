@@ -92,7 +92,7 @@ void ACharacterController::SetupInputComponent()
 
 	InputComponent->BindAction("Reload", IE_Pressed, this, &ACharacterController::StartReload);
 	//Bind Use Item button
-	InputComponent->BindAction("UseItem", IE_Pressed, this, &ACharacterController::ServerSpawnBox);
+	//InputComponent->BindAction("UseItem", IE_Pressed, this, &ACharacterController::ServerSpawnBox);
 
 	InputComponent->BindAction("PreviousWeap", IE_Pressed, this, &ACharacterController::PreviousWeapon);
 	InputComponent->BindAction("NextWeap", IE_Pressed, this, &ACharacterController::NextWeapon);
@@ -224,6 +224,11 @@ void ACharacterController::ReloadComplete()
 
 void ACharacterController::ToggleRespawnCountdown_Implementation(bool isDead)
 {
+	if(Cast<AProjectMGameStateBase>(GetWorld()->GetGameState())->_playersAlive <= 0)
+	{
+		return;
+	}
+	
 	if(!CountdownWidgetInstance)
 	{
 		CountdownWidgetInstance = CreateWidget<UUserWidget>(GetWorld(),CountdownWidgetClass);

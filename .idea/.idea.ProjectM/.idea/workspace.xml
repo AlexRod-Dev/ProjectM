@@ -12,11 +12,14 @@
   <component name="ChangeListManager">
     <list default="true" id="534929b2-979d-4c39-bc4a-9a8db12e89fc" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectM/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectM/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Player/BP_CharacterController.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Player/BP_CharacterController.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/TestMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Maps/TestMap.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Main.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Main.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/MainMenu.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/MainMenu.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/Player/CharacterController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Private/Player/CharacterController.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/Player/PlayerBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Private/Player/PlayerBase.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Public/Player/CharacterController.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Public/Player/CharacterController.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Public/Player/PlayerBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Public/Player/PlayerBase.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/Weapons/Pistol.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Private/Weapons/Pistol.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/World/ProjectMGameInstance.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Private/World/ProjectMGameInstance.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/World/ProjectMGameModeBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Private/World/ProjectMGameModeBase.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/World/ProjectMGameStateBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Private/World/ProjectMGameStateBase.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -267,7 +270,7 @@
       <workItem from="1693069426992" duration="6440000" />
       <workItem from="1693131020216" duration="2654000" />
       <workItem from="1693254967905" duration="2055000" />
-      <workItem from="1693467987927" duration="7512000" />
+      <workItem from="1693467987927" duration="12897000" />
     </task>
     <servers />
   </component>

@@ -263,7 +263,7 @@ void UProjectMGameInstance::HandleNetworkFailure(UWorld* World, UNetDriver* NetD
 
 void UProjectMGameInstance::StartGame()
 {
-		GetWorld()->ServerTravel("/Game/Maps/TestMap?listen");
+		GetWorld()->ServerTravel("/Game/Maps/Level1?listen");
 }
 
 void UProjectMGameInstance::BackToLobby()

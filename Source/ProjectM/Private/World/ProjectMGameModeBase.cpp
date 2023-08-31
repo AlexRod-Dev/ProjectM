@@ -156,6 +156,7 @@ void AProjectMGameModeBase::Respawn(ACharacterController* _playerController)
 			}
 			else
 			{
+				
 				//means everyone is dead so end the game
 				//ShowEndGameWidget(_playerController);
 			}

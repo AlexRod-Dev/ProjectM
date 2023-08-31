@@ -33,7 +33,7 @@ ACharacterController::ACharacterController()
 
 	_spawnBoxDistance = 100.f;
 
-	CountdownWidget = nullptr;
+	CountdownWidgetClass = nullptr;
 	
 	// Set the health pickup class
 	static ConstructorHelpers::FClassFinder<ABoxBase> BoxClassFinder(TEXT("/Game/Blueprints/Objects/BP_BoxBase"));
@@ -41,6 +41,8 @@ ACharacterController::ACharacterController()
 	{
 		BoxClass = BoxClassFinder.Class;
 	}
+
+	
 
 	
 }
@@ -52,6 +54,8 @@ void ACharacterController::BeginPlay()
 
 	bIsAlive = true;
 
+	
+	
 }
 
 // Called every frame
@@ -218,21 +222,30 @@ void ACharacterController::ReloadComplete()
 	}
 }
 
-void ACharacterController::ToggleRespawnCountdown()
+void ACharacterController::ToggleRespawnCountdown_Implementation(bool isDead)
 {
-	if(bIsAlive)
+	if(!CountdownWidgetInstance)
 	{
-
-		//delete widget
-		//CountdownWidget->RemoveFromParent
+		CountdownWidgetInstance = CreateWidget<UUserWidget>(GetWorld(),CountdownWidgetClass);
+		CountdownWidgetInstance->AddToViewport();
 	}
-	else
+	
+	
+	if(CountdownWidgetInstance != nullptr)
 	{
-		
-			//showWidget
+			if(isDead)
+			{
+				CountdownWidgetInstance->SetVisibility(ESlateVisibility::Visible);
 				
+			}
+			else
+			{
+				CountdownWidgetInstance->SetVisibility(ESlateVisibility::Hidden);
+			}
 	}
 }
+
+
 
 
 bool ACharacterController::ServerShoot_Validate()

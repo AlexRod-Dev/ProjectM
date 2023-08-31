@@ -109,7 +109,7 @@ public:
 
 	void HandleRespawnTimer();
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, Replicated)
 	float _respawnCountdown;
 
 	UPROPERTY(EditDefaultsOnly)

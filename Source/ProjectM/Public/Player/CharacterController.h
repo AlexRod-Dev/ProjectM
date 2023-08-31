@@ -83,14 +83,14 @@ public:
 	UFUNCTION()
 	void ReloadComplete();
 
-	UFUNCTION()
-	void ToggleRespawnCountdown();
+	UFUNCTION(Client, Reliable)
+	void ToggleRespawnCountdown(bool isDead);
 
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-	TSubclassOf<UUserWidget> CountdownWidget;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+	TSubclassOf<UUserWidget> CountdownWidgetClass;
 	
-	UUserWidget* WidgetInstance;
+	UUserWidget* CountdownWidgetInstance;
 	
 
 #pragma endregion

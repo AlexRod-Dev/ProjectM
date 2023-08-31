@@ -127,6 +127,7 @@ void APlayerBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifet
 	DOREPLIFETIME(APlayerBase, _weaponInventory);
 	DOREPLIFETIME(APlayerBase, _equippedWeapon);
 	DOREPLIFETIME(APlayerBase, _currentWeapIndex);
+	DOREPLIFETIME(APlayerBase, _respawnCountdown);
 }
 
 void APlayerBase::OnHealthUpdate()
@@ -169,7 +170,8 @@ void APlayerBase::SetCurrentHealth(float _hpValue)
 
 void APlayerBase::Die()
 {
-	//Disable Inputs
+	bIsDead = true;
+	
 	AController* _controller = GetInstigatorController();
 	ACharacterController* _playerController = Cast<ACharacterController>(_controller);
 	
@@ -190,7 +192,6 @@ void APlayerBase::Die()
 
 						if(_gameState->_playersAlive <= 0)
 						{
-							//_gameState->ShowEndGameWidget(_playerController);
 							_gameState->ShowEndGameWidget();
 						}
 				}
@@ -213,6 +214,7 @@ void APlayerBase::Die()
 
 		//Start Timer for countdown
 		GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle,this, &APlayerBase::UpdateRespawnCountdown, 1.f, true);
+		_playerController->ToggleRespawnCountdown(bIsDead);
 	}
 }
 
@@ -236,6 +238,7 @@ void APlayerBase::Respawn()
 
 	ACharacterController* _playerController = Cast<ACharacterController>(_controller);
 
+	_playerController->ToggleRespawnCountdown(bIsDead);
 	
 
 	if (AProjectMGameModeBase* _gameMode = Cast<AProjectMGameModeBase>(GM))
@@ -254,16 +257,14 @@ void APlayerBase::HandleRespawnTimer()
 
 void APlayerBase::UpdateRespawnCountdown()
 {
+	
 	//Decrement the respawn countdown
 	_respawnCountdown -= 1.0f;
 
 	if(_respawnCountdown <= 0.0f)
 	{
 		GetWorldTimerManager().ClearTimer(RespawnTimerHandle);
-		if(WidgetInstance)
-		{
-			WidgetInstance->SetVisibility(ESlateVisibility::Hidden);
-		}
+
 		Respawn();
 	}
 	

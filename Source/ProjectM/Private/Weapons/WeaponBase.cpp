@@ -102,6 +102,17 @@ bool AWeaponBase::ServerAddAmmo_Validate()
 }
 
 
+void AWeaponBase::Client_PlaySound_Implementation(USoundCue* _sound, FVector _location, UWorld* _world)
+{
+	// Call PlaySoundAtLocation on the client
+	UGameplayStatics::PlaySoundAtLocation(_world, _sound, _location);
+}
+
+bool AWeaponBase::Client_PlaySound_Validate(USoundCue* _sound, FVector _location, UWorld* _world)
+{
+	return true;
+}
+
 void AWeaponBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -110,4 +121,6 @@ void AWeaponBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifet
 	DOREPLIFETIME(AWeaponBase, _currentAmmo);
 	DOREPLIFETIME(AWeaponBase, _totalAmmo);
 	DOREPLIFETIME(AWeaponBase, AudioComponent);
+	DOREPLIFETIME(AWeaponBase, FireSound);
+	DOREPLIFETIME(AWeaponBase, ReloadSound);
 }

@@ -81,10 +81,10 @@ public:
 #pragma region Sounds
 
 	//Sounds
-	UPROPERTY(EditAnywhere, Category = "Audio")
+	UPROPERTY(EditAnywhere, Category = "Audio", Replicated)
 	class USoundCue* FireSound;
 
-	UPROPERTY(EditAnywhere, Category = "Audio")
+	UPROPERTY(EditAnywhere, Category = "Audio", Replicated)
 	class USoundCue* ReloadSound;
 
 	UPROPERTY(Replicated)
@@ -95,6 +95,9 @@ public:
 
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void Multicast_PlaySound(USoundCue* _sound, FVector _location, UWorld* _world);
+
+	UFUNCTION(Client, Reliable, WithValidation)
+	virtual void Client_PlaySound(USoundCue* _sound, FVector _location, UWorld* _world);
 
 #pragma endregion
 

@@ -2,7 +2,8 @@
 
 
 #include "Weapons/Rifle.h"
-
+#include "UObject/ConstructorHelpers.h"
+#include "Sound/SoundCue.h"
 #include "Player/BulletBase.h"
 #include "Player/CharacterController.h"
 #include "Player/PlayerBase.h"
@@ -21,6 +22,16 @@ ARifle::ARifle() : AWeaponBase(LoadObject<USkeletalMesh>(nullptr, TEXT("/Game/As
 	if (AmmoClassFinder.Succeeded())
 	{
 		BulletClass = AmmoClassFinder.Class;
+	}
+
+	//Set the sounds
+	
+	static ConstructorHelpers::FObjectFinder<USoundCue> FireSoundAsset(
+		TEXT("/Game/Sounds/SFX/Weapons/Rifle/Cues/Rifle_Fire_Cue"));
+	if (FireSoundAsset.Succeeded())
+	{
+		//AudioComponent->SetSound(FireSoundAsset.Object);
+		FireSound = FireSoundAsset.Object;
 	}
 }
 
@@ -62,6 +73,13 @@ void ARifle::ServerFire(APlayerBase* _player, UWorld* _world, float _timeSinceLa
 					_spawnedBullet->SetInitialVelocity(_player->GetActorForwardVector() * 2000.f);
 					//reset timer
 					Cast<ACharacterController>(_player->GetController())->_timeSinceLastShot = 0;
+				}
+
+				if (FireSound)
+				{
+						
+				//	Server_PlaySound(FireSound, _spawnLocation, _world);
+						Multicast_PlaySound(FireSound, _spawnLocation, _world);
 				}
 			}
 		}

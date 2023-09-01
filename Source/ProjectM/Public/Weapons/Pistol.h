@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Player/PlayerBase.h"
 #include "Weapons/WeaponBase.h"
 #include "Pistol.generated.h"
 
@@ -26,5 +27,6 @@ public:
 	// Set the bullet class
 	virtual void Multicast_PlaySound(USoundCue* _sound, FVector _location, UWorld* _world) override;
 
+	virtual void Client_PlaySound(USoundCue* _sound, FVector _location, UWorld* _world) override;
 	virtual void AddAmmo() override;
 };

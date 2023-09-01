@@ -12,14 +12,20 @@
   <component name="ChangeListManager">
     <list default="true" id="534929b2-979d-4c39-bc4a-9a8db12e89fc" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectM/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectM/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Maps/TestMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Maps/TestMap.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Assets/Meshes/Shape_Cube.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Assets/Meshes/Shape_Cube.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Objects/Pickups/BP_HealthPickup.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Objects/Pickups/BP_HealthPickup.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Sounds/SFX/Weapons/Pistol/Cues/Pistol_Fire_Cue.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Sounds/SFX/Weapons/Pistol/Cues/Pistol_Fire_Cue.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Sounds/SFX/Weapons/Rifle/Cues/RifleA_Fire_Cue.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Sounds/SFX/Weapons/Rifle/Cues/RifleA_Fire_Cue.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Sounds/SFX/Weapons/Shotgun/Cues/ShotgunA_Fire_Cue.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Sounds/SFX/Weapons/Shotgun/Cues/ShotgunA_Fire_Cue.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/UI/Main.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Main.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/UI/MainMenu.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/MainMenu.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/Player/CharacterController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Private/Player/CharacterController.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/Weapons/Pistol.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Private/Weapons/Pistol.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/World/ProjectMGameInstance.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Private/World/ProjectMGameInstance.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/World/ProjectMGameModeBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Private/World/ProjectMGameModeBase.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/World/ProjectMGameStateBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Private/World/ProjectMGameStateBase.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/Weapons/Rifle.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Private/Weapons/Rifle.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/Weapons/Shotgun.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Private/Weapons/Shotgun.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Private/Weapons/WeaponBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Private/Weapons/WeaponBase.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Public/Weapons/Pistol.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Public/Weapons/Pistol.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ProjectM/Public/Weapons/WeaponBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ProjectM/Public/Weapons/WeaponBase.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -271,6 +277,8 @@
       <workItem from="1693131020216" duration="2654000" />
       <workItem from="1693254967905" duration="2055000" />
       <workItem from="1693467987927" duration="12897000" />
+      <workItem from="1693496550540" duration="3818000" />
+      <workItem from="1693579844213" duration="4164000" />
     </task>
     <servers />
   </component>

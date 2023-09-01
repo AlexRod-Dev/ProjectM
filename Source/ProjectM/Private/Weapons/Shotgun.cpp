@@ -2,7 +2,8 @@
 
 
 #include "Weapons/Shotgun.h"
-
+#include "UObject/ConstructorHelpers.h"
+#include "Sound/SoundCue.h"
 #include "Player/BulletBase.h"
 #include "Player/PlayerBase.h"
 
@@ -21,6 +22,16 @@ AShotgun::AShotgun() : AWeaponBase(
 	if (AmmoClassFinder.Succeeded())
 	{
 		BulletClass = AmmoClassFinder.Class;
+	}
+
+	//Set the sounds
+	
+	static ConstructorHelpers::FObjectFinder<USoundCue> FireSoundAsset(
+		TEXT("/Game/Sounds/SFX/Weapons/Shotgun/Cues/Shotgun_Fire_Cue"));
+	if (FireSoundAsset.Succeeded())
+	{
+		//AudioComponent->SetSound(FireSoundAsset.Object);
+		FireSound = FireSoundAsset.Object;
 	}
 }
 
@@ -60,20 +71,30 @@ void AShotgun::ServerFire(APlayerBase* _player, UWorld* _world, float _timeSince
 					_spawnParams.Owner = _player;
 					_spawnParams.Instigator = _player->GetInstigator();
 
-					ABulletBase* ShotgunBullet = _world->SpawnActor<ABulletBase>(
+					ABulletBase* _shotgunBullet = _world->SpawnActor<ABulletBase>(
 						BulletClass, _spawnLocation, _spawnRotation, _spawnParams);
 
 				
-					if (ShotgunBullet)
+					if (_shotgunBullet)
 					{
 						// Set the bullet spread
-						ShotgunBullet->SetInitialVelocity(_spreadDirection * 1000.f);
+						_shotgunBullet->SetInitialVelocity(_spreadDirection * 1000.f);
+
+						_shotgunBullet->_instigatorController = Cast<ACharacterController>(_player->GetController());
+						
 						//reset timer
 						Cast<ACharacterController>(_player->GetController())->_timeSinceLastShot = 0;
 					}
+				
 				}
 				_currentAmmo--;
 
+				if (FireSound)
+				{
+						
+					Server_PlaySound(FireSound, _spawnLocation, _world);
+						
+				}
 				if (_currentAmmo < 0)
 				{
 					_currentAmmo = 0;

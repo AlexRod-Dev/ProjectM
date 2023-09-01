@@ -101,11 +101,13 @@ void APistol::ServerFire(APlayerBase* _player, UWorld* _world, float _timeSinceL
 
 					if (FireSound)
 					{
-						if (HasAuthority())
+						if(Cast<ACharacterController>(_player->GetController())->IsLocalController())
 						{
-							Server_PlaySound(FireSound, _spawnLocation, _world);
+							Client_PlaySound(FireSound, _spawnLocation, _world);
+				
 						}
-					}
+							Server_PlaySound(FireSound, _spawnLocation, _world);
+								}
 				}
 			}
 		}
@@ -125,11 +127,11 @@ void APistol::MultiReload()
 
 	_currentAmmo = _magSize;
 
-	if (ReloadSound != nullptr)
+	if (ReloadSound)
 	{
 		//	if(HasAuthority())
 		//	Server_PlaySound(FireSound,_spawnLocation,_world);
-
+		//Server_PlaySound(FireSound, _spawnLocation, _world);
 		UGameplayStatics::PlaySoundAtLocation(this, ReloadSound, GetActorLocation());
 	}
 }
@@ -137,10 +139,18 @@ void APistol::MultiReload()
 void APistol::Multicast_PlaySound(USoundCue* _sound, FVector _location, UWorld* _world)
 {
 	Super::Multicast_PlaySound(_sound, _location, _world);
-
-
 	
 }
+
+void APistol::Client_PlaySound(USoundCue* _sound, FVector _location, UWorld* _world)
+{
+	Super::Client_PlaySound(_sound,_location,_world);
+	
+	if(ReloadSound)
+	UGameplayStatics::PlaySoundAtLocation(this, ReloadSound, GetActorLocation());
+	
+}
+
 
 void APistol::AddAmmo()
 {
